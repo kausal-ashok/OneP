@@ -1,0 +1,2269 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="11/28/2018 8:48:53 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="LAPTOP-SBSNQ3DE"
+  DTS:CreatorName="LAPTOP-SBSNQ3DE\HP"
+  DTS:DTSID="{212B2F8B-755F-4A21-8241-BFE6BFB0BD96}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="14.0.0600.250"
+  DTS:LocaleID="16393"
+  DTS:ObjectName="ETL_LANDING_PRIME17_CADDRESSLINKS_FULL_LOAD"
+  DTS:PackageType="5"
+  DTS:ProtectionLevel="0"
+  DTS:VersionBuild="717"
+  DTS:VersionGUID="{F371CEA4-F59E-4A6B-A5A5-710040E11694}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_AUDIT_FRAMEWORK]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{32414BCF-F75B-4503-A098-D3FBC5F7A232}"
+      DTS:ObjectName="CM_AUDIT_FRAMEWORK">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_AUDIT_FRAMEWORK_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_AUDIT_FRAMEWORK_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=AUDIT_FRAMEWORK_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{F7CC2EFD-75CA-4080-97A1-685D4DFE317C}"
+      DTS:ObjectName="CM_EIMDW_LANDING_PRIME">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_LANDING_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_ARCHIVE_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=DEV_EIMDW_Landing_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_Prime_Attunity]"
+      DTS:CreationName="MSORA"
+      DTS:DTSID="{030BC989-17E5-4EA3-9261-3ABA893661D2}"
+      DTS:ObjectName="CM_Prime_Attunity">
+      <DTS:PropertyExpression
+        DTS:Name="Password">@[$Project::p_PRIME_PWD]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_PRIME_SERVER]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="UserName">@[$Project::p_PRIME_USER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <OracleXMLPackage>
+          <OraConnectionString>SERVER=10.180.2.215:1522/prime;USERNAME=AMBERCONNECT;ORACLEHOME=;ORACLEHOME64=;WINAUTH=0</OraConnectionString>
+          <OraRetain>False</OraRetain>
+          <OraInitialCatalog></OraInitialCatalog>
+          <OraServerName>10.180.2.215:1522/prime</OraServerName>
+          <OraUserName>AMBERCONNECT</OraUserName>
+          <OraOracleHome></OraOracleHome>
+          <OraOracleHome64></OraOracleHome64>
+          <OraWinAuthentication>False</OraWinAuthentication>
+          <OraEnableDetailedTracing>False</OraEnableDetailedTracing>
+          <OraPassword
+            Sensitive="1"></OraPassword>
+        </OracleXMLPackage>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:LogProviders>
+    <DTS:LogProvider
+      DTS:ConfigString="CM_AUDIT_FRAMEWORK"
+      DTS:CreationName="Microsoft.LogProviderSQLServer"
+      DTS:Description="Writes log entries for events to a SQL Server database"
+      DTS:DTSID="{7A8382C3-5368-4925-A25D-C3920AF8D082}"
+      DTS:ObjectName="SSIS log provider for SQL Server">
+      <DTS:ObjectData>
+        <InnerObject />
+      </DTS:ObjectData>
+    </DTS:LogProvider>
+  </DTS:LogProviders>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{FA59E200-E7A4-43FC-934D-5214F65DDDF4}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Batch_Id">
+      <DTS:VariableValue
+        DTS:DataType="20">-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{0923496A-8A6F-4BB6-8C8A-7E34C7ED36EA}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT COUNT(1) FROM &quot; +  @[User::v_Dest_Table]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Dest_Count_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT COUNT(1) FROM DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_CADDRESSLINKS (NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{2A2EC919-F0A0-47FB-87C8-1E0CACB5D1BF}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="@[$Project::p_LANDING_DATABASE]  +&quot;.&quot;+ @[$Project::p_LANDING_SCHEMA] +&quot;.&quot;+&quot;SRC_PRIME17_CADDRESSLINKS (NOLOCK)&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Dest_Table">
+      <DTS:VariableValue
+        DTS:DataType="8">DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_CADDRESSLINKS (NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{FC941712-C2A4-4091-8F78-F6D08600FD52}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Package_Id">
+      <DTS:VariableValue
+        DTS:DataType="3">-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{7BEB9004-5DD5-48BF-B58B-E0D770E48398}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Rows_Inserted">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{0B0FA6B3-7507-40FC-B606-3749272DF0BA}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Rows_Read">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{CABE829F-3178-4380-AAF8-50BBC01F7F2C}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT  &#xA;INSTITUTION_ID&#x9;&#xA;,SERNO&#x9;&#xA;,TABINDICATOR&#x9;&#xA;,ROWSERNO&#x9;&#xA;,ADDRESSSERNO&#x9;&#xA;,ADDRESSTYPE&#x9;&#xA;,FROMDATE&#x9;&#xA;,UNTILDATE&#x9;&#xA;,ADDRESSLINKTYPE1SOURCESERNO&#x9;&#xA;,ADDRESSLINKTYPE2SOURCESERNO&#x9;&#xA;,ADDRESSLINKTYPE3SOURCESERNO&#x9;&#xA;,ADDRESSLINKTYPE4SOURCESERNO&#x9;&#xA;,ADDRESSLINKTYPE5SOURCESERNO&#x9;&#xA;,LOGACTION&#x9;&#xA;,CONVERTED FROM &quot;+  @[User::v_Source_Table]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Source_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT  
+INSTITUTION_ID	
+,SERNO	
+,TABINDICATOR	
+,ROWSERNO	
+,ADDRESSSERNO	
+,ADDRESSTYPE	
+,FROMDATE	
+,UNTILDATE	
+,ADDRESSLINKTYPE1SOURCESERNO	
+,ADDRESSLINKTYPE2SOURCESERNO	
+,ADDRESSLINKTYPE3SOURCESERNO	
+,ADDRESSLINKTYPE4SOURCESERNO	
+,ADDRESSLINKTYPE5SOURCESERNO	
+,LOGACTION	
+,CONVERTED FROM TCTDBS.CADDRESSLINKS</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{BC5449A6-B1F3-4CA1-B40D-7520755ACAF3}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Source_Table">
+      <DTS:VariableValue
+        DTS:DataType="8">TCTDBS.CADDRESSLINKS</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{BFED06DA-8C6D-4B63-985B-9082C04EF43E}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Task_Name">
+      <DTS:VariableValue
+        DTS:DataType="8">CADDRESSLINKS</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{77A948D9-D4B3-40EF-8480-EDBA365FB64E}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;TRUNCATE TABLE &quot;  + REPLACE(@[User::v_Dest_Table],&quot;(NOLOCK)&quot;,&quot; &quot;)"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Trunc_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">TRUNCATE TABLE DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_CADDRESSLINKS  </DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:LoggingOptions
+    DTS:FilterKind="0"
+    DTS:LoggingMode="1">
+    <DTS:Property
+      DTS:DataType="8"
+      DTS:Name="EventFilter">3,7,OnError,13,OnPostExecute,12,OnTaskFailed</DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnError"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnPostExecute"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnTaskFailed"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:SelectedLogProviders>
+      <DTS:SelectedLogProvider
+        DTS:InstanceID="{7A8382C3-5368-4925-A25D-C3920AF8D082}" />
+    </DTS:SelectedLogProviders>
+  </DTS:LoggingOptions>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\DFT_CADDRESSLINKS_LOAD"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{25CF3CB4-7C4E-4686-8AE9-A254D0CC5448}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="DFT_CADDRESSLINKS_LOAD"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"DFT_"+@[User::v_Task_Name]+"_LOAD"</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="[SRC_CADDRESSLINKS].[SqlCommand]">@[User::v_Source_Query]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <pipeline
+          defaultBufferMaxRows="100000"
+          defaultBufferSize="20485760"
+          version="1">
+          <components>
+            <component
+              refId="Package\DFT_CADDRESSLINKS_LOAD\BDD_CADDRESSLINKS"
+              componentClassID="Microsoft.BDD"
+              contactInfo="Balanced Data Distributor;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Evaluates and directs rows in a dataset to multiple destinations."
+              name="BDD_CADDRESSLINKS">
+              <inputs>
+                <input
+                  refId="Package\DFT_CADDRESSLINKS_LOAD\BDD_CADDRESSLINKS.Inputs[Balanced Data Distributor Input]"
+                  description="Input to the Balanced Data      Distributor Transformation"
+                  name="Balanced Data Distributor Input">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_CADDRESSLINKS_LOAD\BDD_CADDRESSLINKS.Outputs[Balanced Data Distributor Output 1]"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 1"
+                  synchronousInputId="Package\DFT_CADDRESSLINKS_LOAD\BDD_CADDRESSLINKS.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_CADDRESSLINKS_LOAD\BDD_CADDRESSLINKS.Outputs[Balanced Data Distributor Output 2]"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 2"
+                  synchronousInputId="Package\DFT_CADDRESSLINKS_LOAD\BDD_CADDRESSLINKS.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_CADDRESSLINKS_LOAD\BDD_CADDRESSLINKS.Outputs[Balanced Data Distributor Output 3]"
+                  dangling="true"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 3"
+                  synchronousInputId="Package\DFT_CADDRESSLINKS_LOAD\BDD_CADDRESSLINKS.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_CADDRESSLINKS_LOAD\DC_BATCH"
+              componentClassID="Microsoft.DerivedColumn"
+              contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+              name="DC_BATCH"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\DFT_CADDRESSLINKS_LOAD\DC_BATCH.Inputs[Derived Column Input]"
+                  description="Input to the Derived Column Transformation"
+                  name="Derived Column Input">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_CADDRESSLINKS_LOAD\DC_BATCH.Outputs[Derived Column Output]"
+                  description="Default Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  name="Derived Column Output"
+                  synchronousInputId="Package\DFT_CADDRESSLINKS_LOAD\DC_BATCH.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]"
+                      dataType="i8"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]"
+                      name="BATCH_ID"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">@[User::v_Batch_Id]</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">@[User::v_Batch_Id]</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_CADDRESSLINKS_LOAD\DC_BATCH.Outputs[Derived Column Error Output]"
+                  description="Error Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Derived Column Error Output"
+                  synchronousInputId="Package\DFT_CADDRESSLINKS_LOAD\DC_BATCH.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="DST_CADDRESSLINKS"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[LZOWN].[SRC_PRIME17_CADDRESSLINKS]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS,ROWS_PER_BATCH = 1000000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].Columns[INSTITUTION_ID]"
+                      cachedDataType="i4"
+                      cachedName="INSTITUTION_ID"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].Columns[SERNO]"
+                      cachedDataType="numeric"
+                      cachedName="SERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[SERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].Columns[TABINDICATOR]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="TABINDICATOR"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].ExternalColumns[TABINDICATOR]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[TABINDICATOR]" />
+                    <inputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].Columns[ROWSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="ROWSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].ExternalColumns[ROWSERNO]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[ROWSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].Columns[ADDRESSSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="ADDRESSSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESSSERNO]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[ADDRESSSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].Columns[ADDRESSTYPE]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="5"
+                      cachedName="ADDRESSTYPE"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESSTYPE]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[ADDRESSTYPE]" />
+                    <inputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].Columns[FROMDATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="FROMDATE"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].ExternalColumns[FROMDATE]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[FROMDATE]" />
+                    <inputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].Columns[UNTILDATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="UNTILDATE"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].ExternalColumns[UNTILDATE]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[UNTILDATE]" />
+                    <inputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].Columns[ADDRESSLINKTYPE1SOURCESERNO]"
+                      cachedDataType="numeric"
+                      cachedName="ADDRESSLINKTYPE1SOURCESERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESSLINKTYPE1SOURCESERNO]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[ADDRESSLINKTYPE1SOURCESERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].Columns[ADDRESSLINKTYPE2SOURCESERNO]"
+                      cachedDataType="numeric"
+                      cachedName="ADDRESSLINKTYPE2SOURCESERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESSLINKTYPE2SOURCESERNO]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[ADDRESSLINKTYPE2SOURCESERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].Columns[ADDRESSLINKTYPE3SOURCESERNO]"
+                      cachedDataType="numeric"
+                      cachedName="ADDRESSLINKTYPE3SOURCESERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESSLINKTYPE3SOURCESERNO]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[ADDRESSLINKTYPE3SOURCESERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].Columns[ADDRESSLINKTYPE4SOURCESERNO]"
+                      cachedDataType="numeric"
+                      cachedName="ADDRESSLINKTYPE4SOURCESERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESSLINKTYPE4SOURCESERNO]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[ADDRESSLINKTYPE4SOURCESERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].Columns[ADDRESSLINKTYPE5SOURCESERNO]"
+                      cachedDataType="numeric"
+                      cachedName="ADDRESSLINKTYPE5SOURCESERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESSLINKTYPE5SOURCESERNO]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[ADDRESSLINKTYPE5SOURCESERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].Columns[LOGACTION]"
+                      cachedDataType="wstr"
+                      cachedLength="11"
+                      cachedName="LOGACTION"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].ExternalColumns[LOGACTION]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[LOGACTION]" />
+                    <inputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].Columns[CONVERTED]"
+                      cachedDataType="i1"
+                      cachedName="CONVERTED"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].ExternalColumns[CONVERTED]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[CONVERTED]" />
+                    <inputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].Columns[BATCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="BATCH_ID"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].ExternalColumns[LD_SEQ_ID]"
+                      dataType="i4"
+                      name="LD_SEQ_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].ExternalColumns[LOGACTION]"
+                      dataType="wstr"
+                      length="11"
+                      name="LOGACTION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].ExternalColumns[CONVERTED]"
+                      dataType="i2"
+                      name="CONVERTED" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].ExternalColumns[TABINDICATOR]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="TABINDICATOR" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].ExternalColumns[ROWSERNO]"
+                      dataType="numeric"
+                      name="ROWSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESSSERNO]"
+                      dataType="numeric"
+                      name="ADDRESSSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESSTYPE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="5"
+                      name="ADDRESSTYPE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].ExternalColumns[FROMDATE]"
+                      dataType="dbTimeStamp"
+                      name="FROMDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].ExternalColumns[UNTILDATE]"
+                      dataType="dbTimeStamp"
+                      name="UNTILDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESSLINKTYPE1SOURCESERNO]"
+                      dataType="numeric"
+                      name="ADDRESSLINKTYPE1SOURCESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESSLINKTYPE2SOURCESERNO]"
+                      dataType="numeric"
+                      name="ADDRESSLINKTYPE2SOURCESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESSLINKTYPE3SOURCESERNO]"
+                      dataType="numeric"
+                      name="ADDRESSLINKTYPE3SOURCESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESSLINKTYPE4SOURCESERNO]"
+                      dataType="numeric"
+                      name="ADDRESSLINKTYPE4SOURCESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESSLINKTYPE5SOURCESERNO]"
+                      dataType="numeric"
+                      name="ADDRESSLINKTYPE5SOURCESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      dataType="i8"
+                      name="BATCH_ID" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="DST_CADDRESSLINKS 1"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[LZOWN].[SRC_PRIME17_CADDRESSLINKS]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS,ROWS_PER_BATCH = 1000000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].Columns[INSTITUTION_ID]"
+                      cachedDataType="i4"
+                      cachedName="INSTITUTION_ID"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].Columns[SERNO]"
+                      cachedDataType="numeric"
+                      cachedName="SERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[SERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].Columns[TABINDICATOR]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="TABINDICATOR"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[TABINDICATOR]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[TABINDICATOR]" />
+                    <inputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].Columns[ROWSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="ROWSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[ROWSERNO]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[ROWSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].Columns[ADDRESSSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="ADDRESSSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESSSERNO]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[ADDRESSSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].Columns[ADDRESSTYPE]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="5"
+                      cachedName="ADDRESSTYPE"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESSTYPE]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[ADDRESSTYPE]" />
+                    <inputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].Columns[FROMDATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="FROMDATE"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[FROMDATE]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[FROMDATE]" />
+                    <inputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].Columns[UNTILDATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="UNTILDATE"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[UNTILDATE]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[UNTILDATE]" />
+                    <inputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].Columns[ADDRESSLINKTYPE1SOURCESERNO]"
+                      cachedDataType="numeric"
+                      cachedName="ADDRESSLINKTYPE1SOURCESERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESSLINKTYPE1SOURCESERNO]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[ADDRESSLINKTYPE1SOURCESERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].Columns[ADDRESSLINKTYPE2SOURCESERNO]"
+                      cachedDataType="numeric"
+                      cachedName="ADDRESSLINKTYPE2SOURCESERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESSLINKTYPE2SOURCESERNO]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[ADDRESSLINKTYPE2SOURCESERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].Columns[ADDRESSLINKTYPE3SOURCESERNO]"
+                      cachedDataType="numeric"
+                      cachedName="ADDRESSLINKTYPE3SOURCESERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESSLINKTYPE3SOURCESERNO]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[ADDRESSLINKTYPE3SOURCESERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].Columns[ADDRESSLINKTYPE4SOURCESERNO]"
+                      cachedDataType="numeric"
+                      cachedName="ADDRESSLINKTYPE4SOURCESERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESSLINKTYPE4SOURCESERNO]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[ADDRESSLINKTYPE4SOURCESERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].Columns[ADDRESSLINKTYPE5SOURCESERNO]"
+                      cachedDataType="numeric"
+                      cachedName="ADDRESSLINKTYPE5SOURCESERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESSLINKTYPE5SOURCESERNO]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[ADDRESSLINKTYPE5SOURCESERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].Columns[LOGACTION]"
+                      cachedDataType="wstr"
+                      cachedLength="11"
+                      cachedName="LOGACTION"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[LOGACTION]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[LOGACTION]" />
+                    <inputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].Columns[CONVERTED]"
+                      cachedDataType="i1"
+                      cachedName="CONVERTED"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[CONVERTED]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[CONVERTED]" />
+                    <inputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].Columns[BATCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="BATCH_ID"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[LD_SEQ_ID]"
+                      dataType="i4"
+                      name="LD_SEQ_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[LOGACTION]"
+                      dataType="wstr"
+                      length="11"
+                      name="LOGACTION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[CONVERTED]"
+                      dataType="i2"
+                      name="CONVERTED" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[TABINDICATOR]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="TABINDICATOR" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[ROWSERNO]"
+                      dataType="numeric"
+                      name="ROWSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESSSERNO]"
+                      dataType="numeric"
+                      name="ADDRESSSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESSTYPE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="5"
+                      name="ADDRESSTYPE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[FROMDATE]"
+                      dataType="dbTimeStamp"
+                      name="FROMDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[UNTILDATE]"
+                      dataType="dbTimeStamp"
+                      name="UNTILDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESSLINKTYPE1SOURCESERNO]"
+                      dataType="numeric"
+                      name="ADDRESSLINKTYPE1SOURCESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESSLINKTYPE2SOURCESERNO]"
+                      dataType="numeric"
+                      name="ADDRESSLINKTYPE2SOURCESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESSLINKTYPE3SOURCESERNO]"
+                      dataType="numeric"
+                      name="ADDRESSLINKTYPE3SOURCESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESSLINKTYPE4SOURCESERNO]"
+                      dataType="numeric"
+                      name="ADDRESSLINKTYPE4SOURCESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESSLINKTYPE5SOURCESERNO]"
+                      dataType="numeric"
+                      name="ADDRESSLINKTYPE5SOURCESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      dataType="i8"
+                      name="BATCH_ID" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_CADDRESSLINKS_LOAD\RC_CADDRESSLINKS"
+              componentClassID="Microsoft.RowCount"
+              contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Counts rows as they pass through a data flow. For example, use the number of rows processed to determine whether or not to perform cleanup operations, or update text in an e-mail message to communicate processing status."
+              name="RC_CADDRESSLINKS">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable to hold the row count."
+                  name="VariableName">User::v_Rows_Read</property>
+              </properties>
+              <inputs>
+                <input
+                  refId="Package\DFT_CADDRESSLINKS_LOAD\RC_CADDRESSLINKS.Inputs[Row Count Input 1]"
+                  hasSideEffects="true"
+                  name="Row Count Input 1">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_CADDRESSLINKS_LOAD\RC_CADDRESSLINKS.Outputs[Row Count Output 1]"
+                  name="Row Count Output 1"
+                  synchronousInputId="Package\DFT_CADDRESSLINKS_LOAD\RC_CADDRESSLINKS.Inputs[Row Count Input 1]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS"
+              componentClassID="Attunity.SSISOraSrc"
+              contactInfo="Oracle Source;Microsoft Connector for Oracle by Attunity; Attunity Ltd.; All Rights Reserved; http://www.attunity.com;7"
+              description="Microsoft Oracle Source Component by Attunity"
+              name="SRC_CADDRESSLINKS"
+              usesDispositions="true"
+              version="6">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="The name of the table to be fetched."
+                  expressionType="Notify"
+                  name="TableName"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  expressionType="Notify"
+                  name="SqlCommand">SELECT  
+INSTITUTION_ID	
+,SERNO	
+,TABINDICATOR	
+,ROWSERNO	
+,ADDRESSSERNO	
+,ADDRESSTYPE	
+,FROMDATE	
+,UNTILDATE	
+,ADDRESSLINKTYPE1SOURCESERNO	
+,ADDRESSLINKTYPE2SOURCESERNO	
+,ADDRESSLINKTYPE3SOURCESERNO	
+,ADDRESSLINKTYPE4SOURCESERNO	
+,ADDRESSLINKTYPE5SOURCESERNO	
+,LOGACTION	
+,CONVERTED FROM TCTDBS.CADDRESSLINKS</property>
+                <property
+                  dataType="System.Int32"
+                  description="The number of rows fetched in a batch."
+                  expressionType="Notify"
+                  name="BatchSize">100</property>
+                <property
+                  dataType="System.Int32"
+                  description="Number of pre-fetched rows."
+                  expressionType="Notify"
+                  name="PrefetchCount">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Determines the chunk size allocation for LOB columns"
+                  expressionType="Notify"
+                  name="LobChunkSize">32768</property>
+                <property
+                  dataType="System.Int32"
+                  description="The code page to use when code page information is unavailable from the data source."
+                  expressionType="Notify"
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Int32"
+                  description="The mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">1</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Connections[MSOraConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_Prime_Attunity]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_Prime_Attunity]"
+                  description="The Oracle runtime connection"
+                  name="MSOraConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output]"
+                  errorRowDisposition="FailComponent"
+                  name="Oracle Source Output"
+                  truncationRowDisposition="FailComponent">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]"
+                      name="INSTITUTION_ID" />
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[SERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[SERNO]"
+                      name="SERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[TABINDICATOR]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[TABINDICATOR]"
+                      length="1"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[TABINDICATOR]"
+                      name="TABINDICATOR" />
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[ROWSERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[ROWSERNO]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[ROWSERNO]"
+                      name="ROWSERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[ADDRESSSERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[ADDRESSSERNO]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[ADDRESSSERNO]"
+                      name="ADDRESSSERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[ADDRESSTYPE]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[ADDRESSTYPE]"
+                      length="5"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[ADDRESSTYPE]"
+                      name="ADDRESSTYPE" />
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[FROMDATE]"
+                      dataType="dbTimeStamp"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[FROMDATE]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[FROMDATE]"
+                      name="FROMDATE" />
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[UNTILDATE]"
+                      dataType="dbTimeStamp"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[UNTILDATE]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[UNTILDATE]"
+                      name="UNTILDATE" />
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[ADDRESSLINKTYPE1SOURCESERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[ADDRESSLINKTYPE1SOURCESERNO]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[ADDRESSLINKTYPE1SOURCESERNO]"
+                      name="ADDRESSLINKTYPE1SOURCESERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[ADDRESSLINKTYPE2SOURCESERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[ADDRESSLINKTYPE2SOURCESERNO]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[ADDRESSLINKTYPE2SOURCESERNO]"
+                      name="ADDRESSLINKTYPE2SOURCESERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[ADDRESSLINKTYPE3SOURCESERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[ADDRESSLINKTYPE3SOURCESERNO]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[ADDRESSLINKTYPE3SOURCESERNO]"
+                      name="ADDRESSLINKTYPE3SOURCESERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[ADDRESSLINKTYPE4SOURCESERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[ADDRESSLINKTYPE4SOURCESERNO]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[ADDRESSLINKTYPE4SOURCESERNO]"
+                      name="ADDRESSLINKTYPE4SOURCESERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[ADDRESSLINKTYPE5SOURCESERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[ADDRESSLINKTYPE5SOURCESERNO]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[ADDRESSLINKTYPE5SOURCESERNO]"
+                      name="ADDRESSLINKTYPE5SOURCESERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[LOGACTION]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[LOGACTION]"
+                      length="11"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[LOGACTION]"
+                      name="LOGACTION" />
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[CONVERTED]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[CONVERTED]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].Columns[CONVERTED]"
+                      name="CONVERTED" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[TABINDICATOR]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="TABINDICATOR" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[ROWSERNO]"
+                      dataType="numeric"
+                      name="ROWSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[ADDRESSSERNO]"
+                      dataType="numeric"
+                      name="ADDRESSSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[ADDRESSTYPE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="5"
+                      name="ADDRESSTYPE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[FROMDATE]"
+                      dataType="dbTimeStamp"
+                      name="FROMDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[UNTILDATE]"
+                      dataType="dbTimeStamp"
+                      name="UNTILDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[ADDRESSLINKTYPE1SOURCESERNO]"
+                      dataType="numeric"
+                      name="ADDRESSLINKTYPE1SOURCESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[ADDRESSLINKTYPE2SOURCESERNO]"
+                      dataType="numeric"
+                      name="ADDRESSLINKTYPE2SOURCESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[ADDRESSLINKTYPE3SOURCESERNO]"
+                      dataType="numeric"
+                      name="ADDRESSLINKTYPE3SOURCESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[ADDRESSLINKTYPE4SOURCESERNO]"
+                      dataType="numeric"
+                      name="ADDRESSLINKTYPE4SOURCESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[ADDRESSLINKTYPE5SOURCESERNO]"
+                      dataType="numeric"
+                      name="ADDRESSLINKTYPE5SOURCESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[LOGACTION]"
+                      dataType="wstr"
+                      length="11"
+                      name="LOGACTION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[CONVERTED]"
+                      dataType="i1"
+                      name="CONVERTED" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output]"
+                  isErrorOut="true"
+                  name="Oracle Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output].Columns[INSTITUTION_ID]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output].Columns[INSTITUTION_ID]"
+                      name="INSTITUTION_ID" />
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output].Columns[SERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output].Columns[SERNO]"
+                      name="SERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output].Columns[TABINDICATOR]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[TABINDICATOR]"
+                      length="1"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output].Columns[TABINDICATOR]"
+                      name="TABINDICATOR" />
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output].Columns[ROWSERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[ROWSERNO]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output].Columns[ROWSERNO]"
+                      name="ROWSERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output].Columns[ADDRESSSERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[ADDRESSSERNO]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output].Columns[ADDRESSSERNO]"
+                      name="ADDRESSSERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output].Columns[ADDRESSTYPE]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[ADDRESSTYPE]"
+                      length="5"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output].Columns[ADDRESSTYPE]"
+                      name="ADDRESSTYPE" />
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output].Columns[FROMDATE]"
+                      dataType="dbTimeStamp"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[FROMDATE]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output].Columns[FROMDATE]"
+                      name="FROMDATE" />
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output].Columns[UNTILDATE]"
+                      dataType="dbTimeStamp"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[UNTILDATE]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output].Columns[UNTILDATE]"
+                      name="UNTILDATE" />
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output].Columns[ADDRESSLINKTYPE1SOURCESERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[ADDRESSLINKTYPE1SOURCESERNO]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output].Columns[ADDRESSLINKTYPE1SOURCESERNO]"
+                      name="ADDRESSLINKTYPE1SOURCESERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output].Columns[ADDRESSLINKTYPE2SOURCESERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[ADDRESSLINKTYPE2SOURCESERNO]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output].Columns[ADDRESSLINKTYPE2SOURCESERNO]"
+                      name="ADDRESSLINKTYPE2SOURCESERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output].Columns[ADDRESSLINKTYPE3SOURCESERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[ADDRESSLINKTYPE3SOURCESERNO]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output].Columns[ADDRESSLINKTYPE3SOURCESERNO]"
+                      name="ADDRESSLINKTYPE3SOURCESERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output].Columns[ADDRESSLINKTYPE4SOURCESERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[ADDRESSLINKTYPE4SOURCESERNO]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output].Columns[ADDRESSLINKTYPE4SOURCESERNO]"
+                      name="ADDRESSLINKTYPE4SOURCESERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output].Columns[ADDRESSLINKTYPE5SOURCESERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[ADDRESSLINKTYPE5SOURCESERNO]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output].Columns[ADDRESSLINKTYPE5SOURCESERNO]"
+                      name="ADDRESSLINKTYPE5SOURCESERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output].Columns[LOGACTION]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[LOGACTION]"
+                      length="11"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output].Columns[LOGACTION]"
+                      name="LOGACTION" />
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output].Columns[CONVERTED]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output].ExternalColumns[CONVERTED]"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output].Columns[CONVERTED]"
+                      name="CONVERTED" />
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\DFT_CADDRESSLINKS_LOAD.Paths[Balanced Data Distributor Output 1]"
+              endId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS.Inputs[OLE DB Destination Input]"
+              name="Balanced Data Distributor Output 1"
+              startId="Package\DFT_CADDRESSLINKS_LOAD\BDD_CADDRESSLINKS.Outputs[Balanced Data Distributor Output 1]" />
+            <path
+              refId="Package\DFT_CADDRESSLINKS_LOAD.Paths[Balanced Data Distributor Output 2]"
+              endId="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1.Inputs[OLE DB Destination Input]"
+              name="Balanced Data Distributor Output 2"
+              startId="Package\DFT_CADDRESSLINKS_LOAD\BDD_CADDRESSLINKS.Outputs[Balanced Data Distributor Output 2]" />
+            <path
+              refId="Package\DFT_CADDRESSLINKS_LOAD.Paths[Derived Column Output]"
+              endId="Package\DFT_CADDRESSLINKS_LOAD\BDD_CADDRESSLINKS.Inputs[Balanced Data Distributor Input]"
+              name="Derived Column Output"
+              startId="Package\DFT_CADDRESSLINKS_LOAD\DC_BATCH.Outputs[Derived Column Output]" />
+            <path
+              refId="Package\DFT_CADDRESSLINKS_LOAD.Paths[Oracle Source Output]"
+              endId="Package\DFT_CADDRESSLINKS_LOAD\RC_CADDRESSLINKS.Inputs[Row Count Input 1]"
+              name="Oracle Source Output"
+              startId="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS.Outputs[Oracle Source Output]" />
+            <path
+              refId="Package\DFT_CADDRESSLINKS_LOAD.Paths[Row Count Output 1]"
+              endId="Package\DFT_CADDRESSLINKS_LOAD\DC_BATCH.Inputs[Derived Column Input]"
+              name="Row Count Output 1"
+              startId="Package\DFT_CADDRESSLINKS_LOAD\RC_CADDRESSLINKS.Outputs[Row Count Output 1]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_CADDRESSLINKS_GET_DEST_COUNT_LOAD"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{4DDBA1B5-2936-4226-AC96-8AC33DA3B7AE}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_CADDRESSLINKS_GET_DEST_COUNT_LOAD"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_GET_DEST_COUNT_LOAD"</DTS:PropertyExpression>
+      <DTS:EventHandlers>
+        <DTS:EventHandler
+          DTS:refId="Package\SQL_CADDRESSLINKS_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]"
+          DTS:CreationName="OnPreExecute"
+          DTS:DTSID="{8CAED3AE-E807-4044-9A68-1E78A24A7BF2}"
+          DTS:EventID="1076330902"
+          DTS:EventName="OnPreExecute"
+          DTS:LocaleID="-1">
+          <DTS:Variables>
+            <DTS:Variable
+              DTS:CreationName=""
+              DTS:Description="The propagate property of the event"
+              DTS:DTSID="{04760F25-B0E6-4DD3-8B5C-EB8E544C7772}"
+              DTS:IncludeInDebugDump="6789"
+              DTS:Namespace="System"
+              DTS:ObjectName="Propagate">
+              <DTS:VariableValue
+                DTS:DataType="11">-1</DTS:VariableValue>
+            </DTS:Variable>
+          </DTS:Variables>
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\SQL_CADDRESSLINKS_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]\SQL_CADDRESSLINKS_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{7562F3AE-B697-421D-A737-1DAA023A3A44}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="SQL_CADDRESSLINKS_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+              <DTS:Variables />
+              <DTS:PropertyExpression
+                DTS:Name="Name">"SQL_"+ @[User::v_Task_Name]+"_UPDATE_DFT_LOAD_COMPLETED"</DTS:PropertyExpression>
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{32414BCF-F75B-4503-A098-D3FBC5F7A232}"
+                  SQLTask:SqlStatementSource="UPDATE DBO.BATCH_EXECUTION_STATUS&#xA; SET  &#xA;STATUS_FLAG = 'DFT LOAD COMPLETED'   WHERE&#xA; EXECUTION_ID = (&#xA;       SELECT MAX(EXECUTION_ID) EXECUTION_ID&#xA;       FROM DBO.BATCH_EXECUTION_STATUS&#xA;       WHERE PACKAGE_ID =?&#xA;       AND  BATCH_ID = ?&#xA;    )"
+                  SQLTask:TypeConversionMode="None" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="0"
+                    SQLTask:DtsVariableName="User::v_Package_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="1"
+                    SQLTask:DtsVariableName="User::v_Batch_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                </SQLTask:SqlTaskData>
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+        </DTS:EventHandler>
+      </DTS:EventHandlers>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{F7CC2EFD-75CA-4080-97A1-685D4DFE317C}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::v_Dest_Count_Query"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="0"
+            SQLTask:DtsVariableName="User::v_Rows_Inserted" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_CADDRESSLINKS_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{84AF394B-E7AE-44D4-A1DA-347836DE168B}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_CADDRESSLINKS_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_CHECK_PACKAGE_EXISTENCE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{32414BCF-F75B-4503-A098-D3FBC5F7A232}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_NAME VARCHAR(500) = ?&#xA;&#xA;EXEC [DBO].[SP_CHECK_PACKAGE_EXISTENCE]  @PACKAGE_NAME" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_CADDRESSLINKS_SP_GET_PACKAGE_BATCH_ID"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{E952A122-4527-4180-8FE7-27BA6D741FBE}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_CADDRESSLINKS_SP_GET_PACKAGE_BATCH_ID"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_GET_PACKAGE_BATCH_ID"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{32414BCF-F75B-4503-A098-D3FBC5F7A232}"
+          SQLTask:SqlStatementSource="&#xA;DECLARE @PACKAGE_NAME VARCHAR(500) = ?&#xA;DECLARE @PACKAGE_ID  INT &#xA;DECLARE @BATCH_ID BIGINT&#xA;&#xA;&#xA; EXEC [DBO].[SP_GET_PACKAGE_BATCH_ID] @PACKAGE_NAME,@PACKAGE_ID OUT,@BATCH_ID OUT&#xA; SELECT ? = @PACKAGE_ID &#xA; SELECT ? = @BATCH_ID" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_CADDRESSLINKS_SP_INSERT_EXECUTION_STATUS"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{E91A8FCB-FA3F-4D06-AC08-45AE334A8057}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_CADDRESSLINKS_SP_INSERT_EXECUTION_STATUS"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_INSERT_EXECUTION_STATUS"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{32414BCF-F75B-4503-A098-D3FBC5F7A232}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @PACKAGE_START_TIME DATETIME = ?&#xA;DECLARE @JOB_ID INT  =?&#xA;&#xA;EXEC [DBO].[SP_INSERT_EXECUTION_STATUS]           @PACKAGE_ID&#xA;,@BATCH_ID&#xA;,@PACKAGE_START_TIME&#xA;,@JOB_ID" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="System::StartTime"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="7"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="$Project::p_JOB_ID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_CADDRESSLINKS_SP_UPDATE_EXECUTION_STATUS_LOAD"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{C7CB5BDA-7D02-4105-BDAF-880C952835C2}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_CADDRESSLINKS_SP_UPDATE_EXECUTION_STATUS_LOAD"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_UPDATE_EXECUTION_STATUS_LOAD"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{32414BCF-F75B-4503-A098-D3FBC5F7A232}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @ROWS_READ BIGINT = ?&#xA;DECLARE @ROWS_INSERTED BIGINT = ?&#xA;DECLARE @ROWS_UPDATED BIGINT =0&#xA;DECLARE @ROWS_ERRORED  BIGINT=0&#xA;&#xA;&#xA;EXEC DBO.SP_UPDATE_EXECUTION_STATUS @PACKAGE_ID&#xA; , @BATCH_ID&#xA; , @ROWS_READ&#xA; , @ROWS_INSERTED&#xA; , @ROWS_UPDATED&#xA; , @ROWS_ERRORED" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::v_Rows_Read"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="User::v_Rows_Inserted"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_CADDRESSLINKS_TRUNCATE_STG_TABLE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{3ECE2202-BF23-45A5-B12E-BE181B3BCD7F}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_CADDRESSLINKS_TRUNCATE_STG_TABLE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_TRUNCATE_STG_TABLE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{F7CC2EFD-75CA-4080-97A1-685D4DFE317C}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::v_Trunc_Query" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{4B52674E-7D12-4CA1-8A19-C56049EEED76}"
+      DTS:From="Package\SQL_CADDRESSLINKS_SP_GET_PACKAGE_BATCH_ID"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\SQL_CADDRESSLINKS_SP_INSERT_EXECUTION_STATUS" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 10]"
+      DTS:CreationName=""
+      DTS:DTSID="{9E4B61D3-89CB-4FA5-BE2C-931C4FF1B184}"
+      DTS:From="Package\SQL_CADDRESSLINKS_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 10"
+      DTS:To="Package\SQL_CADDRESSLINKS_SP_GET_PACKAGE_BATCH_ID" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 12]"
+      DTS:CreationName=""
+      DTS:DTSID="{21581510-F5BD-4E3D-A173-20AAEBAA0558}"
+      DTS:From="Package\DFT_CADDRESSLINKS_LOAD"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 12"
+      DTS:To="Package\SQL_CADDRESSLINKS_GET_DEST_COUNT_LOAD" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{8F1CBDB8-1183-4299-B5F1-EE4216D3080B}"
+      DTS:From="Package\SQL_CADDRESSLINKS_SP_INSERT_EXECUTION_STATUS"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\SQL_CADDRESSLINKS_TRUNCATE_STG_TABLE" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 5]"
+      DTS:CreationName=""
+      DTS:DTSID="{06452AC2-50F1-4194-8874-9A7453E050D0}"
+      DTS:Expression="@[User::v_Inc_Date] == (DT_DBTIMESTAMP) &quot;1753-01-01&quot;"
+      DTS:From="Package\SQL_CADDRESSLINKS_TRUNCATE_STG_TABLE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 5"
+      DTS:To="Package\DFT_CADDRESSLINKS_LOAD" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 7]"
+      DTS:CreationName=""
+      DTS:DTSID="{5387B8BE-84FD-4FCA-84F4-EB9294E581CC}"
+      DTS:Expression="@[User::v_Rows_Inserted] ==0"
+      DTS:From="Package\SQL_CADDRESSLINKS_GET_DEST_COUNT_LOAD"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 7"
+      DTS:To="Package\SQL_CADDRESSLINKS_SP_UPDATE_EXECUTION_STATUS_LOAD" />
+  </DTS:PrecedenceConstraints>
+  <DTS:EventHandlers>
+    <DTS:EventHandler
+      DTS:refId="Package.EventHandlers[OnError]"
+      DTS:CreationName="OnError"
+      DTS:DTSID="{F04677ED-A77B-460B-B3D2-CC991FF60E9E}"
+      DTS:EventID="2"
+      DTS:EventName="OnError"
+      DTS:LocaleID="-1">
+      <DTS:Variables>
+        <DTS:Variable
+          DTS:CreationName=""
+          DTS:Description="The propagate property of the event"
+          DTS:DTSID="{AF434AF6-0690-405B-B5FC-69A0E9F8C095}"
+          DTS:IncludeInDebugDump="6789"
+          DTS:Namespace="System"
+          DTS:ObjectName="Propagate">
+          <DTS:VariableValue
+            DTS:DataType="11">-1</DTS:VariableValue>
+        </DTS:Variable>
+      </DTS:Variables>
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package.EventHandlers[OnError]\SQL_CADDRESSLINKS_SP_SSIS_ERRORLOG"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{E9064E2D-7E54-4C1C-83F4-36AA527FD1C5}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="SQL_CADDRESSLINKS_SP_SSIS_ERRORLOG"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:PropertyExpression
+            DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_SSIS_ERRORLOG"</DTS:PropertyExpression>
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{32414BCF-F75B-4503-A098-D3FBC5F7A232}"
+              SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @PKG_GUID SYSNAME = ?&#xA;DECLARE @PACKAGE_NAME SYSNAME = ?&#xA;DECLARE @SOURCE_NAME VARCHAR(100) = ?&#xA;DECLARE @TASK_NAME VARCHAR(100) = ?&#xA;DECLARE @MACHINE_NAME VARCHAR(50) = ?&#xA;DECLARE @USER_NAME VARCHAR(50) = ?&#xA;DECLARE @ERROR_NUMBER INT = ?&#xA;DECLARE @ERROR_DESCRIPTION VARCHAR(MAX) = ?&#xA;DECLARE @PACKAGE_START_TIME DATETIME  = NULL&#xA;DECLARE @ROWS_READ BIGINT = ?&#xA;DECLARE @ROWS_INSERTED BIGINT = ?&#xA;DECLARE @ROWS_UPDATED BIGINT = NULL&#xA;DECLARE @ROWS_ERRORED BIGINT = NULL&#xA;&#xA;EXEC DBO.[SP_SSIS_ERRORLOG] @PACKAGE_ID&#xA;&#x9;,@BATCH_ID&#xA;&#x9;,@PKG_GUID&#xA;&#x9;,@PACKAGE_NAME&#xA;&#x9;,@SOURCE_NAME&#xA;&#x9;,@TASK_NAME&#xA;&#x9;,@MACHINE_NAME&#xA;&#x9;,@USER_NAME&#xA;&#x9;,@ERROR_NUMBER&#xA;&#x9;,@ERROR_DESCRIPTION&#xA;&#x9;,@PACKAGE_START_TIME&#xA;&#x9;,@ROWS_READ&#xA;&#x9;,@ROWS_INSERTED&#xA;&#x9;,@ROWS_UPDATED &#xA;&#x9;,@ROWS_ERRORED" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::v_Package_Id"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="1"
+                SQLTask:DtsVariableName="User::v_Batch_Id"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="2"
+                SQLTask:DtsVariableName="System::PackageID"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="3"
+                SQLTask:DtsVariableName="System::PackageName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="4"
+                SQLTask:DtsVariableName="System::SourceName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="5"
+                SQLTask:DtsVariableName="System::TaskName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="6"
+                SQLTask:DtsVariableName="System::MachineName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="7"
+                SQLTask:DtsVariableName="System::UserName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="8"
+                SQLTask:DtsVariableName="System::ErrorCode"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="9"
+                SQLTask:DtsVariableName="System::ErrorDescription"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="10"
+                SQLTask:DtsVariableName="User::v_Rows_Read"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="11"
+                SQLTask:DtsVariableName="User::v_Rows_Inserted"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+    </DTS:EventHandler>
+  </DTS:EventHandlers>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="384,41.6"
+          Id="Package\DFT_CADDRESSLINKS_LOAD"
+          TopLeft="602.878402019497,412.182348771409" />
+        <NodeLayout
+          Size="384,41.6"
+          Id="Package\SQL_CADDRESSLINKS_GET_DEST_COUNT_LOAD"
+          TopLeft="602.878402019497,513.852935964261" />
+        <NodeLayout
+          Size="384,41.6"
+          Id="Package\SQL_CADDRESSLINKS_SP_CHECK_PACKAGE_EXISTENCE"
+          TopLeft="602.878402019497,5.5" />
+        <NodeLayout
+          Size="384,41.6"
+          Id="Package\SQL_CADDRESSLINKS_SP_GET_PACKAGE_BATCH_ID"
+          TopLeft="602.878402019497,107.170587192852" />
+        <NodeLayout
+          Size="384,41.6"
+          Id="Package\SQL_CADDRESSLINKS_SP_INSERT_EXECUTION_STATUS"
+          TopLeft="602.878402019497,208.841174385704" />
+        <NodeLayout
+          Size="384,41.6"
+          Id="Package\SQL_CADDRESSLINKS_SP_UPDATE_EXECUTION_STATUS_LOAD"
+          TopLeft="604.878402019497,612.523523157113" />
+        <NodeLayout
+          Size="384,41.6"
+          Id="Package\SQL_CADDRESSLINKS_TRUNCATE_STG_TABLE"
+          TopLeft="602.878402019497,310.511761578557" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="794.878402019497,149.170587192852">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.670587192852"
+              Start="0,0"
+              End="0,52.170587192852">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.170587192852" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 10]"
+          TopLeft="794.878402019497,47.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.670587192852"
+              Start="0,0"
+              End="0,52.170587192852">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.170587192852" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 12]"
+          TopLeft="794.878402019497,454.182348771409">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.6705871928519"
+              Start="0,0"
+              End="0,52.1705871928519">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.1705871928519" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="794.878402019497,250.841174385704">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.670587192853"
+              Start="0,0"
+              End="0,52.170587192853">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.170587192853" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 5]"
+          TopLeft="794.878402019497,352.511761578557">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.670587192852"
+              Start="0,0"
+              End="0,52.170587192852">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.170587192852" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 7]"
+          TopLeft="795.878402019497,555.852935964261">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,56.6705871928521"
+              Start="0,0"
+              End="0,49.1705871928521">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,49.1705871928521" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <DtsEventHandler
+    design-time-name="Package.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="288,41.6"
+          Id="Package.EventHandlers[OnError]\SQL_CADDRESSLINKS_SP_SSIS_ERRORLOG"
+          TopLeft="342.500004019056,167.041178469675" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <TaskHost
+    design-time-name="Package\DFT_CADDRESSLINKS_LOAD">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="193.6,41.6"
+          Id="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS"
+          TopLeft="77.071428376801,437.213725427278" />
+        <NodeLayout
+          Size="193.6,41.6"
+          Id="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1"
+          TopLeft="453.071428376801,436.213725427278" />
+        <NodeLayout
+          Size="193.6,41.6"
+          Id="Package\DFT_CADDRESSLINKS_LOAD\RC_CADDRESSLINKS"
+          TopLeft="256.409031257739,140.170588238154" />
+        <NodeLayout
+          Size="193.6,41.6"
+          Id="Package\DFT_CADDRESSLINKS_LOAD\DC_BATCH"
+          TopLeft="255.837602676579,226.341176476308" />
+        <NodeLayout
+          Size="193.6,41.6"
+          Id="Package\DFT_CADDRESSLINKS_LOAD\BDD_CADDRESSLINKS"
+          TopLeft="256.409031257739,312.511764714462" />
+        <NodeLayout
+          Size="193.6,41.6"
+          Id="Package\DFT_CADDRESSLINKS_LOAD\SRC_CADDRESSLINKS"
+          TopLeft="256.409031257739,54" />
+        <EdgeLayout
+          Id="Package\DFT_CADDRESSLINKS_LOAD.Paths[Row Count Output 1]"
+          TopLeft="352.923316967159,181.770588238154">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,44.570588238154"
+              Start="0,0"
+              End="0,37.070588238154">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,37.070588238154" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_CADDRESSLINKS_LOAD.Paths[Oracle Source Output]"
+          TopLeft="353.409031257739,96">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,44.170588238154"
+              Start="0,0"
+              End="0,36.670588238154">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,36.670588238154" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_CADDRESSLINKS_LOAD.Paths[Derived Column Output]"
+          TopLeft="352.923316967159,267.941176476308">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,44.570588238154"
+              Start="0,0"
+              End="0,37.070588238154">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,37.070588238154" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_CADDRESSLINKS_LOAD.Paths[Balanced Data Distributor Output 2]"
+          TopLeft="384.409031257739,354.511764714462">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="165.662397119062,81.701960712816"
+              Start="0,0"
+              End="165.662397119062,74.201960712816">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,29.0817755033488" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,29.0817755033488"
+                    Point2="0,33.0817755033488"
+                    Point3="4,33.0817755033488" />
+                  <mssgle:LineSegment
+                    End="161.662397119062,33.0817755033488" />
+                  <mssgle:CubicBezierSegment
+                    Point1="161.662397119062,33.0817755033488"
+                    Point2="165.662397119062,33.0817755033488"
+                    Point3="165.662397119062,37.0817755033488" />
+                  <mssgle:LineSegment
+                    End="165.662397119062,74.201960712816" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="4.9450852782811,38.0817755033488,155.7722265625,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_CADDRESSLINKS_LOAD.Paths[Balanced Data Distributor Output 1]"
+          TopLeft="322.409031257739,354.511764714462">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-148.337602880938,82.701960712816"
+              Start="0,0"
+              End="-148.337602880938,75.201960712816">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,29.4866834788089" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,29.4866834788089"
+                    Point2="0,33.4866834788089"
+                    Point3="-4,33.4866834788089" />
+                  <mssgle:LineSegment
+                    End="-144.337602880938,33.4866834788089" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-144.337602880938,33.4866834788089"
+                    Point2="-148.337602880938,33.4866834788089"
+                    Point3="-148.337602880938,37.4866834788089" />
+                  <mssgle:LineSegment
+                    End="-148.337602880938,75.201960712816" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-151.869367846719,38.4866834788089,155.4011328125,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_CADDRESSLINKS_LOAD\DST_CADDRESSLINKS 1">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <DtsEventHandler
+    design-time-name="Package\SQL_CADDRESSLINKS_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="313,42"
+          Id="Package\SQL_CADDRESSLINKS_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]\SQL_CADDRESSLINKS_UPDATE_DFT_LOAD_COMPLETED"
+          TopLeft="570.3,184.7" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

@@ -1,0 +1,3251 @@
+<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="11/28/2018 8:48:53 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="LAPTOP-SBSNQ3DE"
+  DTS:CreatorName="LAPTOP-SBSNQ3DE\HP"
+  DTS:DTSID="{39124657-8EAF-44F9-A633-D52D1B32B73F}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="14.0.0600.250"
+  DTS:LocaleID="16393"
+  DTS:ObjectName="ETL_ARCHIVE_PRIME17_MSTATEMENTS_LOAD"
+  DTS:PackageType="5"
+  DTS:ProtectionLevel="0"
+  DTS:VersionBuild="746"
+  DTS:VersionGUID="{59C16200-4C4D-4BDB-A0BF-599A4262D2A4}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_AUDIT_FRAMEWORK]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{7109BF63-F1CB-4ED4-9A4C-8E7054E87488}"
+      DTS:ObjectName="CM_AUDIT_FRAMEWORK">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_AUDIT_FRAMEWORK_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_AUDIT_FRAMEWORK_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=AUDIT_FRAMEWORK_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_EIMDW_ARCHIVE_PRIME]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{9F0C28E0-940F-448B-92CD-FD70A5DACAFC}"
+      DTS:ObjectName="CM_EIMDW_ARCHIVE_PRIME">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_ARCHIVE_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_ARCHIVE_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=DEV_EIMDW_Archive_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{130E217B-4F0E-4032-B4E1-024A792C4D30}"
+      DTS:ObjectName="CM_EIMDW_LANDING_PRIME">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_LANDING_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_ARCHIVE_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=DEV_EIMDW_Landing_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:LogProviders>
+    <DTS:LogProvider
+      DTS:ConfigString="CM_AUDIT_FRAMEWORK"
+      DTS:CreationName="Microsoft.LogProviderSQLServer"
+      DTS:Description="Writes log entries for events to a SQL Server database"
+      DTS:DTSID="{7CCF81DA-3317-4AC3-9E77-14EEBFD7E23D}"
+      DTS:ObjectName="SSIS log provider for SQL Server">
+      <DTS:ObjectData>
+        <InnerObject />
+      </DTS:ObjectData>
+    </DTS:LogProvider>
+  </DTS:LogProviders>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{5B5177F8-173C-41D7-A3F4-06E6A5FED1C4}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Batch_Id">
+      <DTS:VariableValue
+        DTS:DataType="20">-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{97CD69A3-D010-46E1-88EE-5E7742D3B51D}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT COUNT(1) FROM  &quot; +  @[User::v_Dest_Table] +&quot;(NOLOCK) WHERE CRTE_BTCH_ID =&quot; + (DT_STR, 12, 1252)  @[User::v_Batch_Id]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Dest_Count_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT COUNT(1) FROM  DEV_EIMDW_Archive_FIN10.[ARCHOWN].PRIME17_MSTATEMENTS(NOLOCK) WHERE CRTE_BTCH_ID =-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{A0CC9594-7149-4068-8F95-CF6D63706046}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="@[$Project::p_ARCHIVE_DATABASE]  +&quot;.&quot;+ @[$Project::p_ARCHIVE_SCHEMA] +&quot;.&quot;+&quot;PRIME17_MSTATEMENTS&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Dest_Table">
+      <DTS:VariableValue
+        DTS:DataType="8">DEV_EIMDW_Archive_FIN10.[ARCHOWN].PRIME17_MSTATEMENTS</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{7BBC1ADC-494E-48DB-87ED-2233211AC78F}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT DW_INC_DATE FROM &quot;+ @[$Project::p_AUDIT_FRAMEWORK_DATABASE]+&quot;.dbo.INCREMENTAL_CONTROL (NOLOCK) WHERE PACKAGE_ID = (SELECT DEPENDENT_PACKAGE_ID FROM &quot;+ @[$Project::p_AUDIT_FRAMEWORK_DATABASE]+&quot;.dbo.PACKAGE_DEPENDENCY_MAPPING (NOLOCK) WHERE PACKAGE_ID =&quot;+ (DT_STR, 10, 1252) @[User::v_Package_Id] +&quot;)&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Get_Inc_Date">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT DW_INC_DATE FROM AUDIT_FRAMEWORK_FIN10.dbo.INCREMENTAL_CONTROL (NOLOCK) WHERE PACKAGE_ID = (SELECT DEPENDENT_PACKAGE_ID FROM AUDIT_FRAMEWORK_FIN10.dbo.PACKAGE_DEPENDENCY_MAPPING (NOLOCK) WHERE PACKAGE_ID =-1)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{0EE070CA-CC2B-4213-94EA-B8570BF26A57}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Inc_Date">
+      <DTS:VariableValue
+        DTS:DataType="7">1/1/1753</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{34D8A217-3C2A-441D-8E44-0115ADC08C76}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Package_Id">
+      <DTS:VariableValue
+        DTS:DataType="3">-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{464CB5D8-0921-4A75-B074-C8A3F43715BE}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Rows_Inserted">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{2B31C857-22B9-4805-9773-3664FC625E2D}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Rows_Read">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{AA5BBCBD-63C9-4363-A45C-BFC0EF727F1A}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Rows_Updated">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{AC7356BD-FC4D-4D2E-8B70-16F79072568B}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT&#xA; INSTITUTION_ID&#xA;,SERNO&#xA;,PARTITIONKEY&#xA;,MERACCSERNO&#xA;,BATCHSERNO&#xA;,BILLINGDATE&#xA;,GENERATEDATE&#xA;,LASTPRINTDATE&#xA;,PRINTCOUNT&#xA;,CLOSINGBALANCE&#xA;,OPENINGBALANCE&#xA;,TOTALDEBITS&#xA;,TOTALCREDITS&#xA;,TOTALPAYMENTS&#xA;,CURRENCY&#xA;,REASON&#xA;,PREVSTMTSERNO&#xA;,PREVSTMTPARTITIONKEY&#xA;,VALUEDATE&#xA;,SEQUENCENUMBER&#xA;     &#xA;&#xA; FROM &quot; +  @[User::v_Source_Table]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Source_Query_Full">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT
+ INSTITUTION_ID
+,SERNO
+,PARTITIONKEY
+,MERACCSERNO
+,BATCHSERNO
+,BILLINGDATE
+,GENERATEDATE
+,LASTPRINTDATE
+,PRINTCOUNT
+,CLOSINGBALANCE
+,OPENINGBALANCE
+,TOTALDEBITS
+,TOTALCREDITS
+,TOTALPAYMENTS
+,CURRENCY
+,REASON
+,PREVSTMTSERNO
+,PREVSTMTPARTITIONKEY
+,VALUEDATE
+,SEQUENCENUMBER
+     
+
+ FROM DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_MSTATEMENTS (NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{26259A20-AE28-4DC9-9AFE-F5FDD87F791E}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT&#xA;       SRC.INSTITUTION_ID&#xA;      ,SRC.SERNO&#xA;      ,SRC.PARTITIONKEY&#xA;      ,SRC.CACCSERNO&#xA;      ,SRC.BATCHSERNO&#xA;      ,SRC.CYCLEDATE&#xA;      ,SRC.BILLINGDATE&#xA;      ,SRC.GENERATEDATETIME&#xA;      ,SRC.LASTPRINTDATE&#xA;      ,SRC.PRINTCOUNT&#xA;      ,SRC.CLOSINGBALANCE&#xA;      ,SRC.OPENINGBALANCE&#xA;      ,SRC.AVERAGEDAILYBALANCE&#xA;      ,SRC.MINDUEAMOUNT&#xA;      ,SRC.OVERDUEAMOUNT&#xA;      ,SRC.WISHTOPAY&#xA;      ,SRC.CYCLEACTIVITY&#xA;      ,SRC.TOTALCREDITS&#xA;      ,SRC.TOTALDEBITS&#xA;      ,SRC.TOTALPAYMENTS&#xA;      ,SRC.TOTALINTEREST&#xA;      ,SRC.EXCESSINTEREST&#xA;      ,SRC.RETURNEDPAYMENTS&#xA;      ,SRC.BACKDATEDCREDITS&#xA;      ,SRC.BACKDATEDDEBITS&#xA;      ,SRC.BACKDATEDPAYMENTS&#xA;      ,SRC.BACKDATEDRETURNEDPAYMENTS&#xA;      ,SRC.EXCESSPAYMENTAMOUNT&#xA;      ,SRC.LATEPAYMENTFEE&#xA;      ,SRC.INSTALMENTCLOSINGBALANCE&#xA;      ,SRC.INSTALMENTOPENINGBALANCE&#xA;      ,SRC.CREDITLIMIT&#xA;      ,SRC.OVERDUECYCLES&#xA;      ,SRC.PAYMENTINDICATOR&#xA;      ,SRC.CURRENCY&#xA;      ,SRC.DUEDATE&#xA;      ,SRC.PRINTDUEDATE&#xA;      ,SRC.CUREOVERDUEDATE&#xA;      ,SRC.COLLECTORCASE&#xA;      ,SRC.REPAYMENTPLANSERNO&#xA;      ,SRC.REPAYMENTPLANPARTITIONKEY&#xA;      ,SRC.REPAYMENTPLANCYCLE&#xA;      ,SRC.APRBALANCE&#xA;      ,SRC.APRPASTDUE&#xA;      ,SRC.APRCASH&#xA;      ,SRC.APRINSTALMENTS&#xA;      ,SRC.REASON&#xA;      ,SRC.SEQUENCE&#xA;      ,SRC.PUSHCOUNTER&#xA;      ,SRC.PUSHEDBILLINGDATE&#xA;      ,SRC.PUSHEDPRINTDUEDATE&#xA;      ,SRC.PREVSTMTSERNO&#xA;      ,SRC.PREVSTMTPARTITIONKEY&#xA;      ,SRC.RECALCALLOWED&#xA;      ,SRC.RECALCMINDUEAMOUNT&#xA;      ,SRC.RECALCOVERDUEAMOUNT&#xA;      ,SRC.RECALCCYCLEACTIVITY&#xA;      ,SRC.RECALCOVERDUECYCLES&#xA;      ,SRC.RECALCPAYMENTINDICATOR&#xA;      ,SRC.RECALCCLOSINGBALANCE&#xA;      ,SRC.RECALCAVERAGEDAILYBALANCE&#xA;      ,SRC.RECALCTOTALPAYMENTS&#xA;      ,SRC.RECALCTOTALINTEREST&#xA;      ,SRC.RECALCEXCESSINTEREST&#xA;      ,SRC.RECALCEXCESSPAYMENTAMOUNT&#xA;      ,SRC.RECALCCUREOVERDUEDATE&#xA;      ,SRC.CONVERTED&#xA;      ,SRC.OVERDUEDATE&#xA;      ,SRC.RECALCOVERDUEDATE&#xA;      ,SRC.PMNTAMTTOPAYOFFIN12MONTHS&#xA;      ,SRC.NUMOFMONTHSTOPAYOFFWITHMINAMT&#xA;      ,SRC.MINDUEAMOUNTWAIVED&#xA;      ,SRC.PAIDINFULLBALANCE&#xA;      ,SRC.PENDINGINTEREST&#xA;      ,SRC.CYCLEDAYS&#xA;      ,SRC.OVERDUEAGE&#xA;      ,SRC.RECALCOVERDUEAGE&#xA;      ,SRC.INSTALMENTCLOSINGBALPRINCIPAL&#xA;      ,SRC.MBHAGREEMENTSERNO&#xA;      ,SRC.MBHAGREEMENTEXPIRYDATE&#xA;      ,SRC.TOTALCREDITSBYDUEDATE&#xA;      ,SRC.RECALCTOTALCREDITS&#xA;      ,SRC.RECALCTOTALCREDITSBYDUEDATE&#xA;      ,SRC.RECALCPAIDINFULLBALANCE&#xA;      ,SRC.STGENERAL&#xA;      ,SRC.COLTYPESERNO&#xA;FROM &quot;+ @[User::v_Source_Table] + &quot; AS SRC &#xA;LEFT JOIN &quot;+ @[User::v_Dest_Table] +&quot; (NOLOCK)  AS DEST  &#xA;ON SRC.SERNO = DEST.SERNO &#xA;WHERE DEST.SERNO IS NULL &#xA;AND SRC.GENERATEDATETIME &gt;= '&quot;+ (DT_WSTR, 25)(DT_DBTIMESTAMP)@[User::v_Inc_Date] +&quot;'&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Source_Query_Inc">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT
+       SRC.INSTITUTION_ID
+      ,SRC.SERNO
+      ,SRC.PARTITIONKEY
+      ,SRC.CACCSERNO
+      ,SRC.BATCHSERNO
+      ,SRC.CYCLEDATE
+      ,SRC.BILLINGDATE
+      ,SRC.GENERATEDATETIME
+      ,SRC.LASTPRINTDATE
+      ,SRC.PRINTCOUNT
+      ,SRC.CLOSINGBALANCE
+      ,SRC.OPENINGBALANCE
+      ,SRC.AVERAGEDAILYBALANCE
+      ,SRC.MINDUEAMOUNT
+      ,SRC.OVERDUEAMOUNT
+      ,SRC.WISHTOPAY
+      ,SRC.CYCLEACTIVITY
+      ,SRC.TOTALCREDITS
+      ,SRC.TOTALDEBITS
+      ,SRC.TOTALPAYMENTS
+      ,SRC.TOTALINTEREST
+      ,SRC.EXCESSINTEREST
+      ,SRC.RETURNEDPAYMENTS
+      ,SRC.BACKDATEDCREDITS
+      ,SRC.BACKDATEDDEBITS
+      ,SRC.BACKDATEDPAYMENTS
+      ,SRC.BACKDATEDRETURNEDPAYMENTS
+      ,SRC.EXCESSPAYMENTAMOUNT
+      ,SRC.LATEPAYMENTFEE
+      ,SRC.INSTALMENTCLOSINGBALANCE
+      ,SRC.INSTALMENTOPENINGBALANCE
+      ,SRC.CREDITLIMIT
+      ,SRC.OVERDUECYCLES
+      ,SRC.PAYMENTINDICATOR
+      ,SRC.CURRENCY
+      ,SRC.DUEDATE
+      ,SRC.PRINTDUEDATE
+      ,SRC.CUREOVERDUEDATE
+      ,SRC.COLLECTORCASE
+      ,SRC.REPAYMENTPLANSERNO
+      ,SRC.REPAYMENTPLANPARTITIONKEY
+      ,SRC.REPAYMENTPLANCYCLE
+      ,SRC.APRBALANCE
+      ,SRC.APRPASTDUE
+      ,SRC.APRCASH
+      ,SRC.APRINSTALMENTS
+      ,SRC.REASON
+      ,SRC.SEQUENCE
+      ,SRC.PUSHCOUNTER
+      ,SRC.PUSHEDBILLINGDATE
+      ,SRC.PUSHEDPRINTDUEDATE
+      ,SRC.PREVSTMTSERNO
+      ,SRC.PREVSTMTPARTITIONKEY
+      ,SRC.RECALCALLOWED
+      ,SRC.RECALCMINDUEAMOUNT
+      ,SRC.RECALCOVERDUEAMOUNT
+      ,SRC.RECALCCYCLEACTIVITY
+      ,SRC.RECALCOVERDUECYCLES
+      ,SRC.RECALCPAYMENTINDICATOR
+      ,SRC.RECALCCLOSINGBALANCE
+      ,SRC.RECALCAVERAGEDAILYBALANCE
+      ,SRC.RECALCTOTALPAYMENTS
+      ,SRC.RECALCTOTALINTEREST
+      ,SRC.RECALCEXCESSINTEREST
+      ,SRC.RECALCEXCESSPAYMENTAMOUNT
+      ,SRC.RECALCCUREOVERDUEDATE
+      ,SRC.CONVERTED
+      ,SRC.OVERDUEDATE
+      ,SRC.RECALCOVERDUEDATE
+      ,SRC.PMNTAMTTOPAYOFFIN12MONTHS
+      ,SRC.NUMOFMONTHSTOPAYOFFWITHMINAMT
+      ,SRC.MINDUEAMOUNTWAIVED
+      ,SRC.PAIDINFULLBALANCE
+      ,SRC.PENDINGINTEREST
+      ,SRC.CYCLEDAYS
+      ,SRC.OVERDUEAGE
+      ,SRC.RECALCOVERDUEAGE
+      ,SRC.INSTALMENTCLOSINGBALPRINCIPAL
+      ,SRC.MBHAGREEMENTSERNO
+      ,SRC.MBHAGREEMENTEXPIRYDATE
+      ,SRC.TOTALCREDITSBYDUEDATE
+      ,SRC.RECALCTOTALCREDITS
+      ,SRC.RECALCTOTALCREDITSBYDUEDATE
+      ,SRC.RECALCPAIDINFULLBALANCE
+      ,SRC.STGENERAL
+      ,SRC.COLTYPESERNO
+FROM DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_MSTATEMENTS (NOLOCK) AS SRC 
+LEFT JOIN DEV_EIMDW_Archive_FIN10.[ARCHOWN].PRIME17_MSTATEMENTS (NOLOCK)  AS DEST  
+ON SRC.SERNO = DEST.SERNO 
+WHERE DEST.SERNO IS NULL 
+AND SRC.GENERATEDATETIME &gt;= '1753-01-01 00:00:00'</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{54C4E479-60C2-456D-A50F-3C9F0A7B20A2}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="@[$Project::p_LANDING_DATABASE] +&quot;.&quot;+ @[$Project::p_LANDING_SCHEMA]+&quot;.SRC_PRIME17_MSTATEMENTS (NOLOCK)&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Source_Table">
+      <DTS:VariableValue
+        DTS:DataType="8">DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_MSTATEMENTS (NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{FBBF01F8-62EE-433A-BBA1-02DD616BC6E2}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Task_Name">
+      <DTS:VariableValue
+        DTS:DataType="8">MSTATEMENTS</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{CA2EF096-7EE2-4190-8A84-202D960D05DD}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;TRUNCATE TABLE &quot; + @[User::v_Dest_Table]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Truncate_Dest">
+      <DTS:VariableValue
+        DTS:DataType="8">TRUNCATE TABLE DEV_EIMDW_Archive_FIN10.[ARCHOWN].PRIME17_MSTATEMENTS</DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:LoggingOptions
+    DTS:FilterKind="0"
+    DTS:LoggingMode="1">
+    <DTS:Property
+      DTS:DataType="8"
+      DTS:Name="EventFilter">3,7,OnError,13,OnPostExecute,12,OnTaskFailed</DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnError"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnPostExecute"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnTaskFailed"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:SelectedLogProviders>
+      <DTS:SelectedLogProvider
+        DTS:InstanceID="{7CCF81DA-3317-4AC3-9E77-14EEBFD7E23D}" />
+    </DTS:SelectedLogProviders>
+  </DTS:LoggingOptions>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{0844F4E0-072D-46C6-923D-05D3DF348AA0}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="DFT_MSTATEMENTS_INITIAL_LOAD"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"DFT_"+ @[User::v_Task_Name]+"_INITIAL_LOAD"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\BDD_MSTATEMENTS"
+              componentClassID="Microsoft.BDD"
+              contactInfo="Balanced Data Distributor;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Evaluates and directs rows in a dataset to multiple destinations."
+              name="BDD_MSTATEMENTS">
+              <inputs>
+                <input
+                  refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\BDD_MSTATEMENTS.Inputs[Balanced Data Distributor Input]"
+                  description="Input to the Balanced Data      Distributor Transformation"
+                  name="Balanced Data Distributor Input">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\BDD_MSTATEMENTS.Outputs[Balanced Data Distributor Output 1]"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 1"
+                  synchronousInputId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\BDD_MSTATEMENTS.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\BDD_MSTATEMENTS.Outputs[Balanced Data Distributor Output 2]"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 2"
+                  synchronousInputId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\BDD_MSTATEMENTS.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\BDD_MSTATEMENTS.Outputs[Balanced Data Distributor Output 3]"
+                  dangling="true"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 3"
+                  synchronousInputId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\BDD_MSTATEMENTS.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH"
+              componentClassID="Microsoft.DerivedColumn"
+              contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+              name="DC_BATCH"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Inputs[Derived Column Input]"
+                  description="Input to the Derived Column Transformation"
+                  name="Derived Column Input">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output]"
+                  description="Default Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  name="Derived Column Output"
+                  synchronousInputId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[CRTE_BTCH_ID]"
+                      dataType="i8"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[CRTE_BTCH_ID]"
+                      name="CRTE_BTCH_ID"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">@[User::v_Batch_Id]</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">@[User::v_Batch_Id]</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[START_DATE]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[START_DATE]"
+                      name="START_DATE"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">[GETDATE]()</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">GETDATE()</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[ACTIVE_FLAG]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      length="1"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[ACTIVE_FLAG]"
+                      name="ACTIVE_FLAG"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">(DT_STR,1,1252)"Y"</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">(DT_STR,1,1252)"Y"</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[DELETE_FLAG]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      length="1"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[DELETE_FLAG]"
+                      name="DELETE_FLAG"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">(DT_STR,1,1252)"N"</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">(DT_STR,1,1252)"N"</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[END_DATE]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[END_DATE]"
+                      name="END_DATE"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">(DT_DBTIMESTAMP)"9999-12-31"</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">(DT_DBTIMESTAMP)"9999-12-31"</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[UPDT_BTCH_ID]"
+                      dataType="i8"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[UPDT_BTCH_ID]"
+                      name="UPDT_BTCH_ID"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">(DT_I8)0</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">(DT_I8)0</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Error Output]"
+                  description="Error Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Derived Column Error Output"
+                  synchronousInputId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="DST_MSTATEMENTS"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[ARCHOWN].[PRIME17_MSTATEMENTS]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS,ROWS_PER_BATCH = 1000000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_ARCHIVE_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_ARCHIVE_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].Columns[INSTITUTION_ID]"
+                      cachedDataType="i4"
+                      cachedName="INSTITUTION_ID"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[INSTITUTION_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].Columns[PARTITIONKEY]"
+                      cachedDataType="numeric"
+                      cachedName="PARTITIONKEY"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[PARTITIONKEY]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[PARTITIONKEY]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].Columns[SERNO]"
+                      cachedDataType="numeric"
+                      cachedName="SERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[SERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].Columns[BATCHSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="BATCHSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[BATCHSERNO]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[BATCHSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].Columns[BILLINGDATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="BILLINGDATE"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[BILLINGDATE]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[BILLINGDATE]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].Columns[LASTPRINTDATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="LASTPRINTDATE"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[LASTPRINTDATE]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[LASTPRINTDATE]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].Columns[PRINTCOUNT]"
+                      cachedDataType="i4"
+                      cachedName="PRINTCOUNT"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[PRINTCOUNT]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[PRINTCOUNT]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].Columns[CLOSINGBALANCE]"
+                      cachedDataType="numeric"
+                      cachedName="CLOSINGBALANCE"
+                      cachedPrecision="16"
+                      cachedScale="3"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[CLOSINGBALANCE]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[CLOSINGBALANCE]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].Columns[OPENINGBALANCE]"
+                      cachedDataType="numeric"
+                      cachedName="OPENINGBALANCE"
+                      cachedPrecision="16"
+                      cachedScale="3"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[OPENINGBALANCE]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[OPENINGBALANCE]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].Columns[TOTALCREDITS]"
+                      cachedDataType="numeric"
+                      cachedName="TOTALCREDITS"
+                      cachedPrecision="16"
+                      cachedScale="3"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[TOTALCREDITS]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[TOTALCREDITS]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].Columns[TOTALDEBITS]"
+                      cachedDataType="numeric"
+                      cachedName="TOTALDEBITS"
+                      cachedPrecision="16"
+                      cachedScale="3"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[TOTALDEBITS]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[TOTALDEBITS]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].Columns[TOTALPAYMENTS]"
+                      cachedDataType="numeric"
+                      cachedName="TOTALPAYMENTS"
+                      cachedPrecision="16"
+                      cachedScale="3"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[TOTALPAYMENTS]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[TOTALPAYMENTS]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].Columns[CURRENCY]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="3"
+                      cachedName="CURRENCY"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[CURRENCY]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[CURRENCY]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].Columns[REASON]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="REASON"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[REASON]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[REASON]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].Columns[PREVSTMTSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="PREVSTMTSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[PREVSTMTSERNO]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[PREVSTMTSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].Columns[PREVSTMTPARTITIONKEY]"
+                      cachedDataType="numeric"
+                      cachedName="PREVSTMTPARTITIONKEY"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[PREVSTMTPARTITIONKEY]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[PREVSTMTPARTITIONKEY]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].Columns[MERACCSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="MERACCSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[MERACCSERNO]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[MERACCSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].Columns[GENERATEDATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="GENERATEDATE"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[GENERATEDATE]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[GENERATEDATE]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].Columns[VALUEDATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="VALUEDATE"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[VALUEDATE]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[VALUEDATE]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].Columns[SEQUENCENUMBER]"
+                      cachedDataType="numeric"
+                      cachedName="SEQUENCENUMBER"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[SEQUENCENUMBER]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[SEQUENCENUMBER]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].Columns[CRTE_BTCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="CRTE_BTCH_ID"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[CRTE_BTCH_ID]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[CRTE_BTCH_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].Columns[START_DATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="START_DATE"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[START_DATE]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[START_DATE]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].Columns[ACTIVE_FLAG]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="ACTIVE_FLAG"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[ACTIVE_FLAG]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[ACTIVE_FLAG]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].Columns[DELETE_FLAG]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="DELETE_FLAG"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[DELETE_FLAG]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[DELETE_FLAG]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].Columns[END_DATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="END_DATE"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[END_DATE]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[END_DATE]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].Columns[UPDT_BTCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="UPDT_BTCH_ID"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[UPDT_BTCH_ID]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[UPDT_BTCH_ID]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[CRTE_BTCH_ID]"
+                      dataType="i8"
+                      name="CRTE_BTCH_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[UPDT_BTCH_ID]"
+                      dataType="i8"
+                      name="UPDT_BTCH_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[START_DATE]"
+                      dataType="dbTimeStamp"
+                      name="START_DATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[END_DATE]"
+                      dataType="dbTimeStamp"
+                      name="END_DATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[ACTIVE_FLAG]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="ACTIVE_FLAG" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[DELETE_FLAG]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="DELETE_FLAG" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[PARTITIONKEY]"
+                      dataType="numeric"
+                      name="PARTITIONKEY"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[BATCHSERNO]"
+                      dataType="numeric"
+                      name="BATCHSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[BILLINGDATE]"
+                      dataType="dbTimeStamp"
+                      name="BILLINGDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[LASTPRINTDATE]"
+                      dataType="dbTimeStamp"
+                      name="LASTPRINTDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[PRINTCOUNT]"
+                      dataType="i4"
+                      name="PRINTCOUNT" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[CLOSINGBALANCE]"
+                      dataType="numeric"
+                      name="CLOSINGBALANCE"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[OPENINGBALANCE]"
+                      dataType="numeric"
+                      name="OPENINGBALANCE"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[TOTALCREDITS]"
+                      dataType="numeric"
+                      name="TOTALCREDITS"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[TOTALDEBITS]"
+                      dataType="numeric"
+                      name="TOTALDEBITS"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[TOTALPAYMENTS]"
+                      dataType="numeric"
+                      name="TOTALPAYMENTS"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[CURRENCY]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="CURRENCY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[REASON]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="REASON" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[PREVSTMTSERNO]"
+                      dataType="numeric"
+                      name="PREVSTMTSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[PREVSTMTPARTITIONKEY]"
+                      dataType="numeric"
+                      name="PREVSTMTPARTITIONKEY"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID_SEQ_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID_SEQ_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[MERACCSERNO]"
+                      dataType="numeric"
+                      name="MERACCSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[GENERATEDATE]"
+                      dataType="dbTimeStamp"
+                      name="GENERATEDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[VALUEDATE]"
+                      dataType="dbTimeStamp"
+                      name="VALUEDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input].ExternalColumns[SEQUENCENUMBER]"
+                      dataType="numeric"
+                      name="SEQUENCENUMBER"
+                      precision="10" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="DST_MSTATEMENTS 1"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[ARCHOWN].[PRIME17_MSTATEMENTS]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS,ROWS_PER_BATCH = 1000000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_ARCHIVE_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_ARCHIVE_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].Columns[INSTITUTION_ID]"
+                      cachedDataType="i4"
+                      cachedName="INSTITUTION_ID"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[INSTITUTION_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].Columns[PARTITIONKEY]"
+                      cachedDataType="numeric"
+                      cachedName="PARTITIONKEY"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[PARTITIONKEY]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[PARTITIONKEY]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].Columns[SERNO]"
+                      cachedDataType="numeric"
+                      cachedName="SERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[SERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].Columns[BATCHSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="BATCHSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[BATCHSERNO]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[BATCHSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].Columns[BILLINGDATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="BILLINGDATE"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[BILLINGDATE]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[BILLINGDATE]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].Columns[LASTPRINTDATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="LASTPRINTDATE"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[LASTPRINTDATE]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[LASTPRINTDATE]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].Columns[PRINTCOUNT]"
+                      cachedDataType="i4"
+                      cachedName="PRINTCOUNT"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[PRINTCOUNT]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[PRINTCOUNT]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].Columns[CLOSINGBALANCE]"
+                      cachedDataType="numeric"
+                      cachedName="CLOSINGBALANCE"
+                      cachedPrecision="16"
+                      cachedScale="3"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[CLOSINGBALANCE]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[CLOSINGBALANCE]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].Columns[OPENINGBALANCE]"
+                      cachedDataType="numeric"
+                      cachedName="OPENINGBALANCE"
+                      cachedPrecision="16"
+                      cachedScale="3"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[OPENINGBALANCE]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[OPENINGBALANCE]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].Columns[TOTALCREDITS]"
+                      cachedDataType="numeric"
+                      cachedName="TOTALCREDITS"
+                      cachedPrecision="16"
+                      cachedScale="3"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[TOTALCREDITS]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[TOTALCREDITS]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].Columns[TOTALDEBITS]"
+                      cachedDataType="numeric"
+                      cachedName="TOTALDEBITS"
+                      cachedPrecision="16"
+                      cachedScale="3"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[TOTALDEBITS]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[TOTALDEBITS]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].Columns[TOTALPAYMENTS]"
+                      cachedDataType="numeric"
+                      cachedName="TOTALPAYMENTS"
+                      cachedPrecision="16"
+                      cachedScale="3"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[TOTALPAYMENTS]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[TOTALPAYMENTS]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].Columns[CURRENCY]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="3"
+                      cachedName="CURRENCY"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[CURRENCY]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[CURRENCY]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].Columns[REASON]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="REASON"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[REASON]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[REASON]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].Columns[PREVSTMTSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="PREVSTMTSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[PREVSTMTSERNO]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[PREVSTMTSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].Columns[PREVSTMTPARTITIONKEY]"
+                      cachedDataType="numeric"
+                      cachedName="PREVSTMTPARTITIONKEY"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[PREVSTMTPARTITIONKEY]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[PREVSTMTPARTITIONKEY]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].Columns[MERACCSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="MERACCSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[MERACCSERNO]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[MERACCSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].Columns[GENERATEDATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="GENERATEDATE"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[GENERATEDATE]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[GENERATEDATE]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].Columns[VALUEDATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="VALUEDATE"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[VALUEDATE]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[VALUEDATE]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].Columns[SEQUENCENUMBER]"
+                      cachedDataType="numeric"
+                      cachedName="SEQUENCENUMBER"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[SEQUENCENUMBER]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[SEQUENCENUMBER]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].Columns[CRTE_BTCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="CRTE_BTCH_ID"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[CRTE_BTCH_ID]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[CRTE_BTCH_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].Columns[START_DATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="START_DATE"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[START_DATE]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[START_DATE]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].Columns[ACTIVE_FLAG]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="ACTIVE_FLAG"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[ACTIVE_FLAG]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[ACTIVE_FLAG]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].Columns[DELETE_FLAG]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="DELETE_FLAG"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[DELETE_FLAG]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[DELETE_FLAG]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].Columns[END_DATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="END_DATE"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[END_DATE]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[END_DATE]" />
+                    <inputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].Columns[UPDT_BTCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="UPDT_BTCH_ID"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[UPDT_BTCH_ID]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[UPDT_BTCH_ID]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[CRTE_BTCH_ID]"
+                      dataType="i8"
+                      name="CRTE_BTCH_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[UPDT_BTCH_ID]"
+                      dataType="i8"
+                      name="UPDT_BTCH_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[START_DATE]"
+                      dataType="dbTimeStamp"
+                      name="START_DATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[END_DATE]"
+                      dataType="dbTimeStamp"
+                      name="END_DATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[ACTIVE_FLAG]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="ACTIVE_FLAG" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[DELETE_FLAG]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="DELETE_FLAG" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[PARTITIONKEY]"
+                      dataType="numeric"
+                      name="PARTITIONKEY"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[BATCHSERNO]"
+                      dataType="numeric"
+                      name="BATCHSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[BILLINGDATE]"
+                      dataType="dbTimeStamp"
+                      name="BILLINGDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[LASTPRINTDATE]"
+                      dataType="dbTimeStamp"
+                      name="LASTPRINTDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[PRINTCOUNT]"
+                      dataType="i4"
+                      name="PRINTCOUNT" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[CLOSINGBALANCE]"
+                      dataType="numeric"
+                      name="CLOSINGBALANCE"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[OPENINGBALANCE]"
+                      dataType="numeric"
+                      name="OPENINGBALANCE"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[TOTALCREDITS]"
+                      dataType="numeric"
+                      name="TOTALCREDITS"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[TOTALDEBITS]"
+                      dataType="numeric"
+                      name="TOTALDEBITS"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[TOTALPAYMENTS]"
+                      dataType="numeric"
+                      name="TOTALPAYMENTS"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[CURRENCY]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="CURRENCY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[REASON]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="REASON" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[PREVSTMTSERNO]"
+                      dataType="numeric"
+                      name="PREVSTMTSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[PREVSTMTPARTITIONKEY]"
+                      dataType="numeric"
+                      name="PREVSTMTPARTITIONKEY"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID_SEQ_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID_SEQ_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[MERACCSERNO]"
+                      dataType="numeric"
+                      name="MERACCSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[GENERATEDATE]"
+                      dataType="dbTimeStamp"
+                      name="GENERATEDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[VALUEDATE]"
+                      dataType="dbTimeStamp"
+                      name="VALUEDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input].ExternalColumns[SEQUENCENUMBER]"
+                      dataType="numeric"
+                      name="SEQUENCENUMBER"
+                      precision="10" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\RC_MSTATEMENTS"
+              componentClassID="Microsoft.RowCount"
+              contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Counts rows as they pass through a data flow. For example, use the number of rows processed to determine whether or not to perform cleanup operations, or update text in an e-mail message to communicate processing status."
+              name="RC_MSTATEMENTS">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable to hold the row count."
+                  name="VariableName">User::v_Rows_Read</property>
+              </properties>
+              <inputs>
+                <input
+                  refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\RC_MSTATEMENTS.Inputs[Row Count Input 1]"
+                  hasSideEffects="true"
+                  name="Row Count Input 1">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\RC_MSTATEMENTS.Outputs[Row Count Output 1]"
+                  name="Row Count Output 1"
+                  synchronousInputId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\RC_MSTATEMENTS.Inputs[Row Count Input 1]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="SRC_MSTATEMENTS"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[LZOWN].[SRC_FINCL10_GAC]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable">User::v_Source_Query_Full</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[INSTITUTION_ID]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[INSTITUTION_ID]"
+                      name="INSTITUTION_ID"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[PARTITIONKEY]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[PARTITIONKEY]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[PARTITIONKEY]"
+                      name="PARTITIONKEY"
+                      precision="10"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[SERNO]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[SERNO]"
+                      name="SERNO"
+                      precision="10"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[BATCHSERNO]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[BATCHSERNO]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[BATCHSERNO]"
+                      name="BATCHSERNO"
+                      precision="10"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[BILLINGDATE]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[BILLINGDATE]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[BILLINGDATE]"
+                      name="BILLINGDATE"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[LASTPRINTDATE]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[LASTPRINTDATE]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[LASTPRINTDATE]"
+                      name="LASTPRINTDATE"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[PRINTCOUNT]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[PRINTCOUNT]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[PRINTCOUNT]"
+                      name="PRINTCOUNT"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[CLOSINGBALANCE]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[CLOSINGBALANCE]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[CLOSINGBALANCE]"
+                      name="CLOSINGBALANCE"
+                      precision="16"
+                      scale="3"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[OPENINGBALANCE]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[OPENINGBALANCE]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[OPENINGBALANCE]"
+                      name="OPENINGBALANCE"
+                      precision="16"
+                      scale="3"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[TOTALCREDITS]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[TOTALCREDITS]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[TOTALCREDITS]"
+                      name="TOTALCREDITS"
+                      precision="16"
+                      scale="3"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[TOTALDEBITS]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[TOTALDEBITS]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[TOTALDEBITS]"
+                      name="TOTALDEBITS"
+                      precision="16"
+                      scale="3"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[TOTALPAYMENTS]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[TOTALPAYMENTS]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[TOTALPAYMENTS]"
+                      name="TOTALPAYMENTS"
+                      precision="16"
+                      scale="3"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[CURRENCY]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[CURRENCY]"
+                      length="3"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[CURRENCY]"
+                      name="CURRENCY"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[REASON]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[REASON]"
+                      length="1"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[REASON]"
+                      name="REASON"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[PREVSTMTSERNO]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[PREVSTMTSERNO]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[PREVSTMTSERNO]"
+                      name="PREVSTMTSERNO"
+                      precision="10"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[PREVSTMTPARTITIONKEY]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[PREVSTMTPARTITIONKEY]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[PREVSTMTPARTITIONKEY]"
+                      name="PREVSTMTPARTITIONKEY"
+                      precision="10"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[MERACCSERNO]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[MERACCSERNO]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[MERACCSERNO]"
+                      name="MERACCSERNO"
+                      precision="10"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[GENERATEDATE]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[GENERATEDATE]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[GENERATEDATE]"
+                      name="GENERATEDATE"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[VALUEDATE]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[VALUEDATE]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[VALUEDATE]"
+                      name="VALUEDATE"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[SEQUENCENUMBER]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[SEQUENCENUMBER]"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].Columns[SEQUENCENUMBER]"
+                      name="SEQUENCENUMBER"
+                      precision="10"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[PARTITIONKEY]"
+                      dataType="numeric"
+                      name="PARTITIONKEY"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[BATCHSERNO]"
+                      dataType="numeric"
+                      name="BATCHSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[BILLINGDATE]"
+                      dataType="dbTimeStamp"
+                      name="BILLINGDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[LASTPRINTDATE]"
+                      dataType="dbTimeStamp"
+                      name="LASTPRINTDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[PRINTCOUNT]"
+                      dataType="i4"
+                      name="PRINTCOUNT" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[CLOSINGBALANCE]"
+                      dataType="numeric"
+                      name="CLOSINGBALANCE"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[OPENINGBALANCE]"
+                      dataType="numeric"
+                      name="OPENINGBALANCE"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[TOTALCREDITS]"
+                      dataType="numeric"
+                      name="TOTALCREDITS"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[TOTALDEBITS]"
+                      dataType="numeric"
+                      name="TOTALDEBITS"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[TOTALPAYMENTS]"
+                      dataType="numeric"
+                      name="TOTALPAYMENTS"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[CURRENCY]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="CURRENCY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[REASON]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="REASON" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[PREVSTMTSERNO]"
+                      dataType="numeric"
+                      name="PREVSTMTSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[PREVSTMTPARTITIONKEY]"
+                      dataType="numeric"
+                      name="PREVSTMTPARTITIONKEY"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[MERACCSERNO]"
+                      dataType="numeric"
+                      name="MERACCSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[GENERATEDATE]"
+                      dataType="dbTimeStamp"
+                      name="GENERATEDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[VALUEDATE]"
+                      dataType="dbTimeStamp"
+                      name="VALUEDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output].ExternalColumns[SEQUENCENUMBER]"
+                      dataType="numeric"
+                      name="SEQUENCENUMBER"
+                      precision="10" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[INSTITUTION_ID]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[INSTITUTION_ID]"
+                      name="INSTITUTION_ID" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[SERNO]"
+                      dataType="numeric"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[SERNO]"
+                      name="SERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[PARTITIONKEY]"
+                      dataType="numeric"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[PARTITIONKEY]"
+                      name="PARTITIONKEY"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[MERACCSERNO]"
+                      dataType="numeric"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[MERACCSERNO]"
+                      name="MERACCSERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[BATCHSERNO]"
+                      dataType="numeric"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[BATCHSERNO]"
+                      name="BATCHSERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[BILLINGDATE]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[BILLINGDATE]"
+                      name="BILLINGDATE" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[GENERATEDATE]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[GENERATEDATE]"
+                      name="GENERATEDATE" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[LASTPRINTDATE]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[LASTPRINTDATE]"
+                      name="LASTPRINTDATE" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[PRINTCOUNT]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[PRINTCOUNT]"
+                      name="PRINTCOUNT" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[CLOSINGBALANCE]"
+                      dataType="numeric"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[CLOSINGBALANCE]"
+                      name="CLOSINGBALANCE"
+                      precision="16"
+                      scale="3" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[OPENINGBALANCE]"
+                      dataType="numeric"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[OPENINGBALANCE]"
+                      name="OPENINGBALANCE"
+                      precision="16"
+                      scale="3" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[TOTALCREDITS]"
+                      dataType="numeric"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[TOTALCREDITS]"
+                      name="TOTALCREDITS"
+                      precision="16"
+                      scale="3" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[TOTALDEBITS]"
+                      dataType="numeric"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[TOTALDEBITS]"
+                      name="TOTALDEBITS"
+                      precision="16"
+                      scale="3" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[TOTALPAYMENTS]"
+                      dataType="numeric"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[TOTALPAYMENTS]"
+                      name="TOTALPAYMENTS"
+                      precision="16"
+                      scale="3" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[CURRENCY]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[CURRENCY]"
+                      name="CURRENCY" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[REASON]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[REASON]"
+                      name="REASON" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[PREVSTMTSERNO]"
+                      dataType="numeric"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[PREVSTMTSERNO]"
+                      name="PREVSTMTSERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[PREVSTMTPARTITIONKEY]"
+                      dataType="numeric"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[PREVSTMTPARTITIONKEY]"
+                      name="PREVSTMTPARTITIONKEY"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[VALUEDATE]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[VALUEDATE]"
+                      name="VALUEDATE" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[SEQUENCENUMBER]"
+                      dataType="numeric"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[SEQUENCENUMBER]"
+                      name="SEQUENCENUMBER"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD.Paths[Balanced Data Distributor Output 1]"
+              endId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS.Inputs[OLE DB Destination Input]"
+              name="Balanced Data Distributor Output 1"
+              startId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\BDD_MSTATEMENTS.Outputs[Balanced Data Distributor Output 1]" />
+            <path
+              refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD.Paths[Balanced Data Distributor Output 2]"
+              endId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1.Inputs[OLE DB Destination Input]"
+              name="Balanced Data Distributor Output 2"
+              startId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\BDD_MSTATEMENTS.Outputs[Balanced Data Distributor Output 2]" />
+            <path
+              refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD.Paths[Derived Column Output]"
+              endId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\BDD_MSTATEMENTS.Inputs[Balanced Data Distributor Input]"
+              name="Derived Column Output"
+              startId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output]" />
+            <path
+              refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD.Paths[OLE DB Source Output]"
+              endId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\RC_MSTATEMENTS.Inputs[Row Count Input 1]"
+              name="OLE DB Source Output"
+              startId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS.Outputs[OLE DB Source Output]" />
+            <path
+              refId="Package\DFT_MSTATEMENTS_INITIAL_LOAD.Paths[Row Count Output 1]"
+              endId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH.Inputs[Derived Column Input]"
+              name="Row Count Output 1"
+              startId="Package\DFT_MSTATEMENTS_INITIAL_LOAD\RC_MSTATEMENTS.Outputs[Row Count Output 1]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_MSTATEMENTS_GET_DEST_COUNT_LOAD"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{123D85DB-B918-45A1-AC89-A062AE73A10F}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_MSTATEMENTS_GET_DEST_COUNT_LOAD"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="1">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_GET_DEST_COUNT_LOAD"</DTS:PropertyExpression>
+      <DTS:EventHandlers>
+        <DTS:EventHandler
+          DTS:refId="Package\SQL_MSTATEMENTS_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]"
+          DTS:CreationName="OnPreExecute"
+          DTS:DTSID="{B40C65BD-976D-47FB-A384-B72A5DAD15A1}"
+          DTS:EventID="1076330902"
+          DTS:EventName="OnPreExecute"
+          DTS:LocaleID="-1">
+          <DTS:Variables>
+            <DTS:Variable
+              DTS:CreationName=""
+              DTS:Description="The propagate property of the event"
+              DTS:DTSID="{4B9F9DB1-9071-4334-8305-E4009DE2C2EA}"
+              DTS:IncludeInDebugDump="6789"
+              DTS:Namespace="System"
+              DTS:ObjectName="Propagate">
+              <DTS:VariableValue
+                DTS:DataType="11">-1</DTS:VariableValue>
+            </DTS:Variable>
+          </DTS:Variables>
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\SQL_MSTATEMENTS_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]\SQL_MSTATEMENTS_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{FB7013EB-E5AA-4117-89F8-11500A217B5A}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="SQL_MSTATEMENTS_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+              <DTS:Variables />
+              <DTS:PropertyExpression
+                DTS:Name="Name">"SQL_"+ @[User::v_Task_Name]+"_UPDATE_DFT_LOAD_COMPLETED"</DTS:PropertyExpression>
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{7109BF63-F1CB-4ED4-9A4C-8E7054E87488}"
+                  SQLTask:SqlStatementSource="UPDATE DBO.BATCH_EXECUTION_STATUS&#xA; SET  &#xA;STATUS_FLAG = 'DFT LOAD COMPLETED'   WHERE&#xA; EXECUTION_ID = (&#xA;       SELECT MAX(EXECUTION_ID) EXECUTION_ID&#xA;       FROM DBO.BATCH_EXECUTION_STATUS&#xA;       WHERE PACKAGE_ID =?&#xA;       AND  BATCH_ID = ?&#xA;    )"
+                  SQLTask:TypeConversionMode="None" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="0"
+                    SQLTask:DtsVariableName="User::v_Package_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="1"
+                    SQLTask:DtsVariableName="User::v_Batch_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                </SQLTask:SqlTaskData>
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+        </DTS:EventHandler>
+      </DTS:EventHandlers>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{9F0C28E0-940F-448B-92CD-FD70A5DACAFC}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::v_Dest_Count_Query"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="0"
+            SQLTask:DtsVariableName="User::v_Rows_Inserted" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_MSTATEMENTS_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{514B6B58-81D3-4199-91B6-83860D230F06}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_MSTATEMENTS_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_CHECK_PACKAGE_EXISTENCE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{7109BF63-F1CB-4ED4-9A4C-8E7054E87488}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_NAME VARCHAR(500) = ?&#xA;&#xA;EXEC [DBO].[SP_CHECK_PACKAGE_EXISTENCE]  @PACKAGE_NAME " xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_MSTATEMENTS_SP_GET_INC_VALUE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{A0C28EDD-59F3-4502-81A9-1653C1F09EAE}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_MSTATEMENTS_SP_GET_INC_VALUE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_GET_INC_VALUE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{7109BF63-F1CB-4ED4-9A4C-8E7054E87488}"
+          SQLTask:BypassPrepare="False"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::v_Get_Inc_Date"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="0"
+            SQLTask:DtsVariableName="User::v_Inc_Date" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_MSTATEMENTS_SP_GET_PACKAGE_BATCH_ID"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{EEAA6AE9-F9C7-4EFB-A8D7-CFD91C773D00}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_MSTATEMENTS_SP_GET_PACKAGE_BATCH_ID"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_GET_PACKAGE_BATCH_ID"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{7109BF63-F1CB-4ED4-9A4C-8E7054E87488}"
+          SQLTask:SqlStatementSource="&#xA;DECLARE @PACKAGE_NAME VARCHAR(500) = ?&#xA;DECLARE @PACKAGE_ID  INT &#xA;DECLARE @BATCH_ID BIGINT&#xA;&#xA;&#xA; EXEC [DBO].[SP_GET_PACKAGE_BATCH_ID]  @PACKAGE_NAME,@PACKAGE_ID OUT,@BATCH_ID OUT&#xA; SELECT ? = @PACKAGE_ID &#xA; SELECT ? = @BATCH_ID" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_MSTATEMENTS_SP_INSERT_EXECUTION_STATUS"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{A5AC226D-0F5E-4A40-AC7C-B81D56D619E6}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_MSTATEMENTS_SP_INSERT_EXECUTION_STATUS"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_INSERT_EXECUTION_STATUS"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{7109BF63-F1CB-4ED4-9A4C-8E7054E87488}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @PACKAGE_START_TIME DATETIME = ?&#xA;DECLARE @JOB_ID INT  =?&#xA;&#xA;EXEC [DBO].[SP_INSERT_EXECUTION_STATUS]               @PACKAGE_ID&#xA;,@BATCH_ID&#xA;,@PACKAGE_START_TIME&#xA;,@JOB_ID" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="System::StartTime"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="7"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="$Project::p_JOB_ID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_MSTATEMENTS_SP_MERGE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{EE71CBC5-FDB5-40C4-A3EA-9AC73F3F3588}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_MSTATEMENTS_SP_MERGE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name]+"_SP_MERGE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{9F0C28E0-940F-448B-92CD-FD70A5DACAFC}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @INSERT_CNT BIGINT = 0&#xA;DECLARE @UPDATE_CNT BIGINT = 0&#xA;DECLARE @ROWSREAD_CNT BIGINT = 0&#xA;&#xA;EXEC [dbo].[SP_SCD_PRIME17_MSTATEMENTS]         &#xA;     @PACKAGE_ID&#xA; ,@BATCH_ID&#xA; ,@INSERT_CNT OUTPUT&#xA; ,@UPDATE_CNT OUTPUT&#xA; ,@ROWSREAD_CNT OUTPUT&#xA;&#xA;SELECT   ? = @INSERT_CNT&#xA; ,? = @UPDATE_CNT&#xA; ,? = @ROWSREAD_CNT" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::v_Rows_Inserted"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="User::v_Rows_Updated"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="4"
+            SQLTask:DtsVariableName="User::v_Rows_Read"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_MSTATEMENTS_SP_UPDATE_DW_INC_VALUES"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{AD1BD15D-8935-4B53-AB38-3CAA8876A694}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_MSTATEMENTS_SP_UPDATE_DW_INC_VALUES"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="2">
+      <DTS:Variables />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_UPDATE_DW_INC_VALUES"</DTS:PropertyExpression>
+      <DTS:EventHandlers>
+        <DTS:EventHandler
+          DTS:refId="Package\SQL_MSTATEMENTS_SP_UPDATE_DW_INC_VALUES.EventHandlers[OnPreExecute]"
+          DTS:CreationName="OnPreExecute"
+          DTS:DTSID="{7DB42929-4B25-4A5A-88B0-73BBE3E26EE4}"
+          DTS:EventID="0"
+          DTS:EventName="OnPreExecute"
+          DTS:LocaleID="-1">
+          <DTS:Variables>
+            <DTS:Variable
+              DTS:CreationName=""
+              DTS:Description="The propagate property of the event"
+              DTS:DTSID="{F96860FE-C7B9-4740-9EEA-005C8273C99F}"
+              DTS:IncludeInDebugDump="6789"
+              DTS:Namespace="System"
+              DTS:ObjectName="Propagate">
+              <DTS:VariableValue
+                DTS:DataType="11">-1</DTS:VariableValue>
+            </DTS:Variable>
+          </DTS:Variables>
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\SQL_MSTATEMENTS_SP_UPDATE_DW_INC_VALUES.EventHandlers[OnPreExecute]\SQL_MSTATEMENTS_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{D456F5EB-80E9-44A6-8495-40D4ABBD465B}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="SQL_MSTATEMENTS_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+              <DTS:Variables />
+              <DTS:PropertyExpression
+                DTS:Name="Name">"SQL_"+ @[User::v_Task_Name]+"_UPDATE_DFT_LOAD_COMPLETED"</DTS:PropertyExpression>
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{7109BF63-F1CB-4ED4-9A4C-8E7054E87488}"
+                  SQLTask:SqlStatementSource="UPDATE DBO.BATCH_EXECUTION_STATUS&#xA; SET  &#xA;STATUS_FLAG = 'DFT LOAD COMPLETED'   WHERE&#xA; EXECUTION_ID = (&#xA;       SELECT MAX(EXECUTION_ID) EXECUTION_ID&#xA;       FROM DBO.BATCH_EXECUTION_STATUS&#xA;       WHERE PACKAGE_ID =?&#xA;       AND  BATCH_ID = ?&#xA;    )" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="0"
+                    SQLTask:DtsVariableName="User::v_Package_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="1"
+                    SQLTask:DtsVariableName="User::v_Batch_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                </SQLTask:SqlTaskData>
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+        </DTS:EventHandler>
+      </DTS:EventHandlers>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{7109BF63-F1CB-4ED4-9A4C-8E7054E87488}"
+          SQLTask:SqlStatementSource="&#xA; DECLARE @PACKAGE_ID INT = ?&#xA;&#xA;EXEC [DBO].[SP_UPDATE_DW_INC_VALUE] @PACKAGE_ID" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_MSTATEMENTS_SP_UPDATE_EXECUTION_STATUS"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{1367BED8-0DD3-4D79-A078-C7AFC0AB2D5F}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_MSTATEMENTS_SP_UPDATE_EXECUTION_STATUS"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="2">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_UPDATE_EXECUTION_STATUS"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{7109BF63-F1CB-4ED4-9A4C-8E7054E87488}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @ROWS_READ BIGINT = ?&#xA;DECLARE @ROWS_INSERTED BIGINT = ?&#xA;DECLARE @ROWS_UPDATED BIGINT = ?&#xA;DECLARE @ROWS_ERRORED BIGINT = 0&#xA;&#xA;&#xA;EXEC DBO.SP_UPDATE_EXECUTION_STATUS @PACKAGE_ID&#xA; , @BATCH_ID&#xA; , @ROWS_READ&#xA; , @ROWS_INSERTED&#xA; ,@ROWS_UPDATED &#xA; ,@ROWS_ERRORED" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::v_Rows_Read"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="User::v_Rows_Inserted"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="4"
+            SQLTask:DtsVariableName="User::v_Rows_Updated"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_MSTATEMENTS_TRUNCATE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{F77FA252-8A84-49C3-9CC6-1DE1AE626B57}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_MSTATEMENTS_TRUNCATE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="1">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_TRUNCATE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{9F0C28E0-940F-448B-92CD-FD70A5DACAFC}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::v_Truncate_Dest" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{B3CE9AF4-ABD4-4793-AEAC-6BE4A01BA512}"
+      DTS:From="Package\SQL_MSTATEMENTS_SP_GET_PACKAGE_BATCH_ID"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\SQL_MSTATEMENTS_SP_INSERT_EXECUTION_STATUS" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{BCB6C15D-54D3-49EB-86D1-5E175B49D150}"
+      DTS:From="Package\SQL_MSTATEMENTS_SP_INSERT_EXECUTION_STATUS"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\SQL_MSTATEMENTS_SP_GET_INC_VALUE" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 10]"
+      DTS:CreationName=""
+      DTS:DTSID="{A8918CD4-59E7-4800-8353-55F13810F8A8}"
+      DTS:From="Package\SQL_MSTATEMENTS_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 10"
+      DTS:To="Package\SQL_MSTATEMENTS_SP_GET_PACKAGE_BATCH_ID" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{45708374-7BB4-4025-8A07-865734BBDE44}"
+      DTS:EvalOp="3"
+      DTS:Expression="@[User::v_Inc_Date] == (DT_DBTIMESTAMP) &quot;1753-01-01&quot;"
+      DTS:From="Package\SQL_MSTATEMENTS_SP_GET_INC_VALUE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\SQL_MSTATEMENTS_TRUNCATE" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 3]"
+      DTS:CreationName=""
+      DTS:DTSID="{746707BB-9F59-4728-A3E3-9E6BE82B9114}"
+      DTS:EvalOp="3"
+      DTS:Expression="@[User::v_Inc_Date] &gt; (DT_DBTIMESTAMP) &quot;1753-01-01&quot;"
+      DTS:From="Package\SQL_MSTATEMENTS_SP_GET_INC_VALUE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 3"
+      DTS:To="Package\SQL_MSTATEMENTS_SP_MERGE" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 4]"
+      DTS:CreationName=""
+      DTS:DTSID="{521CCEC4-5551-4FF2-8F11-68E771591CF2}"
+      DTS:Expression="@[User::v_Inc_Date] == (DT_DBTIMESTAMP) &quot;1753-01-01&quot;"
+      DTS:From="Package\SQL_MSTATEMENTS_TRUNCATE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 4"
+      DTS:To="Package\DFT_MSTATEMENTS_INITIAL_LOAD" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 5]"
+      DTS:CreationName=""
+      DTS:DTSID="{BAE1824A-84EC-4448-948D-FDA887C088A9}"
+      DTS:From="Package\SQL_MSTATEMENTS_SP_UPDATE_DW_INC_VALUES"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 5"
+      DTS:To="Package\SQL_MSTATEMENTS_SP_UPDATE_EXECUTION_STATUS" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 6]"
+      DTS:CreationName=""
+      DTS:DTSID="{0D556D16-EAE3-45B7-9AFD-707AFF837104}"
+      DTS:From="Package\DFT_MSTATEMENTS_INITIAL_LOAD"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 6"
+      DTS:To="Package\SQL_MSTATEMENTS_GET_DEST_COUNT_LOAD" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 7]"
+      DTS:CreationName=""
+      DTS:DTSID="{37723C78-6AF3-4576-85E8-4F32E70247A7}"
+      DTS:From="Package\SQL_MSTATEMENTS_GET_DEST_COUNT_LOAD"
+      DTS:ObjectName="Constraint 7"
+      DTS:To="Package\SQL_MSTATEMENTS_SP_UPDATE_DW_INC_VALUES" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 8]"
+      DTS:CreationName=""
+      DTS:DTSID="{ECF22077-44C0-425F-ADFA-7D6F8FD00AED}"
+      DTS:From="Package\SQL_MSTATEMENTS_SP_MERGE"
+      DTS:ObjectName="Constraint 8"
+      DTS:To="Package\SQL_MSTATEMENTS_SP_UPDATE_DW_INC_VALUES" />
+  </DTS:PrecedenceConstraints>
+  <DTS:EventHandlers>
+    <DTS:EventHandler
+      DTS:refId="Package.EventHandlers[OnError]"
+      DTS:CreationName="OnError"
+      DTS:DTSID="{62BCE366-AA5E-4F96-A891-E6806EA96FA3}"
+      DTS:EventID="2"
+      DTS:EventName="OnError"
+      DTS:LocaleID="-1">
+      <DTS:Variables>
+        <DTS:Variable
+          DTS:CreationName=""
+          DTS:Description="The propagate property of the event"
+          DTS:DTSID="{28051715-7882-4054-8978-B8653D377ECC}"
+          DTS:IncludeInDebugDump="6789"
+          DTS:Namespace="System"
+          DTS:ObjectName="Propagate">
+          <DTS:VariableValue
+            DTS:DataType="11">-1</DTS:VariableValue>
+        </DTS:Variable>
+      </DTS:Variables>
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package.EventHandlers[OnError]\SQL_MSTATEMENTS_SP_SSIS_ERRORLOG"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{F1ACFE42-D70D-40E6-BB08-7A7E90EECF5C}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="SQL_MSTATEMENTS_SP_SSIS_ERRORLOG"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:PropertyExpression
+            DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_SSIS_ERRORLOG"</DTS:PropertyExpression>
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{7109BF63-F1CB-4ED4-9A4C-8E7054E87488}"
+              SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @PKG_GUID SYSNAME = ?&#xA;DECLARE @PACKAGE_NAME SYSNAME = ?&#xA;DECLARE @SOURCE_NAME VARCHAR(100) = ?&#xA;DECLARE @TASK_NAME VARCHAR(100) = ?&#xA;DECLARE @MACHINE_NAME VARCHAR(50) = ?&#xA;DECLARE @USER_NAME VARCHAR(50) = ?&#xA;DECLARE @ERROR_NUMBER INT = ?&#xA;DECLARE @ERROR_DESCRIPTION VARCHAR(MAX) = ?&#xA;DECLARE @PACKAGE_START_TIME DATETIME  = NULL&#xA;DECLARE @ROWS_READ BIGINT = ?&#xA;DECLARE @ROWS_INSERTED BIGINT = ?&#xA;DECLARE @ROWS_UPDATED BIGINT = NULL&#xA;DECLARE @ROWS_ERRORED BIGINT = NULL&#xA;&#xA;EXEC DBO.[SP_SSIS_ERRORLOG] @PACKAGE_ID&#xA;&#x9;,@BATCH_ID&#xA;&#x9;,@PKG_GUID&#xA;&#x9;,@PACKAGE_NAME&#xA;&#x9;,@SOURCE_NAME&#xA;&#x9;,@TASK_NAME&#xA;&#x9;,@MACHINE_NAME&#xA;&#x9;,@USER_NAME&#xA;&#x9;,@ERROR_NUMBER&#xA;&#x9;,@ERROR_DESCRIPTION&#xA;&#x9;,@PACKAGE_START_TIME&#xA;&#x9;,@ROWS_READ&#xA;&#x9;,@ROWS_INSERTED&#xA;&#x9;,@ROWS_UPDATED &#xA;&#x9;,@ROWS_ERRORED" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::v_Package_Id"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="1"
+                SQLTask:DtsVariableName="User::v_Batch_Id"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="2"
+                SQLTask:DtsVariableName="System::PackageID"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="3"
+                SQLTask:DtsVariableName="System::PackageName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="4"
+                SQLTask:DtsVariableName="System::SourceName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="5"
+                SQLTask:DtsVariableName="System::TaskName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="6"
+                SQLTask:DtsVariableName="System::MachineName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="7"
+                SQLTask:DtsVariableName="System::UserName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="8"
+                SQLTask:DtsVariableName="System::ErrorCode"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="9"
+                SQLTask:DtsVariableName="System::ErrorDescription"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="10"
+                SQLTask:DtsVariableName="User::v_Rows_Read"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="11"
+                SQLTask:DtsVariableName="User::v_Rows_Inserted"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+    </DTS:EventHandler>
+  </DTS:EventHandlers>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="343.2,41.6"
+          Id="Package\DFT_MSTATEMENTS_INITIAL_LOAD"
+          TopLeft="89.7142872421109,411.38823966122" />
+        <NodeLayout
+          Size="343.2,41.6"
+          Id="Package\SQL_MSTATEMENTS_GET_DEST_COUNT_LOAD"
+          TopLeft="84.704016696677,492.969266348608" />
+        <NodeLayout
+          Size="343.2,41.6"
+          Id="Package\SQL_MSTATEMENTS_SP_CHECK_PACKAGE_EXISTENCE"
+          TopLeft="253.266516696677,6.72352942892425" />
+        <NodeLayout
+          Size="343.2,41.6"
+          Id="Package\SQL_MSTATEMENTS_SP_GET_INC_VALUE"
+          TopLeft="250.704016696677,248.133971330085" />
+        <NodeLayout
+          Size="343.2,41.6"
+          Id="Package\SQL_MSTATEMENTS_SP_GET_PACKAGE_BATCH_ID"
+          TopLeft="253.266516696677,88.0832650121201" />
+        <NodeLayout
+          Size="343.2,41.6"
+          Id="Package\SQL_MSTATEMENTS_SP_INSERT_EXECUTION_STATUS"
+          TopLeft="253.266516696677,169.443000595316" />
+        <NodeLayout
+          Size="343.2,41.6"
+          Id="Package\SQL_MSTATEMENTS_SP_MERGE"
+          TopLeft="515.714287242111,368.23985726079" />
+        <NodeLayout
+          Size="343.2,41.6"
+          Id="Package\SQL_MSTATEMENTS_SP_UPDATE_DW_INC_VALUES"
+          TopLeft="250.704016696677,576.177860585538" />
+        <NodeLayout
+          Size="343.2,41.6"
+          Id="Package\SQL_MSTATEMENTS_SP_UPDATE_EXECUTION_STATUS"
+          TopLeft="250.704016696677,666.23985726079" />
+        <NodeLayout
+          Size="343.2,41.6"
+          Id="Package\SQL_MSTATEMENTS_TRUNCATE"
+          TopLeft="91.4569954315768,331.175146182985" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="424.866516696677,129.68326501212">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,39.7597355831959"
+              Start="0,0"
+              End="0,32.2597355831959">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,32.2597355831959" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="423.585266696677,211.043000595316">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,37.090970734769"
+              Start="0,0"
+              End="0,29.590970734769">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,29.590970734769" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 10]"
+          TopLeft="424.866516696677,48.3235294289242">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,39.7597355831958"
+              Start="0,0"
+              End="0,32.2597355831958">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,32.2597355831958" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="366.43735003001,289.733971330085">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-103.380354598434,41.4411748529"
+              Start="0,0"
+              End="-103.380354598434,33.9411748529">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,12.6918514024674" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,12.6918514024674"
+                    Point2="0,16.6918514024674"
+                    Point3="-4,16.6918514024674" />
+                  <mssgle:LineSegment
+                    End="-99.3803545984335,16.6918514024674" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-99.3803545984335,16.6918514024674"
+                    Point2="-103.380354598434,16.6918514024674"
+                    Point3="-103.380354598434,20.6918514024674" />
+                  <mssgle:LineSegment
+                    End="-103.380354598434,33.9411748529" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-59.6901772992168,21.6918514024674,16,16"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 3]"
+          TopLeft="478.170683363344,289.733971330085">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="209.143603878768,78.505885930705"
+              Start="0,0"
+              End="209.143603878768,71.005885930705">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,27.6209322449429" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,27.6209322449429"
+                    Point2="0,31.6209322449429"
+                    Point3="4,31.6209322449429" />
+                  <mssgle:LineSegment
+                    End="205.143603878768,31.6209322449429" />
+                  <mssgle:CubicBezierSegment
+                    Point1="205.143603878768,31.6209322449429"
+                    Point2="209.143603878768,31.6209322449429"
+                    Point3="209.143603878768,35.6209322449429" />
+                  <mssgle:LineSegment
+                    End="209.143603878768,71.005885930705" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="96.5718019393838,36.6209322449429,16,16"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 4]"
+          TopLeft="262.185641336844,372.775146182985">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,38.613093478235"
+              Start="0,0"
+              End="0,31.113093478235">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,31.113093478235" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 5]"
+          TopLeft="422.304016696677,617.777860585538">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,48.461996675252"
+              Start="0,0"
+              End="0,40.961996675252">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,40.961996675252" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 6]"
+          TopLeft="258.809151969394,452.98823966122">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,39.981026687388"
+              Start="0,0"
+              End="0,32.481026687388">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,32.481026687388" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 7]"
+          TopLeft="256.304016696677,534.569266348608">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="110.133333333333,41.6085942369301"
+              Start="0,0"
+              End="110.133333333333,34.1085942369301">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,20.8493089479949" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,20.8493089479949"
+                    Point2="0,24.8493089479949"
+                    Point3="4,24.8493089479949" />
+                  <mssgle:LineSegment
+                    End="106.133333333333,24.8493089479949" />
+                  <mssgle:CubicBezierSegment
+                    Point1="106.133333333333,24.8493089479949"
+                    Point2="110.133333333333,24.8493089479949"
+                    Point3="110.133333333333,28.8493089479949" />
+                  <mssgle:LineSegment
+                    End="110.133333333333,34.1085942369301" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 8]"
+          TopLeft="687.314287242111,409.83985726079">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-209.143603878768,166.338003324748"
+              Start="0,0"
+              End="-209.143603878768,158.838003324748">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,95.3396799438286" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,95.3396799438286"
+                    Point2="0,99.3396799438286"
+                    Point3="-4,99.3396799438286" />
+                  <mssgle:LineSegment
+                    End="-205.143603878768,99.3396799438286" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-205.143603878768,99.3396799438286"
+                    Point2="-209.143603878768,99.3396799438286"
+                    Point3="-209.143603878768,103.339679943829" />
+                  <mssgle:LineSegment
+                    End="-209.143603878768,158.838003324748" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <DtsEventHandler
+    design-time-name="Package.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="279.2,41.6"
+          Id="Package.EventHandlers[OnError]\SQL_MSTATEMENTS_SP_SSIS_ERRORLOG"
+          TopLeft="381.500003542219,91.7588240098794" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <TaskHost
+    design-time-name="Package\DFT_MSTATEMENTS_INITIAL_LOAD">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="185.6,41.6"
+          Id="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1"
+          TopLeft="326.285716708826,377.529411664608" />
+        <NodeLayout
+          Size="185.6,41.6"
+          Id="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS"
+          TopLeft="84.2857167088256,377.529411664608" />
+        <NodeLayout
+          Size="185.6,41.6"
+          Id="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DC_BATCH"
+          TopLeft="215.723201432639,181.649673255046" />
+        <NodeLayout
+          Size="185.6,41.6"
+          Id="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS"
+          TopLeft="215.723201432639,15.294117861553" />
+        <NodeLayout
+          Size="185.6,41.6"
+          Id="Package\DFT_MSTATEMENTS_INITIAL_LOAD\BDD_MSTATEMENTS"
+          TopLeft="215.723201432639,264.827450951792" />
+        <NodeLayout
+          Size="185.6,41.6"
+          Id="Package\DFT_MSTATEMENTS_INITIAL_LOAD\RC_MSTATEMENTS"
+          TopLeft="215.723201432639,98.4718955582993" />
+        <EdgeLayout
+          Id="Package\DFT_MSTATEMENTS_INITIAL_LOAD.Paths[Row Count Output 1]"
+          TopLeft="308.523201432639,140.071895558299">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,41.5777776967467"
+              Start="0,0"
+              End="0,34.0777776967467">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,34.0777776967467" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_MSTATEMENTS_INITIAL_LOAD.Paths[OLE DB Source Output]"
+          TopLeft="308.523201432639,56.894117861553">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,41.5777776967463"
+              Start="0,0"
+              End="0,34.0777776967463">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,34.0777776967463" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_MSTATEMENTS_INITIAL_LOAD.Paths[Derived Column Output]"
+          TopLeft="308.523201432639,223.249673255046">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,41.577777696746"
+              Start="0,0"
+              End="0,34.077777696746">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,34.077777696746" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_MSTATEMENTS_INITIAL_LOAD.Paths[Balanced Data Distributor Output 2]"
+          TopLeft="338.123201432639,306.427450951792">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="80.962515276187,71.101960712816"
+              Start="0,0"
+              End="80.962515276187,63.601960712816">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.8054097246793" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,24.8054097246793"
+                    Point2="0,28.8054097246793"
+                    Point3="4,28.8054097246793" />
+                  <mssgle:LineSegment
+                    End="76.962515276187,28.8054097246793" />
+                  <mssgle:CubicBezierSegment
+                    Point1="76.962515276187,28.8054097246793"
+                    Point2="80.962515276187,28.8054097246793"
+                    Point3="80.962515276187,32.8054097246793" />
+                  <mssgle:LineSegment
+                    End="80.962515276187,63.601960712816" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-37.4048556431565,33.8054097246793,155.7722265625,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_MSTATEMENTS_INITIAL_LOAD.Paths[Balanced Data Distributor Output 1]"
+          TopLeft="278.923201432639,306.427450951792">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-101.837484723813,71.101960712816"
+              Start="0,0"
+              End="-101.837484723813,63.601960712816">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.8054097246793" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,24.8054097246793"
+                    Point2="0,28.8054097246793"
+                    Point3="-4,28.8054097246793" />
+                  <mssgle:LineSegment
+                    End="-97.8374847238134,28.8054097246793" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-97.8374847238134,28.8054097246793"
+                    Point2="-101.837484723813,28.8054097246793"
+                    Point3="-101.837484723813,32.8054097246793" />
+                  <mssgle:LineSegment
+                    End="-101.837484723813,63.601960712816" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-128.619308768157,33.8054097246793,155.4011328125,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS 1">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_MSTATEMENTS_INITIAL_LOAD\DST_MSTATEMENTS">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_MSTATEMENTS_INITIAL_LOAD\SRC_MSTATEMENTS">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <DtsEventHandler
+    design-time-name="Package\SQL_MSTATEMENTS_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="312.666666666667,41.3333333333334"
+          Id="Package\SQL_MSTATEMENTS_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]\SQL_MSTATEMENTS_UPDATE_DFT_LOAD_COMPLETED"
+          TopLeft="570.3,184.7" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <DtsEventHandler
+    design-time-name="Package\SQL_MSTATEMENTS_SP_UPDATE_DW_INC_VALUES.EventHandlers[OnPreExecute]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="348,41.6"
+          Id="Package\SQL_MSTATEMENTS_SP_UPDATE_DW_INC_VALUES.EventHandlers[OnPreExecute]\SQL_MSTATEMENTS_UPDATE_DFT_LOAD_COMPLETED"
+          TopLeft="477.4,153" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

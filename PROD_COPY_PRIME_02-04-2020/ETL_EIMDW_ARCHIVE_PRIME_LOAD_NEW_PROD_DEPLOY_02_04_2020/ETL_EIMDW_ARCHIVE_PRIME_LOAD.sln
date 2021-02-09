@@ -1,0 +1,19 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{159641D6-6404-4A2A-AE62-294DE0FE8301}") = "ETL_EIMDW_ARCHIVE_PRIME_LOAD", "ETL_EIMDW_ARCHIVE_PRIME_LOAD\ETL_EIMDW_ARCHIVE_PRIME_LOAD.dtproj", "{E5A30D31-1CD2-4B02-A5FA-581830BC2068}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Development|Default = Development|Default
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E5A30D31-1CD2-4B02-A5FA-581830BC2068}.Development|Default.ActiveCfg = Development
+		{E5A30D31-1CD2-4B02-A5FA-581830BC2068}.Development|Default.Build.0 = Development
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

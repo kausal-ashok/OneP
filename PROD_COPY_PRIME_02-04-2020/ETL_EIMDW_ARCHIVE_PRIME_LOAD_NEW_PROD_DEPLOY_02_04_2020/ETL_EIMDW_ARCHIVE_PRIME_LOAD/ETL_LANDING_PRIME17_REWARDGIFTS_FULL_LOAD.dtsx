@@ -1,0 +1,2806 @@
+<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="11/28/2018 8:48:53 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="LAPTOP-SBSNQ3DE"
+  DTS:CreatorName="LAPTOP-SBSNQ3DE\HP"
+  DTS:DTSID="{7DD1F710-532D-44BF-A32E-00965D0F13DB}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="14.0.0600.250"
+  DTS:LocaleID="16393"
+  DTS:ObjectName="ETL_LANDING_PRIME17_REWARDGIFTS_FULL_LOAD"
+  DTS:PackageType="5"
+  DTS:ProtectionLevel="0"
+  DTS:VersionBuild="763"
+  DTS:VersionGUID="{09553855-CDF4-4651-88B1-281876D2A490}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_AUDIT_FRAMEWORK]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{DC87480A-2B1D-4CB0-B918-8E7BC8FC676F}"
+      DTS:ObjectName="CM_AUDIT_FRAMEWORK">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_AUDIT_FRAMEWORK_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_AUDIT_FRAMEWORK_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=AUDIT_FRAMEWORK_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{6FFEC659-C2F7-4AC5-8059-CF4663E8C652}"
+      DTS:ObjectName="CM_EIMDW_LANDING_PRIME">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_LANDING_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_ARCHIVE_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=DEV_EIMDW_Landing_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_Prime_Attunity]"
+      DTS:CreationName="MSORA"
+      DTS:DTSID="{9E6A6E2F-1BF6-44F9-98D4-634D47D5ABF1}"
+      DTS:ObjectName="CM_Prime_Attunity">
+      <DTS:PropertyExpression
+        DTS:Name="Password">@[$Project::p_PRIME_PWD]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_PRIME_SERVER]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="UserName">@[$Project::p_PRIME_USER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <OracleXMLPackage>
+          <OraConnectionString>SERVER=10.180.2.215:1522/prime;USERNAME=AMBERCONNECT;ORACLEHOME=;ORACLEHOME64=;WINAUTH=0</OraConnectionString>
+          <OraRetain>False</OraRetain>
+          <OraInitialCatalog></OraInitialCatalog>
+          <OraServerName>10.180.2.215:1522/prime</OraServerName>
+          <OraUserName>AMBERCONNECT</OraUserName>
+          <OraOracleHome></OraOracleHome>
+          <OraOracleHome64></OraOracleHome64>
+          <OraWinAuthentication>False</OraWinAuthentication>
+          <OraEnableDetailedTracing>False</OraEnableDetailedTracing>
+          <OraPassword
+            Sensitive="1"></OraPassword>
+        </OracleXMLPackage>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:LogProviders>
+    <DTS:LogProvider
+      DTS:ConfigString="CM_AUDIT_FRAMEWORK"
+      DTS:CreationName="Microsoft.LogProviderSQLServer"
+      DTS:Description="Writes log entries for events to a SQL Server database"
+      DTS:DTSID="{9E5A7D53-F1DB-4894-8540-118C54397B00}"
+      DTS:ObjectName="SSIS log provider for SQL Server">
+      <DTS:ObjectData>
+        <InnerObject />
+      </DTS:ObjectData>
+    </DTS:LogProvider>
+  </DTS:LogProviders>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{211746C4-C93A-4E37-B94A-8BDD0714E044}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Batch_Id">
+      <DTS:VariableValue
+        DTS:DataType="20">-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{CB5E5C95-4E9E-47A2-AE7B-925F870B7329}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT COUNT(1) FROM &quot; +  @[User::v_Dest_Table]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Dest_Count_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT COUNT(1) FROM DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_REWARDGIFTS (NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{73910B5E-A4D5-497A-9F1E-518B63F2C0D9}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="@[$Project::p_LANDING_DATABASE]  +&quot;.&quot;+ @[$Project::p_LANDING_SCHEMA] +&quot;.&quot;+&quot;SRC_PRIME17_REWARDGIFTS (NOLOCK)&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Dest_Table">
+      <DTS:VariableValue
+        DTS:DataType="8">DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_REWARDGIFTS (NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{52084515-2610-47FD-A9BF-EAD24A474337}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Package_Id">
+      <DTS:VariableValue
+        DTS:DataType="3">-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{98FA75D7-87F2-4511-88D4-4A008374696C}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Rows_Inserted">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{6D79DA69-A338-4124-87D9-934F7F3AA993}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Rows_Read">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{0B858BF0-D8FC-4D3D-B840-DC0F309381A7}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT INSTITUTION_ID&#x9;&#xA;,SERNO&#x9;&#xA;,NAME&#x9;&#xA;,CODE&#x9;&#xA;,DESCRIPTION&#x9;&#xA;,ADDRESSSERNO&#x9;&#xA;,ONLYINCOUNTRY&#x9;&#xA;,AVAILABLEFROM&#x9;&#xA;,AVAILABLEUNTIL&#x9;&#xA;,CURRENTLYAVAILABLE&#x9;&#xA;,COSTCURRENCY&#x9;&#xA;,COST&#x9;&#xA;,ADMINCOST&#x9;&#xA;,CARRIAGECOST&#x9;&#xA;,INTCARRIAGECOST&#x9;&#xA;,DAYSFORDELIVERY&#x9;&#xA;,NUMBERORDERED&#x9;&#xA;,PRIORITY&#x9;&#xA;,FULFILMENTMETHOD&#x9;&#xA;,AUTOREDEEM&#x9;&#xA;,LOGACTION&#x9;&#xA;,REASONCODE&#x9;&#xA;,REDEEMASCASHREASONCODE&#x9;&#xA;,REDEEMCASHMETHOD&#x9;&#xA;,DEFAULTREDEEMSTATUS&#x9;&#xA;,PROVIDERID &#xA;FROM &quot;+  @[User::v_Source_Table]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Source_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT INSTITUTION_ID	
+,SERNO	
+,NAME	
+,CODE	
+,DESCRIPTION	
+,ADDRESSSERNO	
+,ONLYINCOUNTRY	
+,AVAILABLEFROM	
+,AVAILABLEUNTIL	
+,CURRENTLYAVAILABLE	
+,COSTCURRENCY	
+,COST	
+,ADMINCOST	
+,CARRIAGECOST	
+,INTCARRIAGECOST	
+,DAYSFORDELIVERY	
+,NUMBERORDERED	
+,PRIORITY	
+,FULFILMENTMETHOD	
+,AUTOREDEEM	
+,LOGACTION	
+,REASONCODE	
+,REDEEMASCASHREASONCODE	
+,REDEEMCASHMETHOD	
+,DEFAULTREDEEMSTATUS	
+,PROVIDERID 
+FROM TCTDBS.REWARDGIFTS</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{3B78337B-BD91-492C-BBEC-A02603039F9B}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Source_Table">
+      <DTS:VariableValue
+        DTS:DataType="8">TCTDBS.REWARDGIFTS</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{2E595BD0-50EF-411F-B668-82CA2A6578B4}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Task_Name">
+      <DTS:VariableValue
+        DTS:DataType="8">REWARDGIFTS</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{55A3B8D4-B663-4BA0-B4D3-753A6C1B2285}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;TRUNCATE TABLE &quot;  + REPLACE(@[User::v_Dest_Table],&quot;(NOLOCK)&quot;,&quot; &quot;)"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Trunc_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">TRUNCATE TABLE DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_REWARDGIFTS  </DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:LoggingOptions
+    DTS:FilterKind="0"
+    DTS:LoggingMode="1">
+    <DTS:Property
+      DTS:DataType="8"
+      DTS:Name="EventFilter">3,7,OnError,13,OnPostExecute,12,OnTaskFailed</DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnError"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnPostExecute"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnTaskFailed"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:SelectedLogProviders>
+      <DTS:SelectedLogProvider
+        DTS:InstanceID="{9E5A7D53-F1DB-4894-8540-118C54397B00}" />
+    </DTS:SelectedLogProviders>
+  </DTS:LoggingOptions>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\DFT_REWARDGIFTS_LOAD"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{AC616FF9-345F-44B1-AF51-5DE96620FB23}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="DFT_REWARDGIFTS_LOAD"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"DFT_"+@[User::v_Task_Name]+"_LOAD"</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="[SRC_REWARDGIFTS].[SqlCommand]">@[User::v_Source_Query]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <pipeline
+          defaultBufferMaxRows="100000"
+          defaultBufferSize="20485760"
+          version="1">
+          <components>
+            <component
+              refId="Package\DFT_REWARDGIFTS_LOAD\BDD_REWARDGIFTS"
+              componentClassID="Microsoft.BDD"
+              contactInfo="Balanced Data Distributor;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Evaluates and directs rows in a dataset to multiple destinations."
+              name="BDD_REWARDGIFTS">
+              <inputs>
+                <input
+                  refId="Package\DFT_REWARDGIFTS_LOAD\BDD_REWARDGIFTS.Inputs[Balanced Data Distributor Input]"
+                  description="Input to the Balanced Data      Distributor Transformation"
+                  name="Balanced Data Distributor Input">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_REWARDGIFTS_LOAD\BDD_REWARDGIFTS.Outputs[Balanced Data Distributor Output 1]"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 1"
+                  synchronousInputId="Package\DFT_REWARDGIFTS_LOAD\BDD_REWARDGIFTS.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_REWARDGIFTS_LOAD\BDD_REWARDGIFTS.Outputs[Balanced Data Distributor Output 2]"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 2"
+                  synchronousInputId="Package\DFT_REWARDGIFTS_LOAD\BDD_REWARDGIFTS.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_REWARDGIFTS_LOAD\BDD_REWARDGIFTS.Outputs[Balanced Data Distributor Output 3]"
+                  dangling="true"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 3"
+                  synchronousInputId="Package\DFT_REWARDGIFTS_LOAD\BDD_REWARDGIFTS.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_REWARDGIFTS_LOAD\DC_BATCH"
+              componentClassID="Microsoft.DerivedColumn"
+              contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+              name="DC_BATCH"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\DFT_REWARDGIFTS_LOAD\DC_BATCH.Inputs[Derived Column Input]"
+                  description="Input to the Derived Column Transformation"
+                  name="Derived Column Input">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_REWARDGIFTS_LOAD\DC_BATCH.Outputs[Derived Column Output]"
+                  description="Default Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  name="Derived Column Output"
+                  synchronousInputId="Package\DFT_REWARDGIFTS_LOAD\DC_BATCH.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]"
+                      dataType="i8"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]"
+                      name="BATCH_ID"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">@[User::v_Batch_Id]</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">@[User::v_Batch_Id]</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_REWARDGIFTS_LOAD\DC_BATCH.Outputs[Derived Column Error Output]"
+                  description="Error Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Derived Column Error Output"
+                  synchronousInputId="Package\DFT_REWARDGIFTS_LOAD\DC_BATCH.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="DST_REWARDGIFTS"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[LZOWN].[SRC_PRIME17_REWARDGIFTS]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS,ROWS_PER_BATCH = 1000000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].Columns[INSTITUTION_ID]"
+                      cachedDataType="i4"
+                      cachedName="INSTITUTION_ID"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].Columns[SERNO]"
+                      cachedDataType="numeric"
+                      cachedName="SERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[SERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].Columns[NAME]"
+                      cachedDataType="wstr"
+                      cachedLength="30"
+                      cachedName="NAME"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[NAME]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[NAME]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].Columns[CODE]"
+                      cachedDataType="wstr"
+                      cachedLength="10"
+                      cachedName="CODE"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[CODE]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[CODE]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].Columns[DESCRIPTION]"
+                      cachedDataType="wstr"
+                      cachedLength="250"
+                      cachedName="DESCRIPTION"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTION]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[DESCRIPTION]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].Columns[ADDRESSSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="ADDRESSSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESSSERNO]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[ADDRESSSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].Columns[ONLYINCOUNTRY]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="3"
+                      cachedName="ONLYINCOUNTRY"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[ONLYINCOUNTRY]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[ONLYINCOUNTRY]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].Columns[AVAILABLEFROM]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="AVAILABLEFROM"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[AVAILABLEFROM]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[AVAILABLEFROM]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].Columns[AVAILABLEUNTIL]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="AVAILABLEUNTIL"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[AVAILABLEUNTIL]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[AVAILABLEUNTIL]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].Columns[CURRENTLYAVAILABLE]"
+                      cachedDataType="i4"
+                      cachedName="CURRENTLYAVAILABLE"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[CURRENTLYAVAILABLE]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[CURRENTLYAVAILABLE]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].Columns[COSTCURRENCY]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="3"
+                      cachedName="COSTCURRENCY"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[COSTCURRENCY]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[COSTCURRENCY]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].Columns[COST]"
+                      cachedDataType="numeric"
+                      cachedName="COST"
+                      cachedPrecision="16"
+                      cachedScale="3"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[COST]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[COST]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].Columns[ADMINCOST]"
+                      cachedDataType="numeric"
+                      cachedName="ADMINCOST"
+                      cachedPrecision="16"
+                      cachedScale="3"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[ADMINCOST]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[ADMINCOST]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].Columns[CARRIAGECOST]"
+                      cachedDataType="numeric"
+                      cachedName="CARRIAGECOST"
+                      cachedPrecision="16"
+                      cachedScale="3"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[CARRIAGECOST]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[CARRIAGECOST]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].Columns[INTCARRIAGECOST]"
+                      cachedDataType="numeric"
+                      cachedName="INTCARRIAGECOST"
+                      cachedPrecision="16"
+                      cachedScale="3"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[INTCARRIAGECOST]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[INTCARRIAGECOST]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].Columns[DAYSFORDELIVERY]"
+                      cachedDataType="i4"
+                      cachedName="DAYSFORDELIVERY"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[DAYSFORDELIVERY]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[DAYSFORDELIVERY]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].Columns[NUMBERORDERED]"
+                      cachedDataType="numeric"
+                      cachedName="NUMBERORDERED"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[NUMBERORDERED]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[NUMBERORDERED]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].Columns[PRIORITY]"
+                      cachedDataType="i4"
+                      cachedName="PRIORITY"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[PRIORITY]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[PRIORITY]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].Columns[FULFILMENTMETHOD]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="FULFILMENTMETHOD"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[FULFILMENTMETHOD]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[FULFILMENTMETHOD]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].Columns[AUTOREDEEM]"
+                      cachedDataType="i1"
+                      cachedName="AUTOREDEEM"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[AUTOREDEEM]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[AUTOREDEEM]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].Columns[LOGACTION]"
+                      cachedDataType="wstr"
+                      cachedLength="11"
+                      cachedName="LOGACTION"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[LOGACTION]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[LOGACTION]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].Columns[REASONCODE]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="REASONCODE"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[REASONCODE]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[REASONCODE]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].Columns[REDEEMASCASHREASONCODE]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="REDEEMASCASHREASONCODE"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[REDEEMASCASHREASONCODE]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[REDEEMASCASHREASONCODE]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].Columns[REDEEMCASHMETHOD]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="REDEEMCASHMETHOD"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[REDEEMCASHMETHOD]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[REDEEMCASHMETHOD]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].Columns[DEFAULTREDEEMSTATUS]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="DEFAULTREDEEMSTATUS"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[DEFAULTREDEEMSTATUS]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[DEFAULTREDEEMSTATUS]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].Columns[PROVIDERID]"
+                      cachedDataType="wstr"
+                      cachedLength="30"
+                      cachedName="PROVIDERID"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[PROVIDERID]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[PROVIDERID]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].Columns[BATCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="BATCH_ID"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[LD_SEQ_ID]"
+                      dataType="i4"
+                      name="LD_SEQ_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      dataType="i8"
+                      name="BATCH_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[LOGACTION]"
+                      dataType="wstr"
+                      length="11"
+                      name="LOGACTION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTION]"
+                      dataType="wstr"
+                      length="250"
+                      name="DESCRIPTION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[REASONCODE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="REASONCODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[NAME]"
+                      dataType="wstr"
+                      length="30"
+                      name="NAME" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[CODE]"
+                      dataType="wstr"
+                      length="10"
+                      name="CODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESSSERNO]"
+                      dataType="numeric"
+                      name="ADDRESSSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[ONLYINCOUNTRY]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="ONLYINCOUNTRY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[AVAILABLEFROM]"
+                      dataType="dbTimeStamp"
+                      name="AVAILABLEFROM" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[AVAILABLEUNTIL]"
+                      dataType="dbTimeStamp"
+                      name="AVAILABLEUNTIL" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[CURRENTLYAVAILABLE]"
+                      dataType="i4"
+                      name="CURRENTLYAVAILABLE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[COSTCURRENCY]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="COSTCURRENCY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[COST]"
+                      dataType="numeric"
+                      name="COST"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[ADMINCOST]"
+                      dataType="numeric"
+                      name="ADMINCOST"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[CARRIAGECOST]"
+                      dataType="numeric"
+                      name="CARRIAGECOST"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[INTCARRIAGECOST]"
+                      dataType="numeric"
+                      name="INTCARRIAGECOST"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[DAYSFORDELIVERY]"
+                      dataType="i4"
+                      name="DAYSFORDELIVERY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[NUMBERORDERED]"
+                      dataType="numeric"
+                      name="NUMBERORDERED"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[PRIORITY]"
+                      dataType="i4"
+                      name="PRIORITY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[FULFILMENTMETHOD]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="FULFILMENTMETHOD" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[AUTOREDEEM]"
+                      dataType="i2"
+                      name="AUTOREDEEM" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[REDEEMASCASHREASONCODE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="REDEEMASCASHREASONCODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[REDEEMCASHMETHOD]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="REDEEMCASHMETHOD" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[DEFAULTREDEEMSTATUS]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="DEFAULTREDEEMSTATUS" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input].ExternalColumns[PROVIDERID]"
+                      dataType="wstr"
+                      length="30"
+                      name="PROVIDERID" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="DST_REWARDGIFTS 1"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[LZOWN].[SRC_PRIME17_REWARDGIFTS]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS,ROWS_PER_BATCH = 1000000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].Columns[INSTITUTION_ID]"
+                      cachedDataType="i4"
+                      cachedName="INSTITUTION_ID"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].Columns[SERNO]"
+                      cachedDataType="numeric"
+                      cachedName="SERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[SERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].Columns[NAME]"
+                      cachedDataType="wstr"
+                      cachedLength="30"
+                      cachedName="NAME"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[NAME]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[NAME]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].Columns[CODE]"
+                      cachedDataType="wstr"
+                      cachedLength="10"
+                      cachedName="CODE"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[CODE]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[CODE]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].Columns[DESCRIPTION]"
+                      cachedDataType="wstr"
+                      cachedLength="250"
+                      cachedName="DESCRIPTION"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTION]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[DESCRIPTION]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].Columns[ADDRESSSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="ADDRESSSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESSSERNO]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[ADDRESSSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].Columns[ONLYINCOUNTRY]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="3"
+                      cachedName="ONLYINCOUNTRY"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[ONLYINCOUNTRY]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[ONLYINCOUNTRY]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].Columns[AVAILABLEFROM]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="AVAILABLEFROM"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[AVAILABLEFROM]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[AVAILABLEFROM]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].Columns[AVAILABLEUNTIL]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="AVAILABLEUNTIL"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[AVAILABLEUNTIL]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[AVAILABLEUNTIL]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].Columns[CURRENTLYAVAILABLE]"
+                      cachedDataType="i4"
+                      cachedName="CURRENTLYAVAILABLE"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[CURRENTLYAVAILABLE]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[CURRENTLYAVAILABLE]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].Columns[COSTCURRENCY]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="3"
+                      cachedName="COSTCURRENCY"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[COSTCURRENCY]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[COSTCURRENCY]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].Columns[COST]"
+                      cachedDataType="numeric"
+                      cachedName="COST"
+                      cachedPrecision="16"
+                      cachedScale="3"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[COST]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[COST]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].Columns[ADMINCOST]"
+                      cachedDataType="numeric"
+                      cachedName="ADMINCOST"
+                      cachedPrecision="16"
+                      cachedScale="3"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[ADMINCOST]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[ADMINCOST]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].Columns[CARRIAGECOST]"
+                      cachedDataType="numeric"
+                      cachedName="CARRIAGECOST"
+                      cachedPrecision="16"
+                      cachedScale="3"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[CARRIAGECOST]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[CARRIAGECOST]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].Columns[INTCARRIAGECOST]"
+                      cachedDataType="numeric"
+                      cachedName="INTCARRIAGECOST"
+                      cachedPrecision="16"
+                      cachedScale="3"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[INTCARRIAGECOST]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[INTCARRIAGECOST]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].Columns[DAYSFORDELIVERY]"
+                      cachedDataType="i4"
+                      cachedName="DAYSFORDELIVERY"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[DAYSFORDELIVERY]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[DAYSFORDELIVERY]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].Columns[NUMBERORDERED]"
+                      cachedDataType="numeric"
+                      cachedName="NUMBERORDERED"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[NUMBERORDERED]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[NUMBERORDERED]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].Columns[PRIORITY]"
+                      cachedDataType="i4"
+                      cachedName="PRIORITY"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[PRIORITY]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[PRIORITY]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].Columns[FULFILMENTMETHOD]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="FULFILMENTMETHOD"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[FULFILMENTMETHOD]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[FULFILMENTMETHOD]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].Columns[AUTOREDEEM]"
+                      cachedDataType="i1"
+                      cachedName="AUTOREDEEM"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[AUTOREDEEM]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[AUTOREDEEM]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].Columns[LOGACTION]"
+                      cachedDataType="wstr"
+                      cachedLength="11"
+                      cachedName="LOGACTION"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[LOGACTION]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[LOGACTION]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].Columns[REASONCODE]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="REASONCODE"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[REASONCODE]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[REASONCODE]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].Columns[REDEEMASCASHREASONCODE]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="REDEEMASCASHREASONCODE"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[REDEEMASCASHREASONCODE]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[REDEEMASCASHREASONCODE]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].Columns[REDEEMCASHMETHOD]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="REDEEMCASHMETHOD"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[REDEEMCASHMETHOD]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[REDEEMCASHMETHOD]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].Columns[DEFAULTREDEEMSTATUS]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="DEFAULTREDEEMSTATUS"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[DEFAULTREDEEMSTATUS]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[DEFAULTREDEEMSTATUS]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].Columns[PROVIDERID]"
+                      cachedDataType="wstr"
+                      cachedLength="30"
+                      cachedName="PROVIDERID"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[PROVIDERID]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[PROVIDERID]" />
+                    <inputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].Columns[BATCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="BATCH_ID"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[LD_SEQ_ID]"
+                      dataType="i4"
+                      name="LD_SEQ_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      dataType="i8"
+                      name="BATCH_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[LOGACTION]"
+                      dataType="wstr"
+                      length="11"
+                      name="LOGACTION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTION]"
+                      dataType="wstr"
+                      length="250"
+                      name="DESCRIPTION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[REASONCODE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="REASONCODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[NAME]"
+                      dataType="wstr"
+                      length="30"
+                      name="NAME" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[CODE]"
+                      dataType="wstr"
+                      length="10"
+                      name="CODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESSSERNO]"
+                      dataType="numeric"
+                      name="ADDRESSSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[ONLYINCOUNTRY]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="ONLYINCOUNTRY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[AVAILABLEFROM]"
+                      dataType="dbTimeStamp"
+                      name="AVAILABLEFROM" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[AVAILABLEUNTIL]"
+                      dataType="dbTimeStamp"
+                      name="AVAILABLEUNTIL" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[CURRENTLYAVAILABLE]"
+                      dataType="i4"
+                      name="CURRENTLYAVAILABLE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[COSTCURRENCY]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="COSTCURRENCY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[COST]"
+                      dataType="numeric"
+                      name="COST"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[ADMINCOST]"
+                      dataType="numeric"
+                      name="ADMINCOST"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[CARRIAGECOST]"
+                      dataType="numeric"
+                      name="CARRIAGECOST"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[INTCARRIAGECOST]"
+                      dataType="numeric"
+                      name="INTCARRIAGECOST"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[DAYSFORDELIVERY]"
+                      dataType="i4"
+                      name="DAYSFORDELIVERY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[NUMBERORDERED]"
+                      dataType="numeric"
+                      name="NUMBERORDERED"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[PRIORITY]"
+                      dataType="i4"
+                      name="PRIORITY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[FULFILMENTMETHOD]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="FULFILMENTMETHOD" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[AUTOREDEEM]"
+                      dataType="i2"
+                      name="AUTOREDEEM" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[REDEEMASCASHREASONCODE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="REDEEMASCASHREASONCODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[REDEEMCASHMETHOD]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="REDEEMCASHMETHOD" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[DEFAULTREDEEMSTATUS]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="DEFAULTREDEEMSTATUS" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input].ExternalColumns[PROVIDERID]"
+                      dataType="wstr"
+                      length="30"
+                      name="PROVIDERID" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_REWARDGIFTS_LOAD\RC_REWARDGIFTS"
+              componentClassID="Microsoft.RowCount"
+              contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Counts rows as they pass through a data flow. For example, use the number of rows processed to determine whether or not to perform cleanup operations, or update text in an e-mail message to communicate processing status."
+              name="RC_REWARDGIFTS">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable to hold the row count."
+                  name="VariableName">User::v_Rows_Read</property>
+              </properties>
+              <inputs>
+                <input
+                  refId="Package\DFT_REWARDGIFTS_LOAD\RC_REWARDGIFTS.Inputs[Row Count Input 1]"
+                  hasSideEffects="true"
+                  name="Row Count Input 1">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_REWARDGIFTS_LOAD\RC_REWARDGIFTS.Outputs[Row Count Output 1]"
+                  name="Row Count Output 1"
+                  synchronousInputId="Package\DFT_REWARDGIFTS_LOAD\RC_REWARDGIFTS.Inputs[Row Count Input 1]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS"
+              componentClassID="Attunity.SSISOraSrc"
+              contactInfo="Oracle Source;Microsoft Connector for Oracle by Attunity; Attunity Ltd.; All Rights Reserved; http://www.attunity.com;7"
+              description="Microsoft Oracle Source Component by Attunity"
+              name="SRC_REWARDGIFTS"
+              usesDispositions="true"
+              version="6">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="The name of the table to be fetched."
+                  expressionType="Notify"
+                  name="TableName"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  expressionType="Notify"
+                  name="SqlCommand">SELECT INSTITUTION_ID	
+,SERNO	
+,NAME	
+,CODE	
+,DESCRIPTION	
+,ADDRESSSERNO	
+,ONLYINCOUNTRY	
+,AVAILABLEFROM	
+,AVAILABLEUNTIL	
+,CURRENTLYAVAILABLE	
+,COSTCURRENCY	
+,COST	
+,ADMINCOST	
+,CARRIAGECOST	
+,INTCARRIAGECOST	
+,DAYSFORDELIVERY	
+,NUMBERORDERED	
+,PRIORITY	
+,FULFILMENTMETHOD	
+,AUTOREDEEM	
+,LOGACTION	
+,REASONCODE	
+,REDEEMASCASHREASONCODE	
+,REDEEMCASHMETHOD	
+,DEFAULTREDEEMSTATUS	
+,PROVIDERID 
+FROM TCTDBS.REWARDGIFTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="The number of rows fetched in a batch."
+                  expressionType="Notify"
+                  name="BatchSize">100</property>
+                <property
+                  dataType="System.Int32"
+                  description="Number of pre-fetched rows."
+                  expressionType="Notify"
+                  name="PrefetchCount">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Determines the chunk size allocation for LOB columns"
+                  expressionType="Notify"
+                  name="LobChunkSize">32768</property>
+                <property
+                  dataType="System.Int32"
+                  description="The code page to use when code page information is unavailable from the data source."
+                  expressionType="Notify"
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Int32"
+                  description="The mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">1</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Connections[MSOraConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_Prime_Attunity]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_Prime_Attunity]"
+                  description="The Oracle runtime connection"
+                  name="MSOraConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output]"
+                  errorRowDisposition="FailComponent"
+                  name="Oracle Source Output"
+                  truncationRowDisposition="FailComponent">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]"
+                      name="INSTITUTION_ID" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[SERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[SERNO]"
+                      name="SERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[NAME]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[NAME]"
+                      length="30"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[NAME]"
+                      name="NAME" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[CODE]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[CODE]"
+                      length="10"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[CODE]"
+                      name="CODE" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[DESCRIPTION]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[DESCRIPTION]"
+                      length="250"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[DESCRIPTION]"
+                      name="DESCRIPTION" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[ADDRESSSERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[ADDRESSSERNO]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[ADDRESSSERNO]"
+                      name="ADDRESSSERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[ONLYINCOUNTRY]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[ONLYINCOUNTRY]"
+                      length="3"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[ONLYINCOUNTRY]"
+                      name="ONLYINCOUNTRY" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[AVAILABLEFROM]"
+                      dataType="dbTimeStamp"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[AVAILABLEFROM]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[AVAILABLEFROM]"
+                      name="AVAILABLEFROM" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[AVAILABLEUNTIL]"
+                      dataType="dbTimeStamp"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[AVAILABLEUNTIL]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[AVAILABLEUNTIL]"
+                      name="AVAILABLEUNTIL" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[CURRENTLYAVAILABLE]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[CURRENTLYAVAILABLE]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[CURRENTLYAVAILABLE]"
+                      name="CURRENTLYAVAILABLE" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[COSTCURRENCY]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[COSTCURRENCY]"
+                      length="3"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[COSTCURRENCY]"
+                      name="COSTCURRENCY" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[COST]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[COST]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[COST]"
+                      name="COST"
+                      precision="16"
+                      scale="3" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[ADMINCOST]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[ADMINCOST]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[ADMINCOST]"
+                      name="ADMINCOST"
+                      precision="16"
+                      scale="3" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[CARRIAGECOST]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[CARRIAGECOST]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[CARRIAGECOST]"
+                      name="CARRIAGECOST"
+                      precision="16"
+                      scale="3" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[INTCARRIAGECOST]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[INTCARRIAGECOST]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[INTCARRIAGECOST]"
+                      name="INTCARRIAGECOST"
+                      precision="16"
+                      scale="3" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[DAYSFORDELIVERY]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[DAYSFORDELIVERY]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[DAYSFORDELIVERY]"
+                      name="DAYSFORDELIVERY" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[NUMBERORDERED]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[NUMBERORDERED]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[NUMBERORDERED]"
+                      name="NUMBERORDERED"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[PRIORITY]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[PRIORITY]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[PRIORITY]"
+                      name="PRIORITY" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[FULFILMENTMETHOD]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[FULFILMENTMETHOD]"
+                      length="4"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[FULFILMENTMETHOD]"
+                      name="FULFILMENTMETHOD" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[AUTOREDEEM]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[AUTOREDEEM]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[AUTOREDEEM]"
+                      name="AUTOREDEEM" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[LOGACTION]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[LOGACTION]"
+                      length="11"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[LOGACTION]"
+                      name="LOGACTION" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[REASONCODE]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[REASONCODE]"
+                      length="4"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[REASONCODE]"
+                      name="REASONCODE" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[REDEEMASCASHREASONCODE]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[REDEEMASCASHREASONCODE]"
+                      length="4"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[REDEEMASCASHREASONCODE]"
+                      name="REDEEMASCASHREASONCODE" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[REDEEMCASHMETHOD]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[REDEEMCASHMETHOD]"
+                      length="1"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[REDEEMCASHMETHOD]"
+                      name="REDEEMCASHMETHOD" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[DEFAULTREDEEMSTATUS]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[DEFAULTREDEEMSTATUS]"
+                      length="4"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[DEFAULTREDEEMSTATUS]"
+                      name="DEFAULTREDEEMSTATUS" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[PROVIDERID]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[PROVIDERID]"
+                      length="30"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].Columns[PROVIDERID]"
+                      name="PROVIDERID" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[NAME]"
+                      dataType="wstr"
+                      length="30"
+                      name="NAME" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[CODE]"
+                      dataType="wstr"
+                      length="10"
+                      name="CODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[DESCRIPTION]"
+                      dataType="wstr"
+                      length="250"
+                      name="DESCRIPTION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[ADDRESSSERNO]"
+                      dataType="numeric"
+                      name="ADDRESSSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[ONLYINCOUNTRY]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="ONLYINCOUNTRY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[AVAILABLEFROM]"
+                      dataType="dbTimeStamp"
+                      name="AVAILABLEFROM" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[AVAILABLEUNTIL]"
+                      dataType="dbTimeStamp"
+                      name="AVAILABLEUNTIL" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[CURRENTLYAVAILABLE]"
+                      dataType="i4"
+                      name="CURRENTLYAVAILABLE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[COSTCURRENCY]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="COSTCURRENCY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[COST]"
+                      dataType="numeric"
+                      name="COST"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[ADMINCOST]"
+                      dataType="numeric"
+                      name="ADMINCOST"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[CARRIAGECOST]"
+                      dataType="numeric"
+                      name="CARRIAGECOST"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[INTCARRIAGECOST]"
+                      dataType="numeric"
+                      name="INTCARRIAGECOST"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[DAYSFORDELIVERY]"
+                      dataType="i4"
+                      name="DAYSFORDELIVERY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[NUMBERORDERED]"
+                      dataType="numeric"
+                      name="NUMBERORDERED"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[PRIORITY]"
+                      dataType="i4"
+                      name="PRIORITY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[FULFILMENTMETHOD]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="FULFILMENTMETHOD" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[AUTOREDEEM]"
+                      dataType="i1"
+                      name="AUTOREDEEM" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[LOGACTION]"
+                      dataType="wstr"
+                      length="11"
+                      name="LOGACTION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[REASONCODE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="REASONCODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[REDEEMASCASHREASONCODE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="REDEEMASCASHREASONCODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[REDEEMCASHMETHOD]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="REDEEMCASHMETHOD" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[DEFAULTREDEEMSTATUS]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="DEFAULTREDEEMSTATUS" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[PROVIDERID]"
+                      dataType="wstr"
+                      length="30"
+                      name="PROVIDERID" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output]"
+                  isErrorOut="true"
+                  name="Oracle Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[INSTITUTION_ID]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[INSTITUTION_ID]"
+                      name="INSTITUTION_ID" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[SERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[SERNO]"
+                      name="SERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[NAME]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[NAME]"
+                      length="30"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[NAME]"
+                      name="NAME" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[CODE]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[CODE]"
+                      length="10"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[CODE]"
+                      name="CODE" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[DESCRIPTION]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[DESCRIPTION]"
+                      length="250"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[DESCRIPTION]"
+                      name="DESCRIPTION" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[ADDRESSSERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[ADDRESSSERNO]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[ADDRESSSERNO]"
+                      name="ADDRESSSERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[ONLYINCOUNTRY]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[ONLYINCOUNTRY]"
+                      length="3"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[ONLYINCOUNTRY]"
+                      name="ONLYINCOUNTRY" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[AVAILABLEFROM]"
+                      dataType="dbTimeStamp"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[AVAILABLEFROM]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[AVAILABLEFROM]"
+                      name="AVAILABLEFROM" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[AVAILABLEUNTIL]"
+                      dataType="dbTimeStamp"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[AVAILABLEUNTIL]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[AVAILABLEUNTIL]"
+                      name="AVAILABLEUNTIL" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[CURRENTLYAVAILABLE]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[CURRENTLYAVAILABLE]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[CURRENTLYAVAILABLE]"
+                      name="CURRENTLYAVAILABLE" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[COSTCURRENCY]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[COSTCURRENCY]"
+                      length="3"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[COSTCURRENCY]"
+                      name="COSTCURRENCY" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[COST]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[COST]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[COST]"
+                      name="COST"
+                      precision="16"
+                      scale="3" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[ADMINCOST]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[ADMINCOST]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[ADMINCOST]"
+                      name="ADMINCOST"
+                      precision="16"
+                      scale="3" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[CARRIAGECOST]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[CARRIAGECOST]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[CARRIAGECOST]"
+                      name="CARRIAGECOST"
+                      precision="16"
+                      scale="3" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[INTCARRIAGECOST]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[INTCARRIAGECOST]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[INTCARRIAGECOST]"
+                      name="INTCARRIAGECOST"
+                      precision="16"
+                      scale="3" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[DAYSFORDELIVERY]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[DAYSFORDELIVERY]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[DAYSFORDELIVERY]"
+                      name="DAYSFORDELIVERY" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[NUMBERORDERED]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[NUMBERORDERED]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[NUMBERORDERED]"
+                      name="NUMBERORDERED"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[PRIORITY]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[PRIORITY]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[PRIORITY]"
+                      name="PRIORITY" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[FULFILMENTMETHOD]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[FULFILMENTMETHOD]"
+                      length="4"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[FULFILMENTMETHOD]"
+                      name="FULFILMENTMETHOD" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[AUTOREDEEM]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[AUTOREDEEM]"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[AUTOREDEEM]"
+                      name="AUTOREDEEM" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[LOGACTION]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[LOGACTION]"
+                      length="11"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[LOGACTION]"
+                      name="LOGACTION" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[REASONCODE]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[REASONCODE]"
+                      length="4"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[REASONCODE]"
+                      name="REASONCODE" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[REDEEMASCASHREASONCODE]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[REDEEMASCASHREASONCODE]"
+                      length="4"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[REDEEMASCASHREASONCODE]"
+                      name="REDEEMASCASHREASONCODE" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[REDEEMCASHMETHOD]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[REDEEMCASHMETHOD]"
+                      length="1"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[REDEEMCASHMETHOD]"
+                      name="REDEEMCASHMETHOD" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[DEFAULTREDEEMSTATUS]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[DEFAULTREDEEMSTATUS]"
+                      length="4"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[DEFAULTREDEEMSTATUS]"
+                      name="DEFAULTREDEEMSTATUS" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[PROVIDERID]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output].ExternalColumns[PROVIDERID]"
+                      length="30"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[PROVIDERID]"
+                      name="PROVIDERID" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\DFT_REWARDGIFTS_LOAD.Paths[Balanced Data Distributor Output 1]"
+              endId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS.Inputs[OLE DB Destination Input]"
+              name="Balanced Data Distributor Output 1"
+              startId="Package\DFT_REWARDGIFTS_LOAD\BDD_REWARDGIFTS.Outputs[Balanced Data Distributor Output 1]" />
+            <path
+              refId="Package\DFT_REWARDGIFTS_LOAD.Paths[Balanced Data Distributor Output 2]"
+              endId="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1.Inputs[OLE DB Destination Input]"
+              name="Balanced Data Distributor Output 2"
+              startId="Package\DFT_REWARDGIFTS_LOAD\BDD_REWARDGIFTS.Outputs[Balanced Data Distributor Output 2]" />
+            <path
+              refId="Package\DFT_REWARDGIFTS_LOAD.Paths[Derived Column Output]"
+              endId="Package\DFT_REWARDGIFTS_LOAD\BDD_REWARDGIFTS.Inputs[Balanced Data Distributor Input]"
+              name="Derived Column Output"
+              startId="Package\DFT_REWARDGIFTS_LOAD\DC_BATCH.Outputs[Derived Column Output]" />
+            <path
+              refId="Package\DFT_REWARDGIFTS_LOAD.Paths[Oracle Source Output]"
+              endId="Package\DFT_REWARDGIFTS_LOAD\RC_REWARDGIFTS.Inputs[Row Count Input 1]"
+              name="Oracle Source Output"
+              startId="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS.Outputs[Oracle Source Output]" />
+            <path
+              refId="Package\DFT_REWARDGIFTS_LOAD.Paths[Row Count Output 1]"
+              endId="Package\DFT_REWARDGIFTS_LOAD\DC_BATCH.Inputs[Derived Column Input]"
+              name="Row Count Output 1"
+              startId="Package\DFT_REWARDGIFTS_LOAD\RC_REWARDGIFTS.Outputs[Row Count Output 1]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_REWARDGIFTS_GET_DEST_COUNT_LOAD"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{DB9A7027-822E-491B-80F6-EE7F0A633195}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_REWARDGIFTS_GET_DEST_COUNT_LOAD"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_GET_DEST_COUNT_LOAD"</DTS:PropertyExpression>
+      <DTS:EventHandlers>
+        <DTS:EventHandler
+          DTS:refId="Package\SQL_REWARDGIFTS_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]"
+          DTS:CreationName="OnPreExecute"
+          DTS:DTSID="{6808C947-F6A9-4CD7-B1BC-EFCAA8512B0E}"
+          DTS:EventID="1076330902"
+          DTS:EventName="OnPreExecute"
+          DTS:LocaleID="-1">
+          <DTS:Variables>
+            <DTS:Variable
+              DTS:CreationName=""
+              DTS:Description="The propagate property of the event"
+              DTS:DTSID="{3BB57F49-206C-4605-9B3A-D41353A88AD8}"
+              DTS:IncludeInDebugDump="6789"
+              DTS:Namespace="System"
+              DTS:ObjectName="Propagate">
+              <DTS:VariableValue
+                DTS:DataType="11">-1</DTS:VariableValue>
+            </DTS:Variable>
+          </DTS:Variables>
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\SQL_REWARDGIFTS_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]\SQL_REWARDGIFTS_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{FDDB843D-C9FA-44D9-9712-9B6C38C2372A}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="SQL_REWARDGIFTS_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+              <DTS:Variables />
+              <DTS:PropertyExpression
+                DTS:Name="Name">"SQL_"+ @[User::v_Task_Name]+"_UPDATE_DFT_LOAD_COMPLETED"</DTS:PropertyExpression>
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{DC87480A-2B1D-4CB0-B918-8E7BC8FC676F}"
+                  SQLTask:SqlStatementSource="UPDATE DBO.BATCH_EXECUTION_STATUS&#xA; SET  &#xA;STATUS_FLAG = 'DFT LOAD COMPLETED'   WHERE&#xA; EXECUTION_ID = (&#xA;       SELECT MAX(EXECUTION_ID) EXECUTION_ID&#xA;       FROM DBO.BATCH_EXECUTION_STATUS&#xA;       WHERE PACKAGE_ID =?&#xA;       AND  BATCH_ID = ?&#xA;    )"
+                  SQLTask:TypeConversionMode="None" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="0"
+                    SQLTask:DtsVariableName="User::v_Package_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="1"
+                    SQLTask:DtsVariableName="User::v_Batch_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                </SQLTask:SqlTaskData>
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+        </DTS:EventHandler>
+      </DTS:EventHandlers>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{6FFEC659-C2F7-4AC5-8059-CF4663E8C652}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::v_Dest_Count_Query"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="0"
+            SQLTask:DtsVariableName="User::v_Rows_Inserted" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_REWARDGIFTS_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{7BE07338-F7D7-47B5-B8C0-4A25B470FFC8}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_REWARDGIFTS_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_CHECK_PACKAGE_EXISTENCE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{DC87480A-2B1D-4CB0-B918-8E7BC8FC676F}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_NAME VARCHAR(500) = ?&#xA;&#xA;EXEC [DBO].[SP_CHECK_PACKAGE_EXISTENCE]  @PACKAGE_NAME" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_REWARDGIFTS_SP_GET_PACKAGE_BATCH_ID"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{248A65F7-4EA5-41F8-88EA-6D794A88ABEE}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_REWARDGIFTS_SP_GET_PACKAGE_BATCH_ID"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_GET_PACKAGE_BATCH_ID"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{DC87480A-2B1D-4CB0-B918-8E7BC8FC676F}"
+          SQLTask:SqlStatementSource="&#xA;DECLARE @PACKAGE_NAME VARCHAR(500) = ?&#xA;DECLARE @PACKAGE_ID  INT &#xA;DECLARE @BATCH_ID BIGINT&#xA;&#xA;&#xA; EXEC [DBO].[SP_GET_PACKAGE_BATCH_ID] @PACKAGE_NAME,@PACKAGE_ID OUT,@BATCH_ID OUT&#xA; SELECT ? = @PACKAGE_ID &#xA; SELECT ? = @BATCH_ID" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_REWARDGIFTS_SP_INSERT_EXECUTION_STATUS"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{F9E53F3A-86D2-48BB-816C-0752F638A151}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_REWARDGIFTS_SP_INSERT_EXECUTION_STATUS"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_INSERT_EXECUTION_STATUS"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{DC87480A-2B1D-4CB0-B918-8E7BC8FC676F}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @PACKAGE_START_TIME DATETIME = ?&#xA;DECLARE @JOB_ID INT  =?&#xA;&#xA;EXEC [DBO].[SP_INSERT_EXECUTION_STATUS]           @PACKAGE_ID&#xA;,@BATCH_ID&#xA;,@PACKAGE_START_TIME&#xA;,@JOB_ID" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="System::StartTime"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="7"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="$Project::p_JOB_ID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_REWARDGIFTS_SP_UPDATE_EXECUTION_STATUS_LOAD"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{4C543262-18DD-4C89-A93E-41589C64D03C}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_REWARDGIFTS_SP_UPDATE_EXECUTION_STATUS_LOAD"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_UPDATE_EXECUTION_STATUS_LOAD"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{DC87480A-2B1D-4CB0-B918-8E7BC8FC676F}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @ROWS_READ BIGINT = ?&#xA;DECLARE @ROWS_INSERTED BIGINT = ?&#xA;DECLARE @ROWS_UPDATED BIGINT =0&#xA;DECLARE @ROWS_ERRORED  BIGINT=0&#xA;&#xA;&#xA;EXEC DBO.SP_UPDATE_EXECUTION_STATUS @PACKAGE_ID&#xA; , @BATCH_ID&#xA; , @ROWS_READ&#xA; , @ROWS_INSERTED&#xA; , @ROWS_UPDATED&#xA; , @ROWS_ERRORED" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::v_Rows_Read"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="User::v_Rows_Inserted"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_REWARDGIFTS_TRUNCATE_STG_TABLE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{2ADF5293-D8C1-44DC-9B50-381A4D36B872}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_REWARDGIFTS_TRUNCATE_STG_TABLE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_TRUNCATE_STG_TABLE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{6FFEC659-C2F7-4AC5-8059-CF4663E8C652}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::v_Trunc_Query" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{C5CB755A-AF10-4A03-A63D-175A0D8C7254}"
+      DTS:From="Package\SQL_REWARDGIFTS_SP_GET_PACKAGE_BATCH_ID"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\SQL_REWARDGIFTS_SP_INSERT_EXECUTION_STATUS" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 10]"
+      DTS:CreationName=""
+      DTS:DTSID="{B3CA99A3-FCC7-4C47-B165-CD6B2F63C1FA}"
+      DTS:From="Package\SQL_REWARDGIFTS_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 10"
+      DTS:To="Package\SQL_REWARDGIFTS_SP_GET_PACKAGE_BATCH_ID" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 12]"
+      DTS:CreationName=""
+      DTS:DTSID="{D2472A4F-4257-4363-AB21-AD45E2020B0F}"
+      DTS:From="Package\DFT_REWARDGIFTS_LOAD"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 12"
+      DTS:To="Package\SQL_REWARDGIFTS_GET_DEST_COUNT_LOAD" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{5CA0B7E1-5600-4856-BDA4-D994892BA09C}"
+      DTS:From="Package\SQL_REWARDGIFTS_SP_INSERT_EXECUTION_STATUS"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\SQL_REWARDGIFTS_TRUNCATE_STG_TABLE" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 5]"
+      DTS:CreationName=""
+      DTS:DTSID="{62898688-A112-491B-A344-42B19ACD4CA3}"
+      DTS:Expression="@[User::v_Inc_Date] == (DT_DBTIMESTAMP) &quot;1753-01-01&quot;"
+      DTS:From="Package\SQL_REWARDGIFTS_TRUNCATE_STG_TABLE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 5"
+      DTS:To="Package\DFT_REWARDGIFTS_LOAD" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 7]"
+      DTS:CreationName=""
+      DTS:DTSID="{0648A996-A271-4FA1-8C0B-939772DCA254}"
+      DTS:Expression="@[User::v_Rows_Inserted] ==0"
+      DTS:From="Package\SQL_REWARDGIFTS_GET_DEST_COUNT_LOAD"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 7"
+      DTS:To="Package\SQL_REWARDGIFTS_SP_UPDATE_EXECUTION_STATUS_LOAD" />
+  </DTS:PrecedenceConstraints>
+  <DTS:EventHandlers>
+    <DTS:EventHandler
+      DTS:refId="Package.EventHandlers[OnError]"
+      DTS:CreationName="OnError"
+      DTS:DTSID="{AFDE8CB6-CB6E-4EE0-A021-E692F042159D}"
+      DTS:EventID="2"
+      DTS:EventName="OnError"
+      DTS:LocaleID="-1">
+      <DTS:Variables>
+        <DTS:Variable
+          DTS:CreationName=""
+          DTS:Description="The propagate property of the event"
+          DTS:DTSID="{DD321E2C-40CD-44E1-ADB9-19ED6693AD99}"
+          DTS:IncludeInDebugDump="6789"
+          DTS:Namespace="System"
+          DTS:ObjectName="Propagate">
+          <DTS:VariableValue
+            DTS:DataType="11">-1</DTS:VariableValue>
+        </DTS:Variable>
+      </DTS:Variables>
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package.EventHandlers[OnError]\SQL_REWARDGIFTS_SP_SSIS_ERRORLOG"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{C23EF932-E60B-4EAF-8F36-7A4D3D9E756B}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="SQL_REWARDGIFTS_SP_SSIS_ERRORLOG"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:PropertyExpression
+            DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_SSIS_ERRORLOG"</DTS:PropertyExpression>
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{DC87480A-2B1D-4CB0-B918-8E7BC8FC676F}"
+              SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @PKG_GUID SYSNAME = ?&#xA;DECLARE @PACKAGE_NAME SYSNAME = ?&#xA;DECLARE @SOURCE_NAME VARCHAR(100) = ?&#xA;DECLARE @TASK_NAME VARCHAR(100) = ?&#xA;DECLARE @MACHINE_NAME VARCHAR(50) = ?&#xA;DECLARE @USER_NAME VARCHAR(50) = ?&#xA;DECLARE @ERROR_NUMBER INT = ?&#xA;DECLARE @ERROR_DESCRIPTION VARCHAR(MAX) = ?&#xA;DECLARE @PACKAGE_START_TIME DATETIME  = NULL&#xA;DECLARE @ROWS_READ BIGINT = ?&#xA;DECLARE @ROWS_INSERTED BIGINT = ?&#xA;DECLARE @ROWS_UPDATED BIGINT = NULL&#xA;DECLARE @ROWS_ERRORED BIGINT = NULL&#xA;&#xA;EXEC DBO.[SP_SSIS_ERRORLOG] @PACKAGE_ID&#xA;&#x9;,@BATCH_ID&#xA;&#x9;,@PKG_GUID&#xA;&#x9;,@PACKAGE_NAME&#xA;&#x9;,@SOURCE_NAME&#xA;&#x9;,@TASK_NAME&#xA;&#x9;,@MACHINE_NAME&#xA;&#x9;,@USER_NAME&#xA;&#x9;,@ERROR_NUMBER&#xA;&#x9;,@ERROR_DESCRIPTION&#xA;&#x9;,@PACKAGE_START_TIME&#xA;&#x9;,@ROWS_READ&#xA;&#x9;,@ROWS_INSERTED&#xA;&#x9;,@ROWS_UPDATED &#xA;&#x9;,@ROWS_ERRORED" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::v_Package_Id"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="1"
+                SQLTask:DtsVariableName="User::v_Batch_Id"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="2"
+                SQLTask:DtsVariableName="System::PackageID"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="3"
+                SQLTask:DtsVariableName="System::PackageName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="4"
+                SQLTask:DtsVariableName="System::SourceName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="5"
+                SQLTask:DtsVariableName="System::TaskName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="6"
+                SQLTask:DtsVariableName="System::MachineName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="7"
+                SQLTask:DtsVariableName="System::UserName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="8"
+                SQLTask:DtsVariableName="System::ErrorCode"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="9"
+                SQLTask:DtsVariableName="System::ErrorDescription"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="10"
+                SQLTask:DtsVariableName="User::v_Rows_Read"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="11"
+                SQLTask:DtsVariableName="User::v_Rows_Inserted"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+    </DTS:EventHandler>
+  </DTS:EventHandlers>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="416,43"
+          Id="Package\DFT_REWARDGIFTS_LOAD"
+          TopLeft="602.878402019497,412.182348771409" />
+        <NodeLayout
+          Size="416,43"
+          Id="Package\SQL_REWARDGIFTS_GET_DEST_COUNT_LOAD"
+          TopLeft="602.878402019497,513.852935964261" />
+        <NodeLayout
+          Size="416,43"
+          Id="Package\SQL_REWARDGIFTS_SP_CHECK_PACKAGE_EXISTENCE"
+          TopLeft="602.878402019497,5.5" />
+        <NodeLayout
+          Size="416,43"
+          Id="Package\SQL_REWARDGIFTS_SP_GET_PACKAGE_BATCH_ID"
+          TopLeft="602.878402019497,107.170587192852" />
+        <NodeLayout
+          Size="416,43"
+          Id="Package\SQL_REWARDGIFTS_SP_INSERT_EXECUTION_STATUS"
+          TopLeft="602.878402019497,208.841174385704" />
+        <NodeLayout
+          Size="416,43"
+          Id="Package\SQL_REWARDGIFTS_SP_UPDATE_EXECUTION_STATUS_LOAD"
+          TopLeft="602.878402019497,615.523523157113" />
+        <NodeLayout
+          Size="416,43"
+          Id="Package\SQL_REWARDGIFTS_TRUNCATE_STG_TABLE"
+          TopLeft="602.878402019497,310.511761578557" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="810.878402019497,150.170587192852">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 10]"
+          TopLeft="810.878402019497,48.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 12]"
+          TopLeft="810.878402019497,455.182348771409">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="810.878402019497,251.841174385704">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 5]"
+          TopLeft="810.878402019497,353.511761578557">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 7]"
+          TopLeft="810.878402019497,556.852935964261">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <DtsEventHandler
+    design-time-name="Package.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="335,42"
+          Id="Package.EventHandlers[OnError]\SQL_REWARDGIFTS_SP_SSIS_ERRORLOG"
+          TopLeft="550.785720659762,203.041178469675" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <TaskHost
+    design-time-name="Package\DFT_REWARDGIFTS_LOAD">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="185,42"
+          Id="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS"
+          TopLeft="74.071428376801,425.213725427278" />
+        <NodeLayout
+          Size="185,42"
+          Id="Package\DFT_REWARDGIFTS_LOAD\SRC_REWARDGIFTS"
+          TopLeft="209.695202870862,48" />
+        <NodeLayout
+          Size="185,42"
+          Id="Package\DFT_REWARDGIFTS_LOAD\RC_REWARDGIFTS"
+          TopLeft="209.695202870862,136.170588238154" />
+        <NodeLayout
+          Size="185,42"
+          Id="Package\DFT_REWARDGIFTS_LOAD\DC_BATCH"
+          TopLeft="209.695202870862,224.341176476308" />
+        <NodeLayout
+          Size="185,42"
+          Id="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1"
+          TopLeft="316.071428376801,425.213725427278" />
+        <NodeLayout
+          Size="185,42"
+          Id="Package\DFT_REWARDGIFTS_LOAD\BDD_REWARDGIFTS"
+          TopLeft="209.695202870862,312.511764714462" />
+        <EdgeLayout
+          Id="Package\DFT_REWARDGIFTS_LOAD.Paths[Row Count Output 1]"
+          TopLeft="302.195202870862,178.170588238154">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,46.170588238154"
+              Start="0,0"
+              End="0,38.670588238154">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,38.670588238154" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_REWARDGIFTS_LOAD.Paths[Oracle Source Output]"
+          TopLeft="302.195202870862,90">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,46.170588238154"
+              Start="0,0"
+              End="0,38.670588238154">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,38.670588238154" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_REWARDGIFTS_LOAD.Paths[Derived Column Output]"
+          TopLeft="302.195202870862,266.341176476308">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,46.170588238154"
+              Start="0,0"
+              End="0,38.670588238154">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,38.670588238154" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_REWARDGIFTS_LOAD.Paths[Balanced Data Distributor Output 2]"
+          TopLeft="331.695202870862,354.511764714462">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="76.876225505939,70.701960712816"
+              Start="0,0"
+              End="76.876225505939,63.201960712816">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.6445242759319" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,24.6445242759319"
+                    Point2="0,28.6445242759319"
+                    Point3="4,28.6445242759319" />
+                  <mssgle:LineSegment
+                    End="72.876225505939,28.6445242759319" />
+                  <mssgle:CubicBezierSegment
+                    Point1="72.876225505939,28.6445242759319"
+                    Point2="76.876225505939,28.6445242759319"
+                    Point3="76.876225505939,32.6445242759319" />
+                  <mssgle:LineSegment
+                    End="76.876225505939,63.201960712816" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-39.4480005282805,33.6445242759319,155.7722265625,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_REWARDGIFTS_LOAD.Paths[Balanced Data Distributor Output 1]"
+          TopLeft="272.695202870862,354.511764714462">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-106.123774494061,70.701960712816"
+              Start="0,0"
+              End="-106.123774494061,63.201960712816">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.6445242759319" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,24.6445242759319"
+                    Point2="0,28.6445242759319"
+                    Point3="-4,28.6445242759319" />
+                  <mssgle:LineSegment
+                    End="-102.123774494061,28.6445242759319" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-102.123774494061,28.6445242759319"
+                    Point2="-106.123774494061,28.6445242759319"
+                    Point3="-106.123774494061,32.6445242759319" />
+                  <mssgle:LineSegment
+                    End="-106.123774494061,63.201960712816" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-130.76245365328,33.6445242759319,155.4011328125,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_REWARDGIFTS_LOAD\DST_REWARDGIFTS 1">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <DtsEventHandler
+    design-time-name="Package\SQL_REWARDGIFTS_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="313,42"
+          Id="Package\SQL_REWARDGIFTS_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]\SQL_REWARDGIFTS_UPDATE_DFT_LOAD_COMPLETED"
+          TopLeft="570.3,184.7" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

@@ -1,0 +1,2160 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="11/28/2018 8:48:53 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="LAPTOP-SBSNQ3DE"
+  DTS:CreatorName="LAPTOP-SBSNQ3DE\HP"
+  DTS:DTSID="{A6B4FF10-3983-475F-90B4-AB3BD241AADC}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="14.0.0600.250"
+  DTS:LocaleID="16393"
+  DTS:ObjectName="ETL_LANDING_PRIME17_MERSTATUS_FULL_LOAD"
+  DTS:PackageType="5"
+  DTS:ProtectionLevel="0"
+  DTS:VersionBuild="746"
+  DTS:VersionGUID="{DFAF52C6-888B-4238-A2CF-51F4694BE77B}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_AUDIT_FRAMEWORK]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{14D66DC0-171C-4AE0-B141-6A3D388D2142}"
+      DTS:ObjectName="CM_AUDIT_FRAMEWORK">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_AUDIT_FRAMEWORK_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_AUDIT_FRAMEWORK_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=AUDIT_FRAMEWORK_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{409FEF85-53F6-41AA-AB95-4C03761E2C3F}"
+      DTS:ObjectName="CM_EIMDW_LANDING_PRIME">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_LANDING_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_ARCHIVE_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=DEV_EIMDW_Landing_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_Prime_Attunity]"
+      DTS:CreationName="MSORA"
+      DTS:DTSID="{6BBD32DE-1478-4FC3-B375-2EC692B654C3}"
+      DTS:ObjectName="CM_Prime_Attunity">
+      <DTS:PropertyExpression
+        DTS:Name="Password">@[$Project::p_PRIME_PWD]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_PRIME_SERVER]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="UserName">@[$Project::p_PRIME_USER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <OracleXMLPackage>
+          <OraConnectionString>SERVER=10.180.2.215:1522/prime;USERNAME=AMBERCONNECT;ORACLEHOME=;ORACLEHOME64=;WINAUTH=0</OraConnectionString>
+          <OraRetain>False</OraRetain>
+          <OraInitialCatalog></OraInitialCatalog>
+          <OraServerName>10.180.2.215:1522/prime</OraServerName>
+          <OraUserName>AMBERCONNECT</OraUserName>
+          <OraOracleHome></OraOracleHome>
+          <OraOracleHome64></OraOracleHome64>
+          <OraWinAuthentication>False</OraWinAuthentication>
+          <OraEnableDetailedTracing>False</OraEnableDetailedTracing>
+          <OraPassword
+            Sensitive="1"></OraPassword>
+        </OracleXMLPackage>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:LogProviders>
+    <DTS:LogProvider
+      DTS:ConfigString="CM_AUDIT_FRAMEWORK"
+      DTS:CreationName="Microsoft.LogProviderSQLServer"
+      DTS:Description="Writes log entries for events to a SQL Server database"
+      DTS:DTSID="{0A45F042-6C81-4DC2-896C-B61D90B814BE}"
+      DTS:ObjectName="SSIS log provider for SQL Server">
+      <DTS:ObjectData>
+        <InnerObject />
+      </DTS:ObjectData>
+    </DTS:LogProvider>
+  </DTS:LogProviders>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{C03EB316-F71C-4CEF-BD46-7178329D3F54}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Batch_Id">
+      <DTS:VariableValue
+        DTS:DataType="20">-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{D0779F85-4023-4E0C-B2C8-38D6FE3205AF}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT COUNT(1) FROM &quot; +  @[User::v_Dest_Table]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Dest_Count_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT COUNT(1) FROM DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_MERSTATUS (NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{CE6AE53C-04B9-4463-8BD6-4A729F04CB1B}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="@[$Project::p_LANDING_DATABASE]  +&quot;.&quot;+ @[$Project::p_LANDING_SCHEMA] +&quot;.&quot;+&quot;SRC_PRIME17_MERSTATUS (NOLOCK)&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Dest_Table">
+      <DTS:VariableValue
+        DTS:DataType="8">DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_MERSTATUS (NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{15E695F5-287F-4699-88FD-6227B2161C7D}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Package_Id">
+      <DTS:VariableValue
+        DTS:DataType="3">-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{6DD4F4BA-470E-4CED-9C9B-C66B6E4D4EB9}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Rows_Inserted">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{22739426-B308-4A74-A7B4-2D882552B2DA}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Rows_Read">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{F36F555F-A465-4A11-B7FC-62D2C137FE0E}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT INSTITUTION_ID&#x9;&#xA;,PSERNO&#x9;&#xA;,CODE&#x9;&#xA;,BILLABLE&#x9;&#xA;,PAYABLE&#x9;&#xA;,TRXNREJECT&#x9;&#xA;,STOPRENEW&#x9;&#xA;,DESCRIPTION&#x9;&#xA;,EMBOSSING&#x9;&#xA;,GENERAL&#x9;&#xA;,MAPEMBOSSING&#x9;&#xA;,AUTHMAP&#x9;&#xA;,LOGVERSION&#xA;&#xA;FROM &quot;+  @[User::v_Source_Table]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Source_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT INSTITUTION_ID	
+,PSERNO	
+,CODE	
+,BILLABLE	
+,PAYABLE	
+,TRXNREJECT	
+,STOPRENEW	
+,DESCRIPTION	
+,EMBOSSING	
+,GENERAL	
+,MAPEMBOSSING	
+,AUTHMAP	
+,LOGVERSION
+
+FROM TCTDBS.MERSTATUS</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{62F4E11E-337D-4198-B443-BFF8A8BD2235}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Source_Table">
+      <DTS:VariableValue
+        DTS:DataType="8">TCTDBS.MERSTATUS</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{B7A24446-8BBE-436E-BA3A-B4F8DEFE57F6}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Task_Name">
+      <DTS:VariableValue
+        DTS:DataType="8">MERSTATUS</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{DA264B41-7A1E-4D0F-95C3-9B8F0DD99CC7}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;TRUNCATE TABLE &quot;  + REPLACE(@[User::v_Dest_Table],&quot;(NOLOCK)&quot;,&quot; &quot;)"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Trunc_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">TRUNCATE TABLE DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_MERSTATUS  </DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:LoggingOptions
+    DTS:FilterKind="0"
+    DTS:LoggingMode="1">
+    <DTS:Property
+      DTS:DataType="8"
+      DTS:Name="EventFilter">3,7,OnError,13,OnPostExecute,12,OnTaskFailed</DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnError"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnPostExecute"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnTaskFailed"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:SelectedLogProviders>
+      <DTS:SelectedLogProvider
+        DTS:InstanceID="{0A45F042-6C81-4DC2-896C-B61D90B814BE}" />
+    </DTS:SelectedLogProviders>
+  </DTS:LoggingOptions>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\DFT_MERSTATUS_LOAD"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{2535BA4F-2FD7-4B7C-BF51-2CF4F0005118}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="DFT_MERSTATUS_LOAD"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"DFT_"+@[User::v_Task_Name]+"_LOAD"</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="[SRC_MERSTATUS].[SqlCommand]">@[User::v_Source_Query]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <pipeline
+          defaultBufferMaxRows="100000"
+          defaultBufferSize="20485760"
+          version="1">
+          <components>
+            <component
+              refId="Package\DFT_MERSTATUS_LOAD\BDD_MERSTATUS"
+              componentClassID="Microsoft.BDD"
+              contactInfo="Balanced Data Distributor;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Evaluates and directs rows in a dataset to multiple destinations."
+              name="BDD_MERSTATUS">
+              <inputs>
+                <input
+                  refId="Package\DFT_MERSTATUS_LOAD\BDD_MERSTATUS.Inputs[Balanced Data Distributor Input]"
+                  description="Input to the Balanced Data      Distributor Transformation"
+                  name="Balanced Data Distributor Input">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_MERSTATUS_LOAD\BDD_MERSTATUS.Outputs[Balanced Data Distributor Output 1]"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 1"
+                  synchronousInputId="Package\DFT_MERSTATUS_LOAD\BDD_MERSTATUS.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_MERSTATUS_LOAD\BDD_MERSTATUS.Outputs[Balanced Data Distributor Output 2]"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 2"
+                  synchronousInputId="Package\DFT_MERSTATUS_LOAD\BDD_MERSTATUS.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_MERSTATUS_LOAD\BDD_MERSTATUS.Outputs[Balanced Data Distributor Output 3]"
+                  dangling="true"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 3"
+                  synchronousInputId="Package\DFT_MERSTATUS_LOAD\BDD_MERSTATUS.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_MERSTATUS_LOAD\DC_BATCH"
+              componentClassID="Microsoft.DerivedColumn"
+              contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+              name="DC_BATCH"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\DFT_MERSTATUS_LOAD\DC_BATCH.Inputs[Derived Column Input]"
+                  description="Input to the Derived Column Transformation"
+                  name="Derived Column Input">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_MERSTATUS_LOAD\DC_BATCH.Outputs[Derived Column Output]"
+                  description="Default Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  name="Derived Column Output"
+                  synchronousInputId="Package\DFT_MERSTATUS_LOAD\DC_BATCH.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]"
+                      dataType="i8"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]"
+                      name="BATCH_ID"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">@[User::v_Batch_Id]</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">@[User::v_Batch_Id]</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_MERSTATUS_LOAD\DC_BATCH.Outputs[Derived Column Error Output]"
+                  description="Error Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Derived Column Error Output"
+                  synchronousInputId="Package\DFT_MERSTATUS_LOAD\DC_BATCH.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="DST_MERSTATUS"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[LZOWN].[SRC_PRIME17_MERSTATUS]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS,ROWS_PER_BATCH = 1000000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].Columns[INSTITUTION_ID]"
+                      cachedDataType="i4"
+                      cachedName="INSTITUTION_ID"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].Columns[PSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="PSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].ExternalColumns[PSERNO]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[PSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].Columns[CODE]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="CODE"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].ExternalColumns[CODE]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[CODE]" />
+                    <inputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].Columns[BILLABLE]"
+                      cachedDataType="i4"
+                      cachedName="BILLABLE"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].ExternalColumns[BILLABLE]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[BILLABLE]" />
+                    <inputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].Columns[PAYABLE]"
+                      cachedDataType="i4"
+                      cachedName="PAYABLE"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].ExternalColumns[PAYABLE]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[PAYABLE]" />
+                    <inputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].Columns[TRXNREJECT]"
+                      cachedDataType="i4"
+                      cachedName="TRXNREJECT"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].ExternalColumns[TRXNREJECT]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[TRXNREJECT]" />
+                    <inputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].Columns[STOPRENEW]"
+                      cachedDataType="i4"
+                      cachedName="STOPRENEW"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].ExternalColumns[STOPRENEW]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[STOPRENEW]" />
+                    <inputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].Columns[DESCRIPTION]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="DESCRIPTION"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTION]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[DESCRIPTION]" />
+                    <inputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].Columns[EMBOSSING]"
+                      cachedDataType="i4"
+                      cachedName="EMBOSSING"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].ExternalColumns[EMBOSSING]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[EMBOSSING]" />
+                    <inputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].Columns[GENERAL]"
+                      cachedDataType="i4"
+                      cachedName="GENERAL"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].ExternalColumns[GENERAL]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[GENERAL]" />
+                    <inputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].Columns[MAPEMBOSSING]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="MAPEMBOSSING"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].ExternalColumns[MAPEMBOSSING]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[MAPEMBOSSING]" />
+                    <inputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].Columns[AUTHMAP]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="2"
+                      cachedName="AUTHMAP"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].ExternalColumns[AUTHMAP]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[AUTHMAP]" />
+                    <inputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].Columns[LOGVERSION]"
+                      cachedDataType="i4"
+                      cachedName="LOGVERSION"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].ExternalColumns[LOGVERSION]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[LOGVERSION]" />
+                    <inputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].Columns[BATCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="BATCH_ID"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].ExternalColumns[LD_SEQ_ID]"
+                      dataType="i4"
+                      name="LD_SEQ_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].ExternalColumns[PSERNO]"
+                      dataType="numeric"
+                      name="PSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].ExternalColumns[CODE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="CODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].ExternalColumns[BILLABLE]"
+                      dataType="i4"
+                      name="BILLABLE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].ExternalColumns[PAYABLE]"
+                      dataType="i4"
+                      name="PAYABLE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].ExternalColumns[TRXNREJECT]"
+                      dataType="i4"
+                      name="TRXNREJECT" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].ExternalColumns[STOPRENEW]"
+                      dataType="i4"
+                      name="STOPRENEW" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTION]"
+                      dataType="wstr"
+                      length="255"
+                      name="DESCRIPTION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].ExternalColumns[EMBOSSING]"
+                      dataType="i4"
+                      name="EMBOSSING" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].ExternalColumns[GENERAL]"
+                      dataType="i4"
+                      name="GENERAL" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].ExternalColumns[MAPEMBOSSING]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="MAPEMBOSSING" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].ExternalColumns[AUTHMAP]"
+                      codePage="1252"
+                      dataType="str"
+                      length="2"
+                      name="AUTHMAP" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].ExternalColumns[LOGVERSION]"
+                      dataType="i4"
+                      name="LOGVERSION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      dataType="i8"
+                      name="BATCH_ID" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="DST_MERSTATUS 1"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[LZOWN].[SRC_PRIME17_MERSTATUS]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS,ROWS_PER_BATCH = 1000000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].Columns[INSTITUTION_ID]"
+                      cachedDataType="i4"
+                      cachedName="INSTITUTION_ID"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].Columns[PSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="PSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].ExternalColumns[PSERNO]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[PSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].Columns[CODE]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="CODE"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].ExternalColumns[CODE]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[CODE]" />
+                    <inputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].Columns[BILLABLE]"
+                      cachedDataType="i4"
+                      cachedName="BILLABLE"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].ExternalColumns[BILLABLE]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[BILLABLE]" />
+                    <inputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].Columns[PAYABLE]"
+                      cachedDataType="i4"
+                      cachedName="PAYABLE"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].ExternalColumns[PAYABLE]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[PAYABLE]" />
+                    <inputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].Columns[TRXNREJECT]"
+                      cachedDataType="i4"
+                      cachedName="TRXNREJECT"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].ExternalColumns[TRXNREJECT]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[TRXNREJECT]" />
+                    <inputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].Columns[STOPRENEW]"
+                      cachedDataType="i4"
+                      cachedName="STOPRENEW"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].ExternalColumns[STOPRENEW]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[STOPRENEW]" />
+                    <inputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].Columns[DESCRIPTION]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="DESCRIPTION"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTION]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[DESCRIPTION]" />
+                    <inputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].Columns[EMBOSSING]"
+                      cachedDataType="i4"
+                      cachedName="EMBOSSING"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBOSSING]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[EMBOSSING]" />
+                    <inputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].Columns[GENERAL]"
+                      cachedDataType="i4"
+                      cachedName="GENERAL"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].ExternalColumns[GENERAL]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[GENERAL]" />
+                    <inputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].Columns[MAPEMBOSSING]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="MAPEMBOSSING"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].ExternalColumns[MAPEMBOSSING]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[MAPEMBOSSING]" />
+                    <inputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].Columns[AUTHMAP]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="2"
+                      cachedName="AUTHMAP"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].ExternalColumns[AUTHMAP]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[AUTHMAP]" />
+                    <inputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].Columns[LOGVERSION]"
+                      cachedDataType="i4"
+                      cachedName="LOGVERSION"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].ExternalColumns[LOGVERSION]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[LOGVERSION]" />
+                    <inputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].Columns[BATCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="BATCH_ID"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].ExternalColumns[LD_SEQ_ID]"
+                      dataType="i4"
+                      name="LD_SEQ_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].ExternalColumns[PSERNO]"
+                      dataType="numeric"
+                      name="PSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].ExternalColumns[CODE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="CODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].ExternalColumns[BILLABLE]"
+                      dataType="i4"
+                      name="BILLABLE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].ExternalColumns[PAYABLE]"
+                      dataType="i4"
+                      name="PAYABLE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].ExternalColumns[TRXNREJECT]"
+                      dataType="i4"
+                      name="TRXNREJECT" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].ExternalColumns[STOPRENEW]"
+                      dataType="i4"
+                      name="STOPRENEW" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTION]"
+                      dataType="wstr"
+                      length="255"
+                      name="DESCRIPTION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBOSSING]"
+                      dataType="i4"
+                      name="EMBOSSING" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].ExternalColumns[GENERAL]"
+                      dataType="i4"
+                      name="GENERAL" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].ExternalColumns[MAPEMBOSSING]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="MAPEMBOSSING" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].ExternalColumns[AUTHMAP]"
+                      codePage="1252"
+                      dataType="str"
+                      length="2"
+                      name="AUTHMAP" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].ExternalColumns[LOGVERSION]"
+                      dataType="i4"
+                      name="LOGVERSION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      dataType="i8"
+                      name="BATCH_ID" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_MERSTATUS_LOAD\RC_MERSTATUS"
+              componentClassID="Microsoft.RowCount"
+              contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Counts rows as they pass through a data flow. For example, use the number of rows processed to determine whether or not to perform cleanup operations, or update text in an e-mail message to communicate processing status."
+              name="RC_MERSTATUS">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable to hold the row count."
+                  name="VariableName">User::v_Rows_Read</property>
+              </properties>
+              <inputs>
+                <input
+                  refId="Package\DFT_MERSTATUS_LOAD\RC_MERSTATUS.Inputs[Row Count Input 1]"
+                  hasSideEffects="true"
+                  name="Row Count Input 1">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_MERSTATUS_LOAD\RC_MERSTATUS.Outputs[Row Count Output 1]"
+                  name="Row Count Output 1"
+                  synchronousInputId="Package\DFT_MERSTATUS_LOAD\RC_MERSTATUS.Inputs[Row Count Input 1]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS"
+              componentClassID="Attunity.SSISOraSrc"
+              contactInfo="Oracle Source;Microsoft Connector for Oracle by Attunity; Attunity Ltd.; All Rights Reserved; http://www.attunity.com;7"
+              description="Microsoft Oracle Source Component by Attunity"
+              name="SRC_MERSTATUS"
+              usesDispositions="true"
+              version="6">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="The name of the table to be fetched."
+                  expressionType="Notify"
+                  name="TableName"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  expressionType="Notify"
+                  name="SqlCommand">SELECT INSTITUTION_ID	
+,PSERNO	
+,CODE	
+,BILLABLE	
+,PAYABLE	
+,TRXNREJECT	
+,STOPRENEW	
+,DESCRIPTION	
+,EMBOSSING	
+,GENERAL	
+,MAPEMBOSSING	
+,AUTHMAP	
+,LOGVERSION
+
+FROM TCTDBS.MERSTATUS</property>
+                <property
+                  dataType="System.Int32"
+                  description="The number of rows fetched in a batch."
+                  expressionType="Notify"
+                  name="BatchSize">100</property>
+                <property
+                  dataType="System.Int32"
+                  description="Number of pre-fetched rows."
+                  expressionType="Notify"
+                  name="PrefetchCount">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Determines the chunk size allocation for LOB columns"
+                  expressionType="Notify"
+                  name="LobChunkSize">32768</property>
+                <property
+                  dataType="System.Int32"
+                  description="The code page to use when code page information is unavailable from the data source."
+                  expressionType="Notify"
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Int32"
+                  description="The mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">1</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Connections[MSOraConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_Prime_Attunity]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_Prime_Attunity]"
+                  description="The Oracle runtime connection"
+                  name="MSOraConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output]"
+                  errorRowDisposition="FailComponent"
+                  name="Oracle Source Output"
+                  truncationRowDisposition="FailComponent">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]"
+                      name="INSTITUTION_ID" />
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[PSERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[PSERNO]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[PSERNO]"
+                      name="PSERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[CODE]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[CODE]"
+                      length="4"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[CODE]"
+                      name="CODE" />
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[BILLABLE]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[BILLABLE]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[BILLABLE]"
+                      name="BILLABLE" />
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[PAYABLE]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[PAYABLE]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[PAYABLE]"
+                      name="PAYABLE" />
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[TRXNREJECT]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[TRXNREJECT]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[TRXNREJECT]"
+                      name="TRXNREJECT" />
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[STOPRENEW]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[STOPRENEW]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[STOPRENEW]"
+                      name="STOPRENEW" />
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[DESCRIPTION]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[DESCRIPTION]"
+                      length="255"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[DESCRIPTION]"
+                      name="DESCRIPTION" />
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[EMBOSSING]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[EMBOSSING]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[EMBOSSING]"
+                      name="EMBOSSING" />
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[GENERAL]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[GENERAL]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[GENERAL]"
+                      name="GENERAL" />
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[MAPEMBOSSING]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[MAPEMBOSSING]"
+                      length="4"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[MAPEMBOSSING]"
+                      name="MAPEMBOSSING" />
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[AUTHMAP]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[AUTHMAP]"
+                      length="2"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[AUTHMAP]"
+                      name="AUTHMAP" />
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[LOGVERSION]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[LOGVERSION]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].Columns[LOGVERSION]"
+                      name="LOGVERSION" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[PSERNO]"
+                      dataType="numeric"
+                      name="PSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[CODE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="CODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[BILLABLE]"
+                      dataType="i4"
+                      name="BILLABLE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[PAYABLE]"
+                      dataType="i4"
+                      name="PAYABLE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[TRXNREJECT]"
+                      dataType="i4"
+                      name="TRXNREJECT" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[STOPRENEW]"
+                      dataType="i4"
+                      name="STOPRENEW" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[DESCRIPTION]"
+                      dataType="wstr"
+                      length="255"
+                      name="DESCRIPTION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[EMBOSSING]"
+                      dataType="i4"
+                      name="EMBOSSING" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[GENERAL]"
+                      dataType="i4"
+                      name="GENERAL" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[MAPEMBOSSING]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="MAPEMBOSSING" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[AUTHMAP]"
+                      codePage="1252"
+                      dataType="str"
+                      length="2"
+                      name="AUTHMAP" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[LOGVERSION]"
+                      dataType="i4"
+                      name="LOGVERSION" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Error Output]"
+                  isErrorOut="true"
+                  name="Oracle Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Error Output].Columns[INSTITUTION_ID]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Error Output].Columns[INSTITUTION_ID]"
+                      name="INSTITUTION_ID" />
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Error Output].Columns[PSERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[PSERNO]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Error Output].Columns[PSERNO]"
+                      name="PSERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Error Output].Columns[CODE]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[CODE]"
+                      length="4"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Error Output].Columns[CODE]"
+                      name="CODE" />
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Error Output].Columns[BILLABLE]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[BILLABLE]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Error Output].Columns[BILLABLE]"
+                      name="BILLABLE" />
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Error Output].Columns[PAYABLE]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[PAYABLE]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Error Output].Columns[PAYABLE]"
+                      name="PAYABLE" />
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Error Output].Columns[TRXNREJECT]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[TRXNREJECT]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Error Output].Columns[TRXNREJECT]"
+                      name="TRXNREJECT" />
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Error Output].Columns[STOPRENEW]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[STOPRENEW]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Error Output].Columns[STOPRENEW]"
+                      name="STOPRENEW" />
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Error Output].Columns[DESCRIPTION]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[DESCRIPTION]"
+                      length="255"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Error Output].Columns[DESCRIPTION]"
+                      name="DESCRIPTION" />
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Error Output].Columns[EMBOSSING]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[EMBOSSING]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Error Output].Columns[EMBOSSING]"
+                      name="EMBOSSING" />
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Error Output].Columns[GENERAL]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[GENERAL]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Error Output].Columns[GENERAL]"
+                      name="GENERAL" />
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Error Output].Columns[MAPEMBOSSING]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[MAPEMBOSSING]"
+                      length="4"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Error Output].Columns[MAPEMBOSSING]"
+                      name="MAPEMBOSSING" />
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Error Output].Columns[AUTHMAP]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[AUTHMAP]"
+                      length="2"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Error Output].Columns[AUTHMAP]"
+                      name="AUTHMAP" />
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Error Output].Columns[LOGVERSION]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output].ExternalColumns[LOGVERSION]"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Error Output].Columns[LOGVERSION]"
+                      name="LOGVERSION" />
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\DFT_MERSTATUS_LOAD.Paths[Balanced Data Distributor Output 1]"
+              endId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS.Inputs[OLE DB Destination Input]"
+              name="Balanced Data Distributor Output 1"
+              startId="Package\DFT_MERSTATUS_LOAD\BDD_MERSTATUS.Outputs[Balanced Data Distributor Output 1]" />
+            <path
+              refId="Package\DFT_MERSTATUS_LOAD.Paths[Balanced Data Distributor Output 2]"
+              endId="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1.Inputs[OLE DB Destination Input]"
+              name="Balanced Data Distributor Output 2"
+              startId="Package\DFT_MERSTATUS_LOAD\BDD_MERSTATUS.Outputs[Balanced Data Distributor Output 2]" />
+            <path
+              refId="Package\DFT_MERSTATUS_LOAD.Paths[Derived Column Output]"
+              endId="Package\DFT_MERSTATUS_LOAD\BDD_MERSTATUS.Inputs[Balanced Data Distributor Input]"
+              name="Derived Column Output"
+              startId="Package\DFT_MERSTATUS_LOAD\DC_BATCH.Outputs[Derived Column Output]" />
+            <path
+              refId="Package\DFT_MERSTATUS_LOAD.Paths[Oracle Source Output]"
+              endId="Package\DFT_MERSTATUS_LOAD\RC_MERSTATUS.Inputs[Row Count Input 1]"
+              name="Oracle Source Output"
+              startId="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS.Outputs[Oracle Source Output]" />
+            <path
+              refId="Package\DFT_MERSTATUS_LOAD.Paths[Row Count Output 1]"
+              endId="Package\DFT_MERSTATUS_LOAD\DC_BATCH.Inputs[Derived Column Input]"
+              name="Row Count Output 1"
+              startId="Package\DFT_MERSTATUS_LOAD\RC_MERSTATUS.Outputs[Row Count Output 1]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_MERSTATUS_GET_DEST_COUNT_LOAD"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{88E4FF83-3440-4539-8628-DA5698B884DB}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_MERSTATUS_GET_DEST_COUNT_LOAD"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_GET_DEST_COUNT_LOAD"</DTS:PropertyExpression>
+      <DTS:EventHandlers>
+        <DTS:EventHandler
+          DTS:refId="Package\SQL_MERSTATUS_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]"
+          DTS:CreationName="OnPreExecute"
+          DTS:DTSID="{97A40B82-7250-4359-AC8C-01F37A3338E5}"
+          DTS:EventID="1076330902"
+          DTS:EventName="OnPreExecute"
+          DTS:LocaleID="-1">
+          <DTS:Variables>
+            <DTS:Variable
+              DTS:CreationName=""
+              DTS:Description="The propagate property of the event"
+              DTS:DTSID="{52C50332-B85A-4D8D-A756-B93F919F4C6B}"
+              DTS:IncludeInDebugDump="6789"
+              DTS:Namespace="System"
+              DTS:ObjectName="Propagate">
+              <DTS:VariableValue
+                DTS:DataType="11">-1</DTS:VariableValue>
+            </DTS:Variable>
+          </DTS:Variables>
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\SQL_MERSTATUS_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]\SQL_MERSTATUS_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{27E4D5FF-F314-4DF5-83BA-8719D11C9057}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="SQL_MERSTATUS_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+              <DTS:Variables />
+              <DTS:PropertyExpression
+                DTS:Name="Name">"SQL_"+ @[User::v_Task_Name]+"_UPDATE_DFT_LOAD_COMPLETED"</DTS:PropertyExpression>
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{14D66DC0-171C-4AE0-B141-6A3D388D2142}"
+                  SQLTask:SqlStatementSource="UPDATE DBO.BATCH_EXECUTION_STATUS&#xA; SET  &#xA;STATUS_FLAG = 'DFT LOAD COMPLETED'   WHERE&#xA; EXECUTION_ID = (&#xA;       SELECT MAX(EXECUTION_ID) EXECUTION_ID&#xA;       FROM DBO.BATCH_EXECUTION_STATUS&#xA;       WHERE PACKAGE_ID =?&#xA;       AND  BATCH_ID = ?&#xA;    )"
+                  SQLTask:TypeConversionMode="None" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="0"
+                    SQLTask:DtsVariableName="User::v_Package_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="1"
+                    SQLTask:DtsVariableName="User::v_Batch_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                </SQLTask:SqlTaskData>
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+        </DTS:EventHandler>
+      </DTS:EventHandlers>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{409FEF85-53F6-41AA-AB95-4C03761E2C3F}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::v_Dest_Count_Query"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="0"
+            SQLTask:DtsVariableName="User::v_Rows_Inserted" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_MERSTATUS_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{9ADFD0A9-A03F-4D79-B1D7-2ABB49852B2C}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_MERSTATUS_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_CHECK_PACKAGE_EXISTENCE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{14D66DC0-171C-4AE0-B141-6A3D388D2142}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_NAME VARCHAR(500) = ?&#xA;&#xA;EXEC [DBO].[SP_CHECK_PACKAGE_EXISTENCE]  @PACKAGE_NAME" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_MERSTATUS_SP_GET_PACKAGE_BATCH_ID"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{9F8D2B41-FBD9-48FA-93EE-31B153FD9E87}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_MERSTATUS_SP_GET_PACKAGE_BATCH_ID"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_GET_PACKAGE_BATCH_ID"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{14D66DC0-171C-4AE0-B141-6A3D388D2142}"
+          SQLTask:SqlStatementSource="&#xA;DECLARE @PACKAGE_NAME VARCHAR(500) = ?&#xA;DECLARE @PACKAGE_ID  INT &#xA;DECLARE @BATCH_ID BIGINT&#xA;&#xA;&#xA; EXEC [DBO].[SP_GET_PACKAGE_BATCH_ID] @PACKAGE_NAME,@PACKAGE_ID OUT,@BATCH_ID OUT&#xA; SELECT ? = @PACKAGE_ID &#xA; SELECT ? = @BATCH_ID" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_MERSTATUS_SP_INSERT_EXECUTION_STATUS"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{62CF3BE0-B621-4B45-A0BB-FD0635723366}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_MERSTATUS_SP_INSERT_EXECUTION_STATUS"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_INSERT_EXECUTION_STATUS"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{14D66DC0-171C-4AE0-B141-6A3D388D2142}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @PACKAGE_START_TIME DATETIME = ?&#xA;DECLARE @JOB_ID INT  =?&#xA;&#xA;EXEC [DBO].[SP_INSERT_EXECUTION_STATUS]           @PACKAGE_ID&#xA;,@BATCH_ID&#xA;,@PACKAGE_START_TIME&#xA;,@JOB_ID" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="System::StartTime"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="7"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="$Project::p_JOB_ID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_MERSTATUS_SP_UPDATE_EXECUTION_STATUS_LOAD"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{542EA065-89D2-4FEC-99ED-76D975C2B5AC}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_MERSTATUS_SP_UPDATE_EXECUTION_STATUS_LOAD"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_UPDATE_EXECUTION_STATUS_LOAD"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{14D66DC0-171C-4AE0-B141-6A3D388D2142}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @ROWS_READ BIGINT = ?&#xA;DECLARE @ROWS_INSERTED BIGINT = ?&#xA;DECLARE @ROWS_UPDATED BIGINT =0&#xA;DECLARE @ROWS_ERRORED  BIGINT=0&#xA;&#xA;&#xA;EXEC DBO.SP_UPDATE_EXECUTION_STATUS @PACKAGE_ID&#xA; , @BATCH_ID&#xA; , @ROWS_READ&#xA; , @ROWS_INSERTED&#xA; , @ROWS_UPDATED&#xA; , @ROWS_ERRORED" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::v_Rows_Read"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="User::v_Rows_Inserted"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_MERSTATUS_TRUNCATE_STG_TABLE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{499CC60D-CA8C-49DD-B015-F54C17CAB319}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_MERSTATUS_TRUNCATE_STG_TABLE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_TRUNCATE_STG_TABLE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{409FEF85-53F6-41AA-AB95-4C03761E2C3F}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::v_Trunc_Query" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{31C068FC-1A46-4F86-BF5F-B2724470E976}"
+      DTS:From="Package\SQL_MERSTATUS_SP_GET_PACKAGE_BATCH_ID"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\SQL_MERSTATUS_SP_INSERT_EXECUTION_STATUS" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 10]"
+      DTS:CreationName=""
+      DTS:DTSID="{6D1EBF6F-E799-4DF5-A02F-1A55BBF2EDA9}"
+      DTS:From="Package\SQL_MERSTATUS_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 10"
+      DTS:To="Package\SQL_MERSTATUS_SP_GET_PACKAGE_BATCH_ID" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 12]"
+      DTS:CreationName=""
+      DTS:DTSID="{6992E395-7305-4189-9A8D-29D0C9CD293B}"
+      DTS:From="Package\DFT_MERSTATUS_LOAD"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 12"
+      DTS:To="Package\SQL_MERSTATUS_GET_DEST_COUNT_LOAD" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{EEE7D1B3-9551-457D-9D1F-FD2381A02DD8}"
+      DTS:From="Package\SQL_MERSTATUS_SP_INSERT_EXECUTION_STATUS"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\SQL_MERSTATUS_TRUNCATE_STG_TABLE" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 5]"
+      DTS:CreationName=""
+      DTS:DTSID="{8BDA9EA0-F8DD-4609-9A0C-BD0CA473F034}"
+      DTS:Expression="@[User::v_Inc_Date] == (DT_DBTIMESTAMP) &quot;1753-01-01&quot;"
+      DTS:From="Package\SQL_MERSTATUS_TRUNCATE_STG_TABLE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 5"
+      DTS:To="Package\DFT_MERSTATUS_LOAD" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 7]"
+      DTS:CreationName=""
+      DTS:DTSID="{CC868913-4B12-4B02-9B46-3BB4C7A7986F}"
+      DTS:Expression="@[User::v_Rows_Inserted] ==0"
+      DTS:From="Package\SQL_MERSTATUS_GET_DEST_COUNT_LOAD"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 7"
+      DTS:To="Package\SQL_MERSTATUS_SP_UPDATE_EXECUTION_STATUS_LOAD" />
+  </DTS:PrecedenceConstraints>
+  <DTS:EventHandlers>
+    <DTS:EventHandler
+      DTS:refId="Package.EventHandlers[OnError]"
+      DTS:CreationName="OnError"
+      DTS:DTSID="{5517A52B-8AF4-4A04-BD8F-53202AD2964C}"
+      DTS:EventID="2"
+      DTS:EventName="OnError"
+      DTS:LocaleID="-1">
+      <DTS:Variables>
+        <DTS:Variable
+          DTS:CreationName=""
+          DTS:Description="The propagate property of the event"
+          DTS:DTSID="{72C23245-C674-415D-9A3C-611424A451E0}"
+          DTS:IncludeInDebugDump="6789"
+          DTS:Namespace="System"
+          DTS:ObjectName="Propagate">
+          <DTS:VariableValue
+            DTS:DataType="11">-1</DTS:VariableValue>
+        </DTS:Variable>
+      </DTS:Variables>
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package.EventHandlers[OnError]\SQL_MERSTATUS_SP_SSIS_ERRORLOG"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{E3C513FB-8307-48A1-8EAC-B530EC48813C}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="SQL_MERSTATUS_SP_SSIS_ERRORLOG"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:PropertyExpression
+            DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_SSIS_ERRORLOG"</DTS:PropertyExpression>
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{14D66DC0-171C-4AE0-B141-6A3D388D2142}"
+              SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @PKG_GUID SYSNAME = ?&#xA;DECLARE @PACKAGE_NAME SYSNAME = ?&#xA;DECLARE @SOURCE_NAME VARCHAR(100) = ?&#xA;DECLARE @TASK_NAME VARCHAR(100) = ?&#xA;DECLARE @MACHINE_NAME VARCHAR(50) = ?&#xA;DECLARE @USER_NAME VARCHAR(50) = ?&#xA;DECLARE @ERROR_NUMBER INT = ?&#xA;DECLARE @ERROR_DESCRIPTION VARCHAR(MAX) = ?&#xA;DECLARE @PACKAGE_START_TIME DATETIME  = NULL&#xA;DECLARE @ROWS_READ BIGINT = ?&#xA;DECLARE @ROWS_INSERTED BIGINT = ?&#xA;DECLARE @ROWS_UPDATED BIGINT = NULL&#xA;DECLARE @ROWS_ERRORED BIGINT = NULL&#xA;&#xA;EXEC DBO.[SP_SSIS_ERRORLOG] @PACKAGE_ID&#xA;&#x9;,@BATCH_ID&#xA;&#x9;,@PKG_GUID&#xA;&#x9;,@PACKAGE_NAME&#xA;&#x9;,@SOURCE_NAME&#xA;&#x9;,@TASK_NAME&#xA;&#x9;,@MACHINE_NAME&#xA;&#x9;,@USER_NAME&#xA;&#x9;,@ERROR_NUMBER&#xA;&#x9;,@ERROR_DESCRIPTION&#xA;&#x9;,@PACKAGE_START_TIME&#xA;&#x9;,@ROWS_READ&#xA;&#x9;,@ROWS_INSERTED&#xA;&#x9;,@ROWS_UPDATED &#xA;&#x9;,@ROWS_ERRORED" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::v_Package_Id"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="1"
+                SQLTask:DtsVariableName="User::v_Batch_Id"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="2"
+                SQLTask:DtsVariableName="System::PackageID"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="3"
+                SQLTask:DtsVariableName="System::PackageName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="4"
+                SQLTask:DtsVariableName="System::SourceName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="5"
+                SQLTask:DtsVariableName="System::TaskName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="6"
+                SQLTask:DtsVariableName="System::MachineName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="7"
+                SQLTask:DtsVariableName="System::UserName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="8"
+                SQLTask:DtsVariableName="System::ErrorCode"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="9"
+                SQLTask:DtsVariableName="System::ErrorDescription"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="10"
+                SQLTask:DtsVariableName="User::v_Rows_Read"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="11"
+                SQLTask:DtsVariableName="User::v_Rows_Inserted"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+    </DTS:EventHandler>
+  </DTS:EventHandlers>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="383.2,41.6"
+          Id="Package\DFT_MERSTATUS_LOAD"
+          TopLeft="602.021259162354,412.182348771409" />
+        <NodeLayout
+          Size="383.2,41.6"
+          Id="Package\SQL_MERSTATUS_GET_DEST_COUNT_LOAD"
+          TopLeft="602.021259162354,513.852935964261" />
+        <NodeLayout
+          Size="383.2,41.6"
+          Id="Package\SQL_MERSTATUS_SP_CHECK_PACKAGE_EXISTENCE"
+          TopLeft="602.021259162354,5.5" />
+        <NodeLayout
+          Size="383.2,41.6"
+          Id="Package\SQL_MERSTATUS_SP_GET_PACKAGE_BATCH_ID"
+          TopLeft="602.021259162354,107.170587192852" />
+        <NodeLayout
+          Size="383.2,41.6"
+          Id="Package\SQL_MERSTATUS_SP_INSERT_EXECUTION_STATUS"
+          TopLeft="602.021259162354,208.841174385704" />
+        <NodeLayout
+          Size="383.2,41.6"
+          Id="Package\SQL_MERSTATUS_SP_UPDATE_EXECUTION_STATUS_LOAD"
+          TopLeft="602.021259162354,615.523523157113" />
+        <NodeLayout
+          Size="383.2,41.6"
+          Id="Package\SQL_MERSTATUS_TRUNCATE_STG_TABLE"
+          TopLeft="602.021259162354,310.511761578557" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="793.521259162354,149.170587192852">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.6705871928522"
+              Start="0,0"
+              End="0,52.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 10]"
+          TopLeft="793.521259162354,47.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.6705871928522"
+              Start="0,0"
+              End="0,52.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 12]"
+          TopLeft="793.521259162354,454.182348771409">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.6705871928522"
+              Start="0,0"
+              End="0,52.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="793.521259162354,250.841174385704">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.6705871928522"
+              Start="0,0"
+              End="0,52.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 5]"
+          TopLeft="793.521259162354,352.511761578557">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.6705871928522"
+              Start="0,0"
+              End="0,52.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 7]"
+          TopLeft="793.521259162354,555.852935964261">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.6705871928522"
+              Start="0,0"
+              End="0,52.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <DtsEventHandler
+    design-time-name="Package.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="267.2,41.6"
+          Id="Package.EventHandlers[OnError]\SQL_MERSTATUS_SP_SSIS_ERRORLOG"
+          TopLeft="381.071431510302,157.217648457326" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <TaskHost
+    design-time-name="Package\DFT_MERSTATUS_LOAD">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="172,41.6"
+          Id="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS"
+          TopLeft="74.071428376801,425.213725427278" />
+        <NodeLayout
+          Size="172,41.6"
+          Id="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1"
+          TopLeft="316.071428376801,425.213725427278" />
+        <NodeLayout
+          Size="172,41.6"
+          Id="Package\DFT_MERSTATUS_LOAD\SRC_MERSTATUS"
+          TopLeft="206.694184582784,64" />
+        <NodeLayout
+          Size="172,41.6"
+          Id="Package\DFT_MERSTATUS_LOAD\DC_BATCH"
+          TopLeft="206.694184582784,229.674509809641" />
+        <NodeLayout
+          Size="172,41.6"
+          Id="Package\DFT_MERSTATUS_LOAD\RC_MERSTATUS"
+          TopLeft="206.694184582784,146.837254904821" />
+        <NodeLayout
+          Size="172,41.6"
+          Id="Package\DFT_MERSTATUS_LOAD\BDD_MERSTATUS"
+          TopLeft="206.694184582784,312.511764714462" />
+        <EdgeLayout
+          Id="Package\DFT_MERSTATUS_LOAD.Paths[Row Count Output 1]"
+          TopLeft="292.694184582784,188.837254904821">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,40.8372549048207"
+              Start="0,0"
+              End="0,33.3372549048207">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,33.3372549048207" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_MERSTATUS_LOAD.Paths[Oracle Source Output]"
+          TopLeft="292.694184582784,106">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,40.8372549048207"
+              Start="0,0"
+              End="0,33.3372549048207">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,33.3372549048207" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_MERSTATUS_LOAD.Paths[Derived Column Output]"
+          TopLeft="292.694184582784,271.674509809641">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,40.8372549048207"
+              Start="0,0"
+              End="0,33.3372549048207">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,33.3372549048207" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_MERSTATUS_LOAD.Paths[Balanced Data Distributor Output 2]"
+          TopLeft="320.027517916117,354.511764714462">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="82.0439104606837,70.701960712816"
+              Start="0,0"
+              End="82.0439104606837,63.201960712816">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.6717628697134" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,24.6717628697134"
+                    Point2="0,28.6717628697134"
+                    Point3="4,28.6717628697134" />
+                  <mssgle:LineSegment
+                    End="78.0439104606837,28.6717628697134" />
+                  <mssgle:CubicBezierSegment
+                    Point1="78.0439104606837,28.6717628697134"
+                    Point2="82.0439104606837,28.6717628697134"
+                    Point3="82.0439104606837,32.6717628697134" />
+                  <mssgle:LineSegment
+                    End="82.0439104606837,63.201960712816" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-36.8641580509082,33.6717628697134,155.7722265625,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_MERSTATUS_LOAD.Paths[Balanced Data Distributor Output 1]"
+          TopLeft="265.360851249451,354.511764714462">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-105.28942287265,70.701960712816"
+              Start="0,0"
+              End="-105.28942287265,63.201960712816">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.6717628697134" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,24.6717628697134"
+                    Point2="0,28.6717628697134"
+                    Point3="-4,28.6717628697134" />
+                  <mssgle:LineSegment
+                    End="-101.28942287265,28.6717628697134" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-101.28942287265,28.6717628697134"
+                    Point2="-105.28942287265,28.6717628697134"
+                    Point3="-105.28942287265,32.6717628697134" />
+                  <mssgle:LineSegment
+                    End="-105.28942287265,63.201960712816" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-130.345277842575,33.6717628697134,155.4011328125,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_MERSTATUS_LOAD\DST_MERSTATUS 1">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <DtsEventHandler
+    design-time-name="Package\SQL_MERSTATUS_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="313,42"
+          Id="Package\SQL_MERSTATUS_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]\SQL_MERSTATUS_UPDATE_DFT_LOAD_COMPLETED"
+          TopLeft="570.3,184.7" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

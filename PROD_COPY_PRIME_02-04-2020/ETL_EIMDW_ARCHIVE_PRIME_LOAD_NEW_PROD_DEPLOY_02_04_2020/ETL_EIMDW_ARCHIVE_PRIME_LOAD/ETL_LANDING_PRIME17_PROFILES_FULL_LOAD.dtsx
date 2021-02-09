@@ -1,0 +1,2082 @@
+<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="11/28/2018 8:48:53 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="LAPTOP-SBSNQ3DE"
+  DTS:CreatorName="LAPTOP-SBSNQ3DE\HP"
+  DTS:DTSID="{0CAD586D-06D9-440F-98D0-CAD6804AD1BD}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="14.0.0600.250"
+  DTS:LocaleID="16393"
+  DTS:ObjectName="ETL_LANDING_PRIME17_PROFILES_FULL_LOAD"
+  DTS:PackageType="5"
+  DTS:ProtectionLevel="0"
+  DTS:VersionBuild="732"
+  DTS:VersionGUID="{7F3F5B0A-5113-42DE-A643-CBEAF3E6BBD9}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_AUDIT_FRAMEWORK]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{314C639B-2F6C-46CF-8F73-7EA399BC2226}"
+      DTS:ObjectName="CM_AUDIT_FRAMEWORK">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_AUDIT_FRAMEWORK_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_AUDIT_FRAMEWORK_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=AUDIT_FRAMEWORK_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{BDDA4933-6A2C-4062-8FA5-6E26FB9336B5}"
+      DTS:ObjectName="CM_EIMDW_LANDING_PRIME">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_LANDING_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_ARCHIVE_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=DEV_EIMDW_Landing_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_Prime_Attunity]"
+      DTS:CreationName="MSORA"
+      DTS:DTSID="{A1F87EDA-F361-4698-AE29-8BC57C1F08C7}"
+      DTS:ObjectName="CM_Prime_Attunity">
+      <DTS:PropertyExpression
+        DTS:Name="Password">@[$Project::p_PRIME_PWD]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_PRIME_SERVER]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="UserName">@[$Project::p_PRIME_USER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <OracleXMLPackage>
+          <OraConnectionString>SERVER=10.180.2.215:1522/prime;USERNAME=AMBERCONNECT;ORACLEHOME=;ORACLEHOME64=;WINAUTH=0</OraConnectionString>
+          <OraRetain>False</OraRetain>
+          <OraInitialCatalog></OraInitialCatalog>
+          <OraServerName>10.180.2.215:1522/prime</OraServerName>
+          <OraUserName>AMBERCONNECT</OraUserName>
+          <OraOracleHome></OraOracleHome>
+          <OraOracleHome64></OraOracleHome64>
+          <OraWinAuthentication>False</OraWinAuthentication>
+          <OraEnableDetailedTracing>False</OraEnableDetailedTracing>
+          <OraPassword
+            Sensitive="1"></OraPassword>
+        </OracleXMLPackage>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:LogProviders>
+    <DTS:LogProvider
+      DTS:ConfigString="CM_AUDIT_FRAMEWORK"
+      DTS:CreationName="Microsoft.LogProviderSQLServer"
+      DTS:Description="Writes log entries for events to a SQL Server database"
+      DTS:DTSID="{708F7BB4-26FF-44D4-9160-0F2C05397241}"
+      DTS:ObjectName="SSIS log provider for SQL Server">
+      <DTS:ObjectData>
+        <InnerObject />
+      </DTS:ObjectData>
+    </DTS:LogProvider>
+  </DTS:LogProviders>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{DA7FC337-69F3-45D4-BB02-0FA2C8E9B834}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Batch_Id">
+      <DTS:VariableValue
+        DTS:DataType="20">-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{FA11AE17-0102-494C-9FD5-230C327096DF}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT COUNT(1) FROM &quot; +  @[User::v_Dest_Table]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Dest_Count_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT COUNT(1) FROM DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_PROFILES (NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{8F6A1B6B-57FC-4AF5-AD41-FF07B01E43BD}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="@[$Project::p_LANDING_DATABASE]  +&quot;.&quot;+ @[$Project::p_LANDING_SCHEMA] +&quot;.&quot;+&quot;SRC_PRIME17_PROFILES (NOLOCK)&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Dest_Table">
+      <DTS:VariableValue
+        DTS:DataType="8">DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_PROFILES (NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{1E17A9A1-A38B-47F6-9687-D5FB619FDC0C}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Package_Id">
+      <DTS:VariableValue
+        DTS:DataType="3">-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{6D7A1CC9-CAA7-4C6D-A8B2-6808F505B624}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Rows_Inserted">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{B2719931-FB3D-4E24-8CF9-113F2183A611}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Rows_Read">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{2AE47AC4-908C-41A6-A6CB-067BA06E4BF6}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT INSTITUTION_ID&#x9;&#xA;,SERNO&#x9;&#xA;,USEDFOR&#x9;&#xA;,SHORTCODE&#x9;&#xA;,CORPINDICATOR&#x9;&#xA;,DESCRIPTION&#x9;&#xA;,LOGVERSION&#x9;&#xA;,ROWSERNO&#x9;&#xA;,TABINDICATOR&#x9;&#xA;,USEDFORCAMPAIGNS&#x9;&#xA;,APPLIESTORP&#xA;  FROM &quot; +  @[User::v_Source_Table]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Source_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT INSTITUTION_ID	
+,SERNO	
+,USEDFOR	
+,SHORTCODE	
+,CORPINDICATOR	
+,DESCRIPTION	
+,LOGVERSION	
+,ROWSERNO	
+,TABINDICATOR	
+,USEDFORCAMPAIGNS	
+,APPLIESTORP
+  FROM TCTDBS.PROFILES</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{F2910E81-6611-4581-B4C6-0A51B0B348A9}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Source_Table">
+      <DTS:VariableValue
+        DTS:DataType="8">TCTDBS.PROFILES</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{151F1AF9-C426-44BA-AA89-E4712E362E4A}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Task_Name">
+      <DTS:VariableValue
+        DTS:DataType="8">PROFILES</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{9CF59F19-400A-4BF2-ADF9-B9455354EE19}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;TRUNCATE TABLE &quot;  + REPLACE(@[User::v_Dest_Table],&quot;(NOLOCK)&quot;,&quot; &quot;)"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Trunc_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">TRUNCATE TABLE DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_PROFILES  </DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:LoggingOptions
+    DTS:FilterKind="0"
+    DTS:LoggingMode="1">
+    <DTS:Property
+      DTS:DataType="8"
+      DTS:Name="EventFilter">3,7,OnError,13,OnPostExecute,12,OnTaskFailed</DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnError"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnPostExecute"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnTaskFailed"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:SelectedLogProviders>
+      <DTS:SelectedLogProvider
+        DTS:InstanceID="{708F7BB4-26FF-44D4-9160-0F2C05397241}" />
+    </DTS:SelectedLogProviders>
+  </DTS:LoggingOptions>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\DFT_PROFILES_LOAD"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{2F7A119A-E4B5-41BF-93A3-88356311A0C5}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="DFT_PROFILES_LOAD"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"DFT_"+@[User::v_Task_Name]+"_LOAD"</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="[SRC_PROFILES].[SqlCommand]">@[User::v_Source_Query]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <pipeline
+          defaultBufferMaxRows="100000"
+          defaultBufferSize="20485760"
+          version="1">
+          <components>
+            <component
+              refId="Package\DFT_PROFILES_LOAD\BDD_PROFILES"
+              componentClassID="Microsoft.BDD"
+              contactInfo="Balanced Data Distributor;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Evaluates and directs rows in a dataset to multiple destinations."
+              name="BDD_PROFILES">
+              <inputs>
+                <input
+                  refId="Package\DFT_PROFILES_LOAD\BDD_PROFILES.Inputs[Balanced Data Distributor Input]"
+                  description="Input to the Balanced Data      Distributor Transformation"
+                  name="Balanced Data Distributor Input">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_PROFILES_LOAD\BDD_PROFILES.Outputs[Balanced Data Distributor Output 1]"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 1"
+                  synchronousInputId="Package\DFT_PROFILES_LOAD\BDD_PROFILES.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_PROFILES_LOAD\BDD_PROFILES.Outputs[Balanced Data Distributor Output 2]"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 2"
+                  synchronousInputId="Package\DFT_PROFILES_LOAD\BDD_PROFILES.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_PROFILES_LOAD\BDD_PROFILES.Outputs[Balanced Data Distributor Output 3]"
+                  dangling="true"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 3"
+                  synchronousInputId="Package\DFT_PROFILES_LOAD\BDD_PROFILES.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_PROFILES_LOAD\DC_BATCH"
+              componentClassID="Microsoft.DerivedColumn"
+              contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+              name="DC_BATCH"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\DFT_PROFILES_LOAD\DC_BATCH.Inputs[Derived Column Input]"
+                  description="Input to the Derived Column Transformation"
+                  name="Derived Column Input">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_PROFILES_LOAD\DC_BATCH.Outputs[Derived Column Output]"
+                  description="Default Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  name="Derived Column Output"
+                  synchronousInputId="Package\DFT_PROFILES_LOAD\DC_BATCH.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_PROFILES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]"
+                      dataType="i8"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\DFT_PROFILES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]"
+                      name="BATCH_ID"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">@[User::v_Batch_Id]</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">@[User::v_Batch_Id]</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_PROFILES_LOAD\DC_BATCH.Outputs[Derived Column Error Output]"
+                  description="Error Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Derived Column Error Output"
+                  synchronousInputId="Package\DFT_PROFILES_LOAD\DC_BATCH.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_PROFILES_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_PROFILES_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_PROFILES_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_PROFILES_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_PROFILES_LOAD\DST_PROFILES"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="DST_PROFILES"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[LZOWN].[SRC_PRIME17_PROFILES]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS,ROWS_PER_BATCH = 1000000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].Columns[INSTITUTION_ID]"
+                      cachedDataType="i4"
+                      cachedName="INSTITUTION_ID"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].Columns[SERNO]"
+                      cachedDataType="numeric"
+                      cachedName="SERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[SERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].Columns[USEDFOR]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="USEDFOR"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].ExternalColumns[USEDFOR]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[USEDFOR]" />
+                    <inputColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].Columns[SHORTCODE]"
+                      cachedDataType="wstr"
+                      cachedLength="5"
+                      cachedName="SHORTCODE"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].ExternalColumns[SHORTCODE]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[SHORTCODE]" />
+                    <inputColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].Columns[CORPINDICATOR]"
+                      cachedDataType="i1"
+                      cachedName="CORPINDICATOR"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].ExternalColumns[CORPINDICATOR]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[CORPINDICATOR]" />
+                    <inputColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].Columns[DESCRIPTION]"
+                      cachedDataType="wstr"
+                      cachedLength="40"
+                      cachedName="DESCRIPTION"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTION]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[DESCRIPTION]" />
+                    <inputColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].Columns[LOGVERSION]"
+                      cachedDataType="i4"
+                      cachedName="LOGVERSION"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].ExternalColumns[LOGVERSION]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[LOGVERSION]" />
+                    <inputColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].Columns[ROWSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="ROWSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].ExternalColumns[ROWSERNO]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[ROWSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].Columns[TABINDICATOR]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="TABINDICATOR"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].ExternalColumns[TABINDICATOR]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[TABINDICATOR]" />
+                    <inputColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].Columns[USEDFORCAMPAIGNS]"
+                      cachedDataType="i1"
+                      cachedName="USEDFORCAMPAIGNS"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].ExternalColumns[USEDFORCAMPAIGNS]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[USEDFORCAMPAIGNS]" />
+                    <inputColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].Columns[APPLIESTORP]"
+                      cachedDataType="i1"
+                      cachedName="APPLIESTORP"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].ExternalColumns[APPLIESTORP]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[APPLIESTORP]" />
+                    <inputColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].Columns[BATCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="BATCH_ID"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      lineageId="Package\DFT_PROFILES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].ExternalColumns[LD_SEQ_ID]"
+                      dataType="i4"
+                      name="LD_SEQ_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      dataType="i8"
+                      name="BATCH_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].ExternalColumns[USEDFOR]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="USEDFOR" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].ExternalColumns[SHORTCODE]"
+                      dataType="wstr"
+                      length="5"
+                      name="SHORTCODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].ExternalColumns[CORPINDICATOR]"
+                      dataType="i2"
+                      name="CORPINDICATOR" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTION]"
+                      dataType="wstr"
+                      length="40"
+                      name="DESCRIPTION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].ExternalColumns[LOGVERSION]"
+                      dataType="i4"
+                      name="LOGVERSION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].ExternalColumns[ROWSERNO]"
+                      dataType="numeric"
+                      name="ROWSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].ExternalColumns[TABINDICATOR]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="TABINDICATOR" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].ExternalColumns[USEDFORCAMPAIGNS]"
+                      dataType="i2"
+                      name="USEDFORCAMPAIGNS" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input].ExternalColumns[APPLIESTORP]"
+                      dataType="i2"
+                      name="APPLIESTORP" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="DST_PROFILES 1"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[LZOWN].[SRC_PRIME17_PROFILES]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS,ROWS_PER_BATCH = 1000000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].Columns[INSTITUTION_ID]"
+                      cachedDataType="i4"
+                      cachedName="INSTITUTION_ID"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].Columns[SERNO]"
+                      cachedDataType="numeric"
+                      cachedName="SERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[SERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].Columns[USEDFOR]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="USEDFOR"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].ExternalColumns[USEDFOR]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[USEDFOR]" />
+                    <inputColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].Columns[SHORTCODE]"
+                      cachedDataType="wstr"
+                      cachedLength="5"
+                      cachedName="SHORTCODE"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].ExternalColumns[SHORTCODE]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[SHORTCODE]" />
+                    <inputColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].Columns[CORPINDICATOR]"
+                      cachedDataType="i1"
+                      cachedName="CORPINDICATOR"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].ExternalColumns[CORPINDICATOR]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[CORPINDICATOR]" />
+                    <inputColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].Columns[DESCRIPTION]"
+                      cachedDataType="wstr"
+                      cachedLength="40"
+                      cachedName="DESCRIPTION"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTION]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[DESCRIPTION]" />
+                    <inputColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].Columns[LOGVERSION]"
+                      cachedDataType="i4"
+                      cachedName="LOGVERSION"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].ExternalColumns[LOGVERSION]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[LOGVERSION]" />
+                    <inputColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].Columns[ROWSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="ROWSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].ExternalColumns[ROWSERNO]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[ROWSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].Columns[TABINDICATOR]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="TABINDICATOR"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].ExternalColumns[TABINDICATOR]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[TABINDICATOR]" />
+                    <inputColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].Columns[USEDFORCAMPAIGNS]"
+                      cachedDataType="i1"
+                      cachedName="USEDFORCAMPAIGNS"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].ExternalColumns[USEDFORCAMPAIGNS]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[USEDFORCAMPAIGNS]" />
+                    <inputColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].Columns[APPLIESTORP]"
+                      cachedDataType="i1"
+                      cachedName="APPLIESTORP"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].ExternalColumns[APPLIESTORP]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[APPLIESTORP]" />
+                    <inputColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].Columns[BATCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="BATCH_ID"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      lineageId="Package\DFT_PROFILES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].ExternalColumns[LD_SEQ_ID]"
+                      dataType="i4"
+                      name="LD_SEQ_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      dataType="i8"
+                      name="BATCH_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].ExternalColumns[USEDFOR]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="USEDFOR" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].ExternalColumns[SHORTCODE]"
+                      dataType="wstr"
+                      length="5"
+                      name="SHORTCODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].ExternalColumns[CORPINDICATOR]"
+                      dataType="i2"
+                      name="CORPINDICATOR" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTION]"
+                      dataType="wstr"
+                      length="40"
+                      name="DESCRIPTION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].ExternalColumns[LOGVERSION]"
+                      dataType="i4"
+                      name="LOGVERSION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].ExternalColumns[ROWSERNO]"
+                      dataType="numeric"
+                      name="ROWSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].ExternalColumns[TABINDICATOR]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="TABINDICATOR" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].ExternalColumns[USEDFORCAMPAIGNS]"
+                      dataType="i2"
+                      name="USEDFORCAMPAIGNS" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input].ExternalColumns[APPLIESTORP]"
+                      dataType="i2"
+                      name="APPLIESTORP" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_PROFILES_LOAD\RC_PROFILES"
+              componentClassID="Microsoft.RowCount"
+              contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Counts rows as they pass through a data flow. For example, use the number of rows processed to determine whether or not to perform cleanup operations, or update text in an e-mail message to communicate processing status."
+              name="RC_PROFILES">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable to hold the row count."
+                  name="VariableName">User::v_Rows_Read</property>
+              </properties>
+              <inputs>
+                <input
+                  refId="Package\DFT_PROFILES_LOAD\RC_PROFILES.Inputs[Row Count Input 1]"
+                  hasSideEffects="true"
+                  name="Row Count Input 1">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_PROFILES_LOAD\RC_PROFILES.Outputs[Row Count Output 1]"
+                  name="Row Count Output 1"
+                  synchronousInputId="Package\DFT_PROFILES_LOAD\RC_PROFILES.Inputs[Row Count Input 1]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES"
+              componentClassID="Attunity.SSISOraSrc"
+              contactInfo="Oracle Source;Microsoft Connector for Oracle by Attunity; Attunity Ltd.; All Rights Reserved; http://www.attunity.com;7"
+              description="Microsoft Oracle Source Component by Attunity"
+              name="SRC_PROFILES"
+              usesDispositions="true"
+              version="6">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="The name of the table to be fetched."
+                  expressionType="Notify"
+                  name="TableName"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  expressionType="Notify"
+                  name="SqlCommand">SELECT INSTITUTION_ID	
+,SERNO	
+,USEDFOR	
+,SHORTCODE	
+,CORPINDICATOR	
+,DESCRIPTION	
+,LOGVERSION	
+,ROWSERNO	
+,TABINDICATOR	
+,USEDFORCAMPAIGNS	
+,APPLIESTORP
+  FROM TCTDBS.PROFILES</property>
+                <property
+                  dataType="System.Int32"
+                  description="The number of rows fetched in a batch."
+                  expressionType="Notify"
+                  name="BatchSize">100</property>
+                <property
+                  dataType="System.Int32"
+                  description="Number of pre-fetched rows."
+                  expressionType="Notify"
+                  name="PrefetchCount">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Determines the chunk size allocation for LOB columns"
+                  expressionType="Notify"
+                  name="LobChunkSize">32768</property>
+                <property
+                  dataType="System.Int32"
+                  description="The code page to use when code page information is unavailable from the data source."
+                  expressionType="Notify"
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Int32"
+                  description="The mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">1</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Connections[MSOraConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_Prime_Attunity]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_Prime_Attunity]"
+                  description="The Oracle runtime connection"
+                  name="MSOraConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output]"
+                  errorRowDisposition="FailComponent"
+                  name="Oracle Source Output"
+                  truncationRowDisposition="FailComponent">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]"
+                      name="INSTITUTION_ID" />
+                    <outputColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[SERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[SERNO]"
+                      name="SERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[USEDFOR]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].ExternalColumns[USEDFOR]"
+                      length="1"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[USEDFOR]"
+                      name="USEDFOR" />
+                    <outputColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[SHORTCODE]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].ExternalColumns[SHORTCODE]"
+                      length="5"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[SHORTCODE]"
+                      name="SHORTCODE" />
+                    <outputColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[CORPINDICATOR]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].ExternalColumns[CORPINDICATOR]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[CORPINDICATOR]"
+                      name="CORPINDICATOR" />
+                    <outputColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[DESCRIPTION]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].ExternalColumns[DESCRIPTION]"
+                      length="40"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[DESCRIPTION]"
+                      name="DESCRIPTION" />
+                    <outputColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[LOGVERSION]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].ExternalColumns[LOGVERSION]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[LOGVERSION]"
+                      name="LOGVERSION" />
+                    <outputColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[ROWSERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].ExternalColumns[ROWSERNO]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[ROWSERNO]"
+                      name="ROWSERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[TABINDICATOR]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].ExternalColumns[TABINDICATOR]"
+                      length="1"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[TABINDICATOR]"
+                      name="TABINDICATOR" />
+                    <outputColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[USEDFORCAMPAIGNS]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].ExternalColumns[USEDFORCAMPAIGNS]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[USEDFORCAMPAIGNS]"
+                      name="USEDFORCAMPAIGNS" />
+                    <outputColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[APPLIESTORP]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].ExternalColumns[APPLIESTORP]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].Columns[APPLIESTORP]"
+                      name="APPLIESTORP" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].ExternalColumns[USEDFOR]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="USEDFOR" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].ExternalColumns[SHORTCODE]"
+                      dataType="wstr"
+                      length="5"
+                      name="SHORTCODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].ExternalColumns[CORPINDICATOR]"
+                      dataType="i1"
+                      name="CORPINDICATOR" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].ExternalColumns[DESCRIPTION]"
+                      dataType="wstr"
+                      length="40"
+                      name="DESCRIPTION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].ExternalColumns[LOGVERSION]"
+                      dataType="i4"
+                      name="LOGVERSION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].ExternalColumns[ROWSERNO]"
+                      dataType="numeric"
+                      name="ROWSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].ExternalColumns[TABINDICATOR]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="TABINDICATOR" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].ExternalColumns[USEDFORCAMPAIGNS]"
+                      dataType="i1"
+                      name="USEDFORCAMPAIGNS" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].ExternalColumns[APPLIESTORP]"
+                      dataType="i1"
+                      name="APPLIESTORP" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Error Output]"
+                  isErrorOut="true"
+                  name="Oracle Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Error Output].Columns[INSTITUTION_ID]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Error Output].Columns[INSTITUTION_ID]"
+                      name="INSTITUTION_ID" />
+                    <outputColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Error Output].Columns[SERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Error Output].Columns[SERNO]"
+                      name="SERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Error Output].Columns[USEDFOR]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].ExternalColumns[USEDFOR]"
+                      length="1"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Error Output].Columns[USEDFOR]"
+                      name="USEDFOR" />
+                    <outputColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Error Output].Columns[SHORTCODE]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].ExternalColumns[SHORTCODE]"
+                      length="5"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Error Output].Columns[SHORTCODE]"
+                      name="SHORTCODE" />
+                    <outputColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Error Output].Columns[CORPINDICATOR]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].ExternalColumns[CORPINDICATOR]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Error Output].Columns[CORPINDICATOR]"
+                      name="CORPINDICATOR" />
+                    <outputColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Error Output].Columns[DESCRIPTION]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].ExternalColumns[DESCRIPTION]"
+                      length="40"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Error Output].Columns[DESCRIPTION]"
+                      name="DESCRIPTION" />
+                    <outputColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Error Output].Columns[LOGVERSION]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].ExternalColumns[LOGVERSION]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Error Output].Columns[LOGVERSION]"
+                      name="LOGVERSION" />
+                    <outputColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Error Output].Columns[ROWSERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].ExternalColumns[ROWSERNO]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Error Output].Columns[ROWSERNO]"
+                      name="ROWSERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Error Output].Columns[TABINDICATOR]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].ExternalColumns[TABINDICATOR]"
+                      length="1"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Error Output].Columns[TABINDICATOR]"
+                      name="TABINDICATOR" />
+                    <outputColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Error Output].Columns[USEDFORCAMPAIGNS]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].ExternalColumns[USEDFORCAMPAIGNS]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Error Output].Columns[USEDFORCAMPAIGNS]"
+                      name="USEDFORCAMPAIGNS" />
+                    <outputColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Error Output].Columns[APPLIESTORP]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output].ExternalColumns[APPLIESTORP]"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Error Output].Columns[APPLIESTORP]"
+                      name="APPLIESTORP" />
+                    <outputColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\DFT_PROFILES_LOAD.Paths[Balanced Data Distributor Output 1]"
+              endId="Package\DFT_PROFILES_LOAD\DST_PROFILES.Inputs[OLE DB Destination Input]"
+              name="Balanced Data Distributor Output 1"
+              startId="Package\DFT_PROFILES_LOAD\BDD_PROFILES.Outputs[Balanced Data Distributor Output 1]" />
+            <path
+              refId="Package\DFT_PROFILES_LOAD.Paths[Balanced Data Distributor Output 2]"
+              endId="Package\DFT_PROFILES_LOAD\DST_PROFILES 1.Inputs[OLE DB Destination Input]"
+              name="Balanced Data Distributor Output 2"
+              startId="Package\DFT_PROFILES_LOAD\BDD_PROFILES.Outputs[Balanced Data Distributor Output 2]" />
+            <path
+              refId="Package\DFT_PROFILES_LOAD.Paths[Derived Column Output]"
+              endId="Package\DFT_PROFILES_LOAD\BDD_PROFILES.Inputs[Balanced Data Distributor Input]"
+              name="Derived Column Output"
+              startId="Package\DFT_PROFILES_LOAD\DC_BATCH.Outputs[Derived Column Output]" />
+            <path
+              refId="Package\DFT_PROFILES_LOAD.Paths[Oracle Source Output]"
+              endId="Package\DFT_PROFILES_LOAD\RC_PROFILES.Inputs[Row Count Input 1]"
+              name="Oracle Source Output"
+              startId="Package\DFT_PROFILES_LOAD\SRC_PROFILES.Outputs[Oracle Source Output]" />
+            <path
+              refId="Package\DFT_PROFILES_LOAD.Paths[Row Count Output 1]"
+              endId="Package\DFT_PROFILES_LOAD\DC_BATCH.Inputs[Derived Column Input]"
+              name="Row Count Output 1"
+              startId="Package\DFT_PROFILES_LOAD\RC_PROFILES.Outputs[Row Count Output 1]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_PROFILES_GET_DEST_COUNT_LOAD"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{AD2DBF30-77B9-40B8-809F-EAC563A75A8B}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_PROFILES_GET_DEST_COUNT_LOAD"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_GET_DEST_COUNT_LOAD"</DTS:PropertyExpression>
+      <DTS:EventHandlers>
+        <DTS:EventHandler
+          DTS:refId="Package\SQL_PROFILES_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]"
+          DTS:CreationName="OnPreExecute"
+          DTS:DTSID="{E0C1CFAD-43D3-420E-88E5-319E64963A54}"
+          DTS:EventID="1076330902"
+          DTS:EventName="OnPreExecute"
+          DTS:LocaleID="-1">
+          <DTS:Variables>
+            <DTS:Variable
+              DTS:CreationName=""
+              DTS:Description="The propagate property of the event"
+              DTS:DTSID="{D59E96B5-BD1F-4654-AB86-1525FF7D5A90}"
+              DTS:IncludeInDebugDump="6789"
+              DTS:Namespace="System"
+              DTS:ObjectName="Propagate">
+              <DTS:VariableValue
+                DTS:DataType="11">-1</DTS:VariableValue>
+            </DTS:Variable>
+          </DTS:Variables>
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\SQL_PROFILES_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]\SQL_PROFILES_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{4824CFFB-71F2-4CF9-826F-64C1168FE64F}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="SQL_PROFILES_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+              <DTS:Variables />
+              <DTS:PropertyExpression
+                DTS:Name="Name">"SQL_"+ @[User::v_Task_Name]+"_UPDATE_DFT_LOAD_COMPLETED"</DTS:PropertyExpression>
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{314C639B-2F6C-46CF-8F73-7EA399BC2226}"
+                  SQLTask:SqlStatementSource="UPDATE DBO.BATCH_EXECUTION_STATUS&#xA; SET  &#xA;STATUS_FLAG = 'DFT LOAD COMPLETED'   WHERE&#xA; EXECUTION_ID = (&#xA;       SELECT MAX(EXECUTION_ID) EXECUTION_ID&#xA;       FROM DBO.BATCH_EXECUTION_STATUS&#xA;       WHERE PACKAGE_ID =?&#xA;       AND  BATCH_ID = ?&#xA;    )"
+                  SQLTask:TypeConversionMode="None" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="0"
+                    SQLTask:DtsVariableName="User::v_Package_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="1"
+                    SQLTask:DtsVariableName="User::v_Batch_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                </SQLTask:SqlTaskData>
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+        </DTS:EventHandler>
+      </DTS:EventHandlers>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{BDDA4933-6A2C-4062-8FA5-6E26FB9336B5}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::v_Dest_Count_Query"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="0"
+            SQLTask:DtsVariableName="User::v_Rows_Inserted" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_PROFILES_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{E437E6AA-A4BB-4A55-B7D1-6CAE729946A3}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_PROFILES_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_CHECK_PACKAGE_EXISTENCE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{314C639B-2F6C-46CF-8F73-7EA399BC2226}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_NAME VARCHAR(500) = ?&#xA;&#xA;EXEC [DBO].[SP_CHECK_PACKAGE_EXISTENCE]  @PACKAGE_NAME" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_PROFILES_SP_GET_PACKAGE_BATCH_ID"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{533329C3-C0DD-416D-83EB-B7E8CDA53925}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_PROFILES_SP_GET_PACKAGE_BATCH_ID"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_GET_PACKAGE_BATCH_ID"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{314C639B-2F6C-46CF-8F73-7EA399BC2226}"
+          SQLTask:SqlStatementSource="&#xA;DECLARE @PACKAGE_NAME VARCHAR(500) = ?&#xA;DECLARE @PACKAGE_ID  INT &#xA;DECLARE @BATCH_ID BIGINT&#xA;&#xA;&#xA; EXEC [DBO].[SP_GET_PACKAGE_BATCH_ID] @PACKAGE_NAME,@PACKAGE_ID OUT,@BATCH_ID OUT&#xA; SELECT ? = @PACKAGE_ID &#xA; SELECT ? = @BATCH_ID" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_PROFILES_SP_INSERT_EXECUTION_STATUS"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{F522A129-FA68-415B-84DA-6CF5C0D4150B}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_PROFILES_SP_INSERT_EXECUTION_STATUS"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_INSERT_EXECUTION_STATUS"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{314C639B-2F6C-46CF-8F73-7EA399BC2226}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @PACKAGE_START_TIME DATETIME = ?&#xA;DECLARE @JOB_ID INT  =?&#xA;&#xA;EXEC [DBO].[SP_INSERT_EXECUTION_STATUS]           @PACKAGE_ID&#xA;,@BATCH_ID&#xA;,@PACKAGE_START_TIME&#xA;,@JOB_ID" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="System::StartTime"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="7"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="$Project::p_JOB_ID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_PROFILES_SP_UPDATE_EXECUTION_STATUS_LOAD"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{1B2B44D5-B1DA-4B3A-8AAC-AD6F0B88AC10}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_PROFILES_SP_UPDATE_EXECUTION_STATUS_LOAD"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_UPDATE_EXECUTION_STATUS_LOAD"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{314C639B-2F6C-46CF-8F73-7EA399BC2226}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @ROWS_READ BIGINT = ?&#xA;DECLARE @ROWS_INSERTED BIGINT = ?&#xA;DECLARE @ROWS_UPDATED BIGINT =0&#xA;DECLARE @ROWS_ERRORED  BIGINT=0&#xA;&#xA;&#xA;EXEC DBO.SP_UPDATE_EXECUTION_STATUS @PACKAGE_ID&#xA; , @BATCH_ID&#xA; , @ROWS_READ&#xA; , @ROWS_INSERTED&#xA; , @ROWS_UPDATED&#xA; , @ROWS_ERRORED" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::v_Rows_Read"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="User::v_Rows_Inserted"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_PROFILES_TRUNCATE_STG_TABLE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{7F7A29BB-8D91-473F-86DF-A2BACA446449}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_PROFILES_TRUNCATE_STG_TABLE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_TRUNCATE_STG_TABLE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{BDDA4933-6A2C-4062-8FA5-6E26FB9336B5}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::v_Trunc_Query" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{F21CDAAF-76D4-4E43-B242-2D56FA6FA8CB}"
+      DTS:From="Package\SQL_PROFILES_SP_GET_PACKAGE_BATCH_ID"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\SQL_PROFILES_SP_INSERT_EXECUTION_STATUS" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 10]"
+      DTS:CreationName=""
+      DTS:DTSID="{1ACC3C6E-882A-49F9-91C6-05A9D4EF472A}"
+      DTS:From="Package\SQL_PROFILES_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 10"
+      DTS:To="Package\SQL_PROFILES_SP_GET_PACKAGE_BATCH_ID" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 12]"
+      DTS:CreationName=""
+      DTS:DTSID="{3F58359B-B72A-478F-9FF9-533D7F86204C}"
+      DTS:From="Package\DFT_PROFILES_LOAD"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 12"
+      DTS:To="Package\SQL_PROFILES_GET_DEST_COUNT_LOAD" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{65C68710-398C-4961-9808-95162553586D}"
+      DTS:From="Package\SQL_PROFILES_SP_INSERT_EXECUTION_STATUS"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\SQL_PROFILES_TRUNCATE_STG_TABLE" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 5]"
+      DTS:CreationName=""
+      DTS:DTSID="{C4ED0629-0BBB-46FB-BD7A-50AA5B90B610}"
+      DTS:Expression="@[User::v_Inc_Date] == (DT_DBTIMESTAMP) &quot;1753-01-01&quot;"
+      DTS:From="Package\SQL_PROFILES_TRUNCATE_STG_TABLE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 5"
+      DTS:To="Package\DFT_PROFILES_LOAD" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 7]"
+      DTS:CreationName=""
+      DTS:DTSID="{1DFD2566-299D-4E34-9C19-532BE35942B5}"
+      DTS:Expression="@[User::v_Rows_Inserted] ==0"
+      DTS:From="Package\SQL_PROFILES_GET_DEST_COUNT_LOAD"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 7"
+      DTS:To="Package\SQL_PROFILES_SP_UPDATE_EXECUTION_STATUS_LOAD" />
+  </DTS:PrecedenceConstraints>
+  <DTS:EventHandlers>
+    <DTS:EventHandler
+      DTS:refId="Package.EventHandlers[OnError]"
+      DTS:CreationName="OnError"
+      DTS:DTSID="{F437E36E-005B-4D6E-BD68-0FB323136253}"
+      DTS:EventID="2"
+      DTS:EventName="OnError"
+      DTS:LocaleID="-1">
+      <DTS:Variables>
+        <DTS:Variable
+          DTS:CreationName=""
+          DTS:Description="The propagate property of the event"
+          DTS:DTSID="{A3FE4D6B-AFC2-4709-8879-2A67376A5F01}"
+          DTS:IncludeInDebugDump="6789"
+          DTS:Namespace="System"
+          DTS:ObjectName="Propagate">
+          <DTS:VariableValue
+            DTS:DataType="11">-1</DTS:VariableValue>
+        </DTS:Variable>
+      </DTS:Variables>
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package.EventHandlers[OnError]\SQL_PROFILES_SP_SSIS_ERRORLOG"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{3DD5C4E8-C788-4847-BEAA-C6A115F00980}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="SQL_PROFILES_SP_SSIS_ERRORLOG"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:PropertyExpression
+            DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_SSIS_ERRORLOG"</DTS:PropertyExpression>
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{314C639B-2F6C-46CF-8F73-7EA399BC2226}"
+              SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @PKG_GUID SYSNAME = ?&#xA;DECLARE @PACKAGE_NAME SYSNAME = ?&#xA;DECLARE @SOURCE_NAME VARCHAR(100) = ?&#xA;DECLARE @TASK_NAME VARCHAR(100) = ?&#xA;DECLARE @MACHINE_NAME VARCHAR(50) = ?&#xA;DECLARE @USER_NAME VARCHAR(50) = ?&#xA;DECLARE @ERROR_NUMBER INT = ?&#xA;DECLARE @ERROR_DESCRIPTION VARCHAR(MAX) = ?&#xA;DECLARE @PACKAGE_START_TIME DATETIME  = NULL&#xA;DECLARE @ROWS_READ BIGINT = ?&#xA;DECLARE @ROWS_INSERTED BIGINT = ?&#xA;DECLARE @ROWS_UPDATED BIGINT = NULL&#xA;DECLARE @ROWS_ERRORED BIGINT = NULL&#xA;&#xA;EXEC DBO.[SP_SSIS_ERRORLOG] @PACKAGE_ID&#xA;&#x9;,@BATCH_ID&#xA;&#x9;,@PKG_GUID&#xA;&#x9;,@PACKAGE_NAME&#xA;&#x9;,@SOURCE_NAME&#xA;&#x9;,@TASK_NAME&#xA;&#x9;,@MACHINE_NAME&#xA;&#x9;,@USER_NAME&#xA;&#x9;,@ERROR_NUMBER&#xA;&#x9;,@ERROR_DESCRIPTION&#xA;&#x9;,@PACKAGE_START_TIME&#xA;&#x9;,@ROWS_READ&#xA;&#x9;,@ROWS_INSERTED&#xA;&#x9;,@ROWS_UPDATED &#xA;&#x9;,@ROWS_ERRORED" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::v_Package_Id"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="1"
+                SQLTask:DtsVariableName="User::v_Batch_Id"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="2"
+                SQLTask:DtsVariableName="System::PackageID"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="3"
+                SQLTask:DtsVariableName="System::PackageName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="4"
+                SQLTask:DtsVariableName="System::SourceName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="5"
+                SQLTask:DtsVariableName="System::TaskName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="6"
+                SQLTask:DtsVariableName="System::MachineName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="7"
+                SQLTask:DtsVariableName="System::UserName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="8"
+                SQLTask:DtsVariableName="System::ErrorCode"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="9"
+                SQLTask:DtsVariableName="System::ErrorDescription"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="10"
+                SQLTask:DtsVariableName="User::v_Rows_Read"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="11"
+                SQLTask:DtsVariableName="User::v_Rows_Inserted"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+    </DTS:EventHandler>
+  </DTS:EventHandlers>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="390,43"
+          Id="Package\DFT_PROFILES_LOAD"
+          TopLeft="602.878402019497,412.182348771409" />
+        <NodeLayout
+          Size="390,43"
+          Id="Package\SQL_PROFILES_GET_DEST_COUNT_LOAD"
+          TopLeft="602.878402019497,513.852935964261" />
+        <NodeLayout
+          Size="390,43"
+          Id="Package\SQL_PROFILES_SP_CHECK_PACKAGE_EXISTENCE"
+          TopLeft="602.878402019497,5.5" />
+        <NodeLayout
+          Size="390,43"
+          Id="Package\SQL_PROFILES_SP_GET_PACKAGE_BATCH_ID"
+          TopLeft="602.878402019497,107.170587192852" />
+        <NodeLayout
+          Size="390,43"
+          Id="Package\SQL_PROFILES_SP_INSERT_EXECUTION_STATUS"
+          TopLeft="602.878402019497,208.841174385704" />
+        <NodeLayout
+          Size="390,43"
+          Id="Package\SQL_PROFILES_SP_UPDATE_EXECUTION_STATUS_LOAD"
+          TopLeft="602.878402019497,615.523523157113" />
+        <NodeLayout
+          Size="390,43"
+          Id="Package\SQL_PROFILES_TRUNCATE_STG_TABLE"
+          TopLeft="602.878402019497,310.511761578557" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="797.878402019497,150.170587192852">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.670587192852"
+              Start="0,0"
+              End="0,51.170587192852">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.170587192852" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 10]"
+          TopLeft="797.878402019497,48.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.670587192852"
+              Start="0,0"
+              End="0,51.170587192852">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.170587192852" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 12]"
+          TopLeft="797.878402019497,455.182348771409">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928519"
+              Start="0,0"
+              End="0,51.1705871928519">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928519" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="797.878402019497,251.841174385704">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.670587192853"
+              Start="0,0"
+              End="0,51.170587192853">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.170587192853" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 5]"
+          TopLeft="797.878402019497,353.511761578557">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.670587192852"
+              Start="0,0"
+              End="0,51.170587192852">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.170587192852" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 7]"
+          TopLeft="797.878402019497,556.852935964261">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928521"
+              Start="0,0"
+              End="0,51.1705871928521">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928521" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <DtsEventHandler
+    design-time-name="Package.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="294,42"
+          Id="Package.EventHandlers[OnError]\SQL_PROFILES_SP_SSIS_ERRORLOG"
+          TopLeft="596.071430624748,197.970590037046" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <TaskHost
+    design-time-name="Package\DFT_PROFILES_LOAD">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="199,42"
+          Id="Package\DFT_PROFILES_LOAD\DST_PROFILES"
+          TopLeft="76.071428376801,425.213725427278" />
+        <NodeLayout
+          Size="199,42"
+          Id="Package\DFT_PROFILES_LOAD\RC_PROFILES"
+          TopLeft="220.780861332478,133.503921571487" />
+        <NodeLayout
+          Size="199,42"
+          Id="Package\DFT_PROFILES_LOAD\SRC_PROFILES"
+          TopLeft="220.780861332478,44" />
+        <NodeLayout
+          Size="199,42"
+          Id="Package\DFT_PROFILES_LOAD\DST_PROFILES 1"
+          TopLeft="341.071428376801,429.213725427278" />
+        <NodeLayout
+          Size="199,42"
+          Id="Package\DFT_PROFILES_LOAD\DC_BATCH"
+          TopLeft="220.780861332478,223.007843142975" />
+        <NodeLayout
+          Size="199,42"
+          Id="Package\DFT_PROFILES_LOAD\BDD_PROFILES"
+          TopLeft="220.780861332478,312.511764714462" />
+        <EdgeLayout
+          Id="Package\DFT_PROFILES_LOAD.Paths[Derived Column Output]"
+          TopLeft="320.280861332478,265.007843142975">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,47.503921571487"
+              Start="0,0"
+              End="0,40.003921571487">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,40.003921571487" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_PROFILES_LOAD.Paths[Balanced Data Distributor Output 2]"
+          TopLeft="352.114194665811,354.511764714462">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="88.4572337109897,74.701960712816"
+              Start="0,0"
+              End="88.4572337109897,67.201960712816">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,26.2382812057859" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,26.2382812057859"
+                    Point2="0,30.2382812057859"
+                    Point3="4,30.2382812057859" />
+                  <mssgle:LineSegment
+                    End="84.4572337109897,30.2382812057859" />
+                  <mssgle:CubicBezierSegment
+                    Point1="84.4572337109897,30.2382812057859"
+                    Point2="88.4572337109897,30.2382812057859"
+                    Point3="88.4572337109897,34.2382812057859" />
+                  <mssgle:LineSegment
+                    End="88.4572337109897,67.201960712816" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-33.6574964257552,35.2382812057859,155.7722265625,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_PROFILES_LOAD.Paths[Balanced Data Distributor Output 1]"
+          TopLeft="288.447527999145,354.511764714462">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-112.876099622344,70.701960712816"
+              Start="0,0"
+              End="-112.876099622344,63.201960712816">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.6191386335028" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,24.6191386335028"
+                    Point2="0,28.6191386335028"
+                    Point3="-4,28.6191386335028" />
+                  <mssgle:LineSegment
+                    End="-108.876099622344,28.6191386335028" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-108.876099622344,28.6191386335028"
+                    Point2="-112.876099622344,28.6191386335028"
+                    Point3="-112.876099622344,32.6191386335028" />
+                  <mssgle:LineSegment
+                    End="-112.876099622344,63.201960712816" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-134.138616217422,33.6191386335028,155.4011328125,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_PROFILES_LOAD.Paths[Row Count Output 1]"
+          TopLeft="320.280861332478,175.503921571487">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,47.503921571488"
+              Start="0,0"
+              End="0,40.003921571488">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,40.003921571488" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_PROFILES_LOAD.Paths[Oracle Source Output]"
+          TopLeft="320.280861332478,86">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,47.503921571487"
+              Start="0,0"
+              End="0,40.003921571487">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,40.003921571487" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_PROFILES_LOAD\DST_PROFILES">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_PROFILES_LOAD\DST_PROFILES 1">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <DtsEventHandler
+    design-time-name="Package\SQL_PROFILES_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="313,42"
+          Id="Package\SQL_PROFILES_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]\SQL_PROFILES_UPDATE_DFT_LOAD_COMPLETED"
+          TopLeft="570.3,184.7" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

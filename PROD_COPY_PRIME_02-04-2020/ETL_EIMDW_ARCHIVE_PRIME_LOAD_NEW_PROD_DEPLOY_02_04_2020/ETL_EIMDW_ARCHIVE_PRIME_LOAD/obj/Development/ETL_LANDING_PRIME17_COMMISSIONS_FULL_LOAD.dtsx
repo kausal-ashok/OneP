@@ -1,0 +1,3110 @@
+<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="11/28/2018 8:48:53 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="LAPTOP-SBSNQ3DE"
+  DTS:CreatorName="LAPTOP-SBSNQ3DE\HP"
+  DTS:DTSID="{48BAB82E-3C8C-489B-98AC-FAC4A3CB7095}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="14.0.0600.250"
+  DTS:LocaleID="16393"
+  DTS:ObjectName="ETL_LANDING_PRIME17_COMMISSIONS_FULL_LOAD"
+  DTS:PackageType="5"
+  DTS:ProtectionLevel="0"
+  DTS:VersionBuild="738"
+  DTS:VersionGUID="{FCB5E417-8CC8-4B0D-A50C-182A087EABA1}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_AUDIT_FRAMEWORK]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{1636D124-EDD7-4E17-8AC7-87A25FE17594}"
+      DTS:ObjectName="CM_AUDIT_FRAMEWORK">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_AUDIT_FRAMEWORK_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_AUDIT_FRAMEWORK_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=AUDIT_FRAMEWORK_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{1FFCE957-6245-4848-A3E3-C2386D24EB58}"
+      DTS:ObjectName="CM_EIMDW_LANDING_PRIME">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_LANDING_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_ARCHIVE_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=DEV_EIMDW_Landing_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_Prime_Attunity]"
+      DTS:CreationName="MSORA"
+      DTS:DTSID="{F580AE50-9DE8-4F95-9504-AAAB07500065}"
+      DTS:ObjectName="CM_Prime_Attunity">
+      <DTS:PropertyExpression
+        DTS:Name="Password">@[$Project::p_PRIME_PWD]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_PRIME_SERVER]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="UserName">@[$Project::p_PRIME_USER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <OracleXMLPackage>
+          <OraConnectionString>SERVER=10.180.2.215:1522/prime;USERNAME=AMBERCONNECT;ORACLEHOME=;ORACLEHOME64=;WINAUTH=0</OraConnectionString>
+          <OraRetain>False</OraRetain>
+          <OraInitialCatalog></OraInitialCatalog>
+          <OraServerName>10.180.2.215:1522/prime</OraServerName>
+          <OraUserName>AMBERCONNECT</OraUserName>
+          <OraOracleHome></OraOracleHome>
+          <OraOracleHome64></OraOracleHome64>
+          <OraWinAuthentication>False</OraWinAuthentication>
+          <OraEnableDetailedTracing>False</OraEnableDetailedTracing>
+          <OraPassword
+            Sensitive="1"></OraPassword>
+        </OracleXMLPackage>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:LogProviders>
+    <DTS:LogProvider
+      DTS:ConfigString="CM_AUDIT_FRAMEWORK"
+      DTS:CreationName="Microsoft.LogProviderSQLServer"
+      DTS:Description="Writes log entries for events to a SQL Server database"
+      DTS:DTSID="{DEF2D0CA-BE4D-4FF7-ABD4-002C53FE6FEC}"
+      DTS:ObjectName="SSIS log provider for SQL Server">
+      <DTS:ObjectData>
+        <InnerObject />
+      </DTS:ObjectData>
+    </DTS:LogProvider>
+  </DTS:LogProviders>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{726EBEDA-8CB9-4735-A99E-741568CAE102}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Batch_Id">
+      <DTS:VariableValue
+        DTS:DataType="20">-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{757D0C3A-15B8-4782-92FB-AC31219BC1BE}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT COUNT(1) FROM &quot; +  @[User::v_Dest_Table]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Dest_Count_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT COUNT(1) FROM DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_COMMISSIONS (NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{B6278343-E83C-4B37-B39C-091D2454FE7B}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="@[$Project::p_LANDING_DATABASE]  +&quot;.&quot;+ @[$Project::p_LANDING_SCHEMA] +&quot;.&quot;+&quot;SRC_PRIME17_COMMISSIONS (NOLOCK)&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Dest_Table">
+      <DTS:VariableValue
+        DTS:DataType="8">DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_COMMISSIONS (NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{98832D8C-59B5-4C1E-A816-6D219A382EDE}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Package_Id">
+      <DTS:VariableValue
+        DTS:DataType="3">-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{90D276D1-8DAA-4494-87E4-78B58BCC13E0}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Rows_Inserted">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{6200CB3E-12E2-4D90-AC62-D4132D5A6174}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Rows_Read">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{A69D096D-7523-406B-8213-6EF7FF5C7B93}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT INSTITUTION_ID&#x9;&#xA;,SERNO&#x9;&#xA;,DESCRIPTION&#x9;&#xA;,PROFILESERNO&#x9;&#xA;,TRXNTYPESERNO&#x9;&#xA;,SIGN&#x9;&#xA;,FLATAMOUNT&#x9;&#xA;,CURRENCY&#x9;&#xA;,PERCENTAMOUNT&#x9;&#xA;,COMBINATION&#x9;&#xA;,DELAYPMNTDAYS&#x9;&#xA;,POSTATEOC&#x9;&#xA;,INCLUDEMERCOM&#x9;&#xA;,SEPARATETRXN&#x9;&#xA;,EXCLUDETIP&#x9;&#xA;,SUMLINEITEMS&#x9;&#xA;,PERUNIT&#x9;&#xA;,LOGVERSION&#x9;&#xA;,BASEDATE&#x9;&#xA;,CASHBACKCOMBINATION&#x9;&#xA;,CASHBACKPERCENTAMOUNT&#x9;&#xA;,CASHBACKFLATAMOUNT&#x9;&#xA;,SEPCOMCHBK&#x9;&#xA;,LIMITSHORTCODE&#x9;&#xA;,USELIMITS&#x9;&#xA;,REASONCODE&#x9;&#xA;,INCLUDEIRF&#x9;&#xA;,INCLUDEMAF&#x9;&#xA;,MAFPERCENTAGE&#x9;&#xA;,MAFFLATAMOUNT&#x9;&#xA;,MAFCOMBINATION&#x9;&#xA;,MAFAPPLIESTO&#x9;&#xA;,BLENDEDMETHOD&#x9;&#xA;,CASHBACKSIGN&#x9;&#xA;,ALLOWOVERWRITE&#xA;&#xA;&#xA;FROM &quot;+  @[User::v_Source_Table]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Source_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT INSTITUTION_ID	
+,SERNO	
+,DESCRIPTION	
+,PROFILESERNO	
+,TRXNTYPESERNO	
+,SIGN	
+,FLATAMOUNT	
+,CURRENCY	
+,PERCENTAMOUNT	
+,COMBINATION	
+,DELAYPMNTDAYS	
+,POSTATEOC	
+,INCLUDEMERCOM	
+,SEPARATETRXN	
+,EXCLUDETIP	
+,SUMLINEITEMS	
+,PERUNIT	
+,LOGVERSION	
+,BASEDATE	
+,CASHBACKCOMBINATION	
+,CASHBACKPERCENTAMOUNT	
+,CASHBACKFLATAMOUNT	
+,SEPCOMCHBK	
+,LIMITSHORTCODE	
+,USELIMITS	
+,REASONCODE	
+,INCLUDEIRF	
+,INCLUDEMAF	
+,MAFPERCENTAGE	
+,MAFFLATAMOUNT	
+,MAFCOMBINATION	
+,MAFAPPLIESTO	
+,BLENDEDMETHOD	
+,CASHBACKSIGN	
+,ALLOWOVERWRITE
+
+
+FROM TCTDBS.COMMISSIONS</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{CA25EC9C-45F2-4874-91C3-F2758A0125A8}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Source_Table">
+      <DTS:VariableValue
+        DTS:DataType="8">TCTDBS.COMMISSIONS</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{3A5C3276-3648-456F-ACB3-4EA739318D52}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Task_Name">
+      <DTS:VariableValue
+        DTS:DataType="8">COMMISSIONS</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{A20056F2-5567-42D0-9800-317DBC4A4E81}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;TRUNCATE TABLE &quot;  + REPLACE(@[User::v_Dest_Table],&quot;(NOLOCK)&quot;,&quot; &quot;)"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Trunc_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">TRUNCATE TABLE DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_COMMISSIONS  </DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:LoggingOptions
+    DTS:FilterKind="0"
+    DTS:LoggingMode="1">
+    <DTS:Property
+      DTS:DataType="8"
+      DTS:Name="EventFilter">3,7,OnError,13,OnPostExecute,12,OnTaskFailed</DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnError"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnPostExecute"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnTaskFailed"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:SelectedLogProviders>
+      <DTS:SelectedLogProvider
+        DTS:InstanceID="{DEF2D0CA-BE4D-4FF7-ABD4-002C53FE6FEC}" />
+    </DTS:SelectedLogProviders>
+  </DTS:LoggingOptions>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\DFT_COMMISSIONS_LOAD"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{B6976A46-E378-4790-BCBF-A2F17360B117}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="DFT_COMMISSIONS_LOAD"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"DFT_"+@[User::v_Task_Name]+"_LOAD"</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="[SRC_COMMISSIONS].[SqlCommand]">@[User::v_Source_Query]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <pipeline
+          defaultBufferMaxRows="100000"
+          defaultBufferSize="20485760"
+          version="1">
+          <components>
+            <component
+              refId="Package\DFT_COMMISSIONS_LOAD\BDD_COMMISSIONS"
+              componentClassID="Microsoft.BDD"
+              contactInfo="Balanced Data Distributor;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Evaluates and directs rows in a dataset to multiple destinations."
+              name="BDD_COMMISSIONS">
+              <inputs>
+                <input
+                  refId="Package\DFT_COMMISSIONS_LOAD\BDD_COMMISSIONS.Inputs[Balanced Data Distributor Input]"
+                  description="Input to the Balanced Data      Distributor Transformation"
+                  name="Balanced Data Distributor Input">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_COMMISSIONS_LOAD\BDD_COMMISSIONS.Outputs[Balanced Data Distributor Output 1]"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 1"
+                  synchronousInputId="Package\DFT_COMMISSIONS_LOAD\BDD_COMMISSIONS.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_COMMISSIONS_LOAD\BDD_COMMISSIONS.Outputs[Balanced Data Distributor Output 2]"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 2"
+                  synchronousInputId="Package\DFT_COMMISSIONS_LOAD\BDD_COMMISSIONS.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_COMMISSIONS_LOAD\BDD_COMMISSIONS.Outputs[Balanced Data Distributor Output 3]"
+                  dangling="true"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 3"
+                  synchronousInputId="Package\DFT_COMMISSIONS_LOAD\BDD_COMMISSIONS.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_COMMISSIONS_LOAD\DC_BATCH"
+              componentClassID="Microsoft.DerivedColumn"
+              contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+              name="DC_BATCH"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\DFT_COMMISSIONS_LOAD\DC_BATCH.Inputs[Derived Column Input]"
+                  description="Input to the Derived Column Transformation"
+                  name="Derived Column Input">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_COMMISSIONS_LOAD\DC_BATCH.Outputs[Derived Column Output]"
+                  description="Default Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  name="Derived Column Output"
+                  synchronousInputId="Package\DFT_COMMISSIONS_LOAD\DC_BATCH.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]"
+                      dataType="i8"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]"
+                      name="BATCH_ID"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">@[User::v_Batch_Id]</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">@[User::v_Batch_Id]</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_COMMISSIONS_LOAD\DC_BATCH.Outputs[Derived Column Error Output]"
+                  description="Error Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Derived Column Error Output"
+                  synchronousInputId="Package\DFT_COMMISSIONS_LOAD\DC_BATCH.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="DST_COMMISSIONS"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[LZOWN].[SRC_PRIME17_COMMISSIONS]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS,ROWS_PER_BATCH = 1000000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[INSTITUTION_ID]"
+                      cachedDataType="i4"
+                      cachedName="INSTITUTION_ID"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[SERNO]"
+                      cachedDataType="numeric"
+                      cachedName="SERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[SERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[DESCRIPTION]"
+                      cachedDataType="wstr"
+                      cachedLength="40"
+                      cachedName="DESCRIPTION"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTION]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[DESCRIPTION]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[PROFILESERNO]"
+                      cachedDataType="numeric"
+                      cachedName="PROFILESERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[PROFILESERNO]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[PROFILESERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[TRXNTYPESERNO]"
+                      cachedDataType="numeric"
+                      cachedName="TRXNTYPESERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[TRXNTYPESERNO]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[TRXNTYPESERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[SIGN]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="SIGN"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[SIGN]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[SIGN]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[FLATAMOUNT]"
+                      cachedDataType="numeric"
+                      cachedName="FLATAMOUNT"
+                      cachedPrecision="19"
+                      cachedScale="6"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[FLATAMOUNT]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[FLATAMOUNT]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[CURRENCY]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="3"
+                      cachedName="CURRENCY"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[CURRENCY]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[CURRENCY]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[PERCENTAMOUNT]"
+                      cachedDataType="numeric"
+                      cachedName="PERCENTAMOUNT"
+                      cachedPrecision="10"
+                      cachedScale="5"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[PERCENTAMOUNT]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[PERCENTAMOUNT]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[COMBINATION]"
+                      cachedDataType="i4"
+                      cachedName="COMBINATION"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[COMBINATION]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[COMBINATION]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[DELAYPMNTDAYS]"
+                      cachedDataType="i4"
+                      cachedName="DELAYPMNTDAYS"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[DELAYPMNTDAYS]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[DELAYPMNTDAYS]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[POSTATEOC]"
+                      cachedDataType="i4"
+                      cachedName="POSTATEOC"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[POSTATEOC]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[POSTATEOC]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[INCLUDEMERCOM]"
+                      cachedDataType="i4"
+                      cachedName="INCLUDEMERCOM"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[INCLUDEMERCOM]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[INCLUDEMERCOM]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[SEPARATETRXN]"
+                      cachedDataType="i4"
+                      cachedName="SEPARATETRXN"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[SEPARATETRXN]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[SEPARATETRXN]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[EXCLUDETIP]"
+                      cachedDataType="i4"
+                      cachedName="EXCLUDETIP"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[EXCLUDETIP]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[EXCLUDETIP]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[SUMLINEITEMS]"
+                      cachedDataType="i4"
+                      cachedName="SUMLINEITEMS"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[SUMLINEITEMS]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[SUMLINEITEMS]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[PERUNIT]"
+                      cachedDataType="i4"
+                      cachedName="PERUNIT"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[PERUNIT]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[PERUNIT]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[LOGVERSION]"
+                      cachedDataType="i4"
+                      cachedName="LOGVERSION"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[LOGVERSION]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[LOGVERSION]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[BASEDATE]"
+                      cachedDataType="i4"
+                      cachedName="BASEDATE"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[BASEDATE]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[BASEDATE]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[CASHBACKCOMBINATION]"
+                      cachedDataType="i4"
+                      cachedName="CASHBACKCOMBINATION"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[CASHBACKCOMBINATION]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[CASHBACKCOMBINATION]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[CASHBACKPERCENTAMOUNT]"
+                      cachedDataType="numeric"
+                      cachedName="CASHBACKPERCENTAMOUNT"
+                      cachedPrecision="10"
+                      cachedScale="5"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[CASHBACKPERCENTAMOUNT]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[CASHBACKPERCENTAMOUNT]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[CASHBACKFLATAMOUNT]"
+                      cachedDataType="numeric"
+                      cachedName="CASHBACKFLATAMOUNT"
+                      cachedPrecision="19"
+                      cachedScale="6"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[CASHBACKFLATAMOUNT]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[CASHBACKFLATAMOUNT]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[SEPCOMCHBK]"
+                      cachedDataType="i4"
+                      cachedName="SEPCOMCHBK"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[SEPCOMCHBK]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[SEPCOMCHBK]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[LIMITSHORTCODE]"
+                      cachedDataType="wstr"
+                      cachedLength="10"
+                      cachedName="LIMITSHORTCODE"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[LIMITSHORTCODE]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[LIMITSHORTCODE]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[USELIMITS]"
+                      cachedDataType="i1"
+                      cachedName="USELIMITS"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[USELIMITS]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[USELIMITS]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[REASONCODE]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="REASONCODE"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[REASONCODE]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[REASONCODE]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[INCLUDEIRF]"
+                      cachedDataType="i4"
+                      cachedName="INCLUDEIRF"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[INCLUDEIRF]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[INCLUDEIRF]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[INCLUDEMAF]"
+                      cachedDataType="i4"
+                      cachedName="INCLUDEMAF"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[INCLUDEMAF]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[INCLUDEMAF]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[MAFPERCENTAGE]"
+                      cachedDataType="numeric"
+                      cachedName="MAFPERCENTAGE"
+                      cachedPrecision="10"
+                      cachedScale="5"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[MAFPERCENTAGE]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[MAFPERCENTAGE]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[MAFFLATAMOUNT]"
+                      cachedDataType="numeric"
+                      cachedName="MAFFLATAMOUNT"
+                      cachedPrecision="19"
+                      cachedScale="6"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[MAFFLATAMOUNT]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[MAFFLATAMOUNT]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[MAFCOMBINATION]"
+                      cachedDataType="i4"
+                      cachedName="MAFCOMBINATION"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[MAFCOMBINATION]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[MAFCOMBINATION]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[MAFAPPLIESTO]"
+                      cachedDataType="i4"
+                      cachedName="MAFAPPLIESTO"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[MAFAPPLIESTO]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[MAFAPPLIESTO]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[BLENDEDMETHOD]"
+                      cachedDataType="i1"
+                      cachedName="BLENDEDMETHOD"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[BLENDEDMETHOD]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[BLENDEDMETHOD]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[CASHBACKSIGN]"
+                      cachedDataType="wstr"
+                      cachedLength="1"
+                      cachedName="CASHBACKSIGN"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[CASHBACKSIGN]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[CASHBACKSIGN]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[ALLOWOVERWRITE]"
+                      cachedDataType="i4"
+                      cachedName="ALLOWOVERWRITE"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[ALLOWOVERWRITE]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[ALLOWOVERWRITE]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].Columns[BATCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="BATCH_ID"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[LD_SEQ_ID]"
+                      dataType="i4"
+                      name="LD_SEQ_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTION]"
+                      dataType="wstr"
+                      length="40"
+                      name="DESCRIPTION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[PROFILESERNO]"
+                      dataType="numeric"
+                      name="PROFILESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[TRXNTYPESERNO]"
+                      dataType="numeric"
+                      name="TRXNTYPESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[SIGN]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="SIGN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[FLATAMOUNT]"
+                      dataType="numeric"
+                      name="FLATAMOUNT"
+                      precision="19"
+                      scale="6" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[CURRENCY]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="CURRENCY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[PERCENTAMOUNT]"
+                      dataType="numeric"
+                      name="PERCENTAMOUNT"
+                      precision="10"
+                      scale="5" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[COMBINATION]"
+                      dataType="i4"
+                      name="COMBINATION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[DELAYPMNTDAYS]"
+                      dataType="i4"
+                      name="DELAYPMNTDAYS" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[POSTATEOC]"
+                      dataType="i4"
+                      name="POSTATEOC" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[INCLUDEMERCOM]"
+                      dataType="i4"
+                      name="INCLUDEMERCOM" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[SEPARATETRXN]"
+                      dataType="i4"
+                      name="SEPARATETRXN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[EXCLUDETIP]"
+                      dataType="i4"
+                      name="EXCLUDETIP" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[SUMLINEITEMS]"
+                      dataType="i4"
+                      name="SUMLINEITEMS" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[PERUNIT]"
+                      dataType="i4"
+                      name="PERUNIT" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[LOGVERSION]"
+                      dataType="i4"
+                      name="LOGVERSION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[BASEDATE]"
+                      dataType="i4"
+                      name="BASEDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[CASHBACKCOMBINATION]"
+                      dataType="i4"
+                      name="CASHBACKCOMBINATION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[CASHBACKPERCENTAMOUNT]"
+                      dataType="numeric"
+                      name="CASHBACKPERCENTAMOUNT"
+                      precision="10"
+                      scale="5" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[CASHBACKFLATAMOUNT]"
+                      dataType="numeric"
+                      name="CASHBACKFLATAMOUNT"
+                      precision="19"
+                      scale="6" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[SEPCOMCHBK]"
+                      dataType="i4"
+                      name="SEPCOMCHBK" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[LIMITSHORTCODE]"
+                      dataType="wstr"
+                      length="10"
+                      name="LIMITSHORTCODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[USELIMITS]"
+                      dataType="i2"
+                      name="USELIMITS" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[REASONCODE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="REASONCODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[INCLUDEIRF]"
+                      dataType="i4"
+                      name="INCLUDEIRF" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[INCLUDEMAF]"
+                      dataType="i4"
+                      name="INCLUDEMAF" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[MAFPERCENTAGE]"
+                      dataType="numeric"
+                      name="MAFPERCENTAGE"
+                      precision="10"
+                      scale="5" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[MAFFLATAMOUNT]"
+                      dataType="numeric"
+                      name="MAFFLATAMOUNT"
+                      precision="19"
+                      scale="6" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[MAFCOMBINATION]"
+                      dataType="i4"
+                      name="MAFCOMBINATION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[MAFAPPLIESTO]"
+                      dataType="i4"
+                      name="MAFAPPLIESTO" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[BLENDEDMETHOD]"
+                      dataType="i2"
+                      name="BLENDEDMETHOD" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[CASHBACKSIGN]"
+                      dataType="wstr"
+                      length="1"
+                      name="CASHBACKSIGN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[ALLOWOVERWRITE]"
+                      dataType="i4"
+                      name="ALLOWOVERWRITE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      dataType="i8"
+                      name="BATCH_ID" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="DST_COMMISSIONS 1"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[LZOWN].[SRC_PRIME17_COMMISSIONS]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS,ROWS_PER_BATCH = 1000000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[INSTITUTION_ID]"
+                      cachedDataType="i4"
+                      cachedName="INSTITUTION_ID"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[SERNO]"
+                      cachedDataType="numeric"
+                      cachedName="SERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[SERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[DESCRIPTION]"
+                      cachedDataType="wstr"
+                      cachedLength="40"
+                      cachedName="DESCRIPTION"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTION]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[DESCRIPTION]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[PROFILESERNO]"
+                      cachedDataType="numeric"
+                      cachedName="PROFILESERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[PROFILESERNO]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[PROFILESERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[TRXNTYPESERNO]"
+                      cachedDataType="numeric"
+                      cachedName="TRXNTYPESERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[TRXNTYPESERNO]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[TRXNTYPESERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[SIGN]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="SIGN"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[SIGN]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[SIGN]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[FLATAMOUNT]"
+                      cachedDataType="numeric"
+                      cachedName="FLATAMOUNT"
+                      cachedPrecision="19"
+                      cachedScale="6"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[FLATAMOUNT]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[FLATAMOUNT]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[CURRENCY]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="3"
+                      cachedName="CURRENCY"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[CURRENCY]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[CURRENCY]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[PERCENTAMOUNT]"
+                      cachedDataType="numeric"
+                      cachedName="PERCENTAMOUNT"
+                      cachedPrecision="10"
+                      cachedScale="5"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[PERCENTAMOUNT]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[PERCENTAMOUNT]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[COMBINATION]"
+                      cachedDataType="i4"
+                      cachedName="COMBINATION"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[COMBINATION]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[COMBINATION]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[DELAYPMNTDAYS]"
+                      cachedDataType="i4"
+                      cachedName="DELAYPMNTDAYS"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[DELAYPMNTDAYS]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[DELAYPMNTDAYS]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[POSTATEOC]"
+                      cachedDataType="i4"
+                      cachedName="POSTATEOC"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[POSTATEOC]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[POSTATEOC]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[INCLUDEMERCOM]"
+                      cachedDataType="i4"
+                      cachedName="INCLUDEMERCOM"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[INCLUDEMERCOM]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[INCLUDEMERCOM]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[SEPARATETRXN]"
+                      cachedDataType="i4"
+                      cachedName="SEPARATETRXN"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[SEPARATETRXN]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[SEPARATETRXN]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[EXCLUDETIP]"
+                      cachedDataType="i4"
+                      cachedName="EXCLUDETIP"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[EXCLUDETIP]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[EXCLUDETIP]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[SUMLINEITEMS]"
+                      cachedDataType="i4"
+                      cachedName="SUMLINEITEMS"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[SUMLINEITEMS]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[SUMLINEITEMS]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[PERUNIT]"
+                      cachedDataType="i4"
+                      cachedName="PERUNIT"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[PERUNIT]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[PERUNIT]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[LOGVERSION]"
+                      cachedDataType="i4"
+                      cachedName="LOGVERSION"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[LOGVERSION]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[LOGVERSION]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[BASEDATE]"
+                      cachedDataType="i4"
+                      cachedName="BASEDATE"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[BASEDATE]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[BASEDATE]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[CASHBACKCOMBINATION]"
+                      cachedDataType="i4"
+                      cachedName="CASHBACKCOMBINATION"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[CASHBACKCOMBINATION]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[CASHBACKCOMBINATION]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[CASHBACKPERCENTAMOUNT]"
+                      cachedDataType="numeric"
+                      cachedName="CASHBACKPERCENTAMOUNT"
+                      cachedPrecision="10"
+                      cachedScale="5"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[CASHBACKPERCENTAMOUNT]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[CASHBACKPERCENTAMOUNT]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[CASHBACKFLATAMOUNT]"
+                      cachedDataType="numeric"
+                      cachedName="CASHBACKFLATAMOUNT"
+                      cachedPrecision="19"
+                      cachedScale="6"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[CASHBACKFLATAMOUNT]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[CASHBACKFLATAMOUNT]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[SEPCOMCHBK]"
+                      cachedDataType="i4"
+                      cachedName="SEPCOMCHBK"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[SEPCOMCHBK]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[SEPCOMCHBK]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[LIMITSHORTCODE]"
+                      cachedDataType="wstr"
+                      cachedLength="10"
+                      cachedName="LIMITSHORTCODE"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[LIMITSHORTCODE]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[LIMITSHORTCODE]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[USELIMITS]"
+                      cachedDataType="i1"
+                      cachedName="USELIMITS"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[USELIMITS]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[USELIMITS]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[REASONCODE]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="REASONCODE"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[REASONCODE]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[REASONCODE]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[INCLUDEIRF]"
+                      cachedDataType="i4"
+                      cachedName="INCLUDEIRF"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[INCLUDEIRF]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[INCLUDEIRF]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[INCLUDEMAF]"
+                      cachedDataType="i4"
+                      cachedName="INCLUDEMAF"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[INCLUDEMAF]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[INCLUDEMAF]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[MAFPERCENTAGE]"
+                      cachedDataType="numeric"
+                      cachedName="MAFPERCENTAGE"
+                      cachedPrecision="10"
+                      cachedScale="5"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[MAFPERCENTAGE]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[MAFPERCENTAGE]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[MAFFLATAMOUNT]"
+                      cachedDataType="numeric"
+                      cachedName="MAFFLATAMOUNT"
+                      cachedPrecision="19"
+                      cachedScale="6"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[MAFFLATAMOUNT]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[MAFFLATAMOUNT]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[MAFCOMBINATION]"
+                      cachedDataType="i4"
+                      cachedName="MAFCOMBINATION"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[MAFCOMBINATION]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[MAFCOMBINATION]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[MAFAPPLIESTO]"
+                      cachedDataType="i4"
+                      cachedName="MAFAPPLIESTO"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[MAFAPPLIESTO]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[MAFAPPLIESTO]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[BLENDEDMETHOD]"
+                      cachedDataType="i1"
+                      cachedName="BLENDEDMETHOD"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[BLENDEDMETHOD]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[BLENDEDMETHOD]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[CASHBACKSIGN]"
+                      cachedDataType="wstr"
+                      cachedLength="1"
+                      cachedName="CASHBACKSIGN"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[CASHBACKSIGN]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[CASHBACKSIGN]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[ALLOWOVERWRITE]"
+                      cachedDataType="i4"
+                      cachedName="ALLOWOVERWRITE"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[ALLOWOVERWRITE]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[ALLOWOVERWRITE]" />
+                    <inputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].Columns[BATCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="BATCH_ID"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[LD_SEQ_ID]"
+                      dataType="i4"
+                      name="LD_SEQ_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTION]"
+                      dataType="wstr"
+                      length="40"
+                      name="DESCRIPTION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[PROFILESERNO]"
+                      dataType="numeric"
+                      name="PROFILESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[TRXNTYPESERNO]"
+                      dataType="numeric"
+                      name="TRXNTYPESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[SIGN]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="SIGN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[FLATAMOUNT]"
+                      dataType="numeric"
+                      name="FLATAMOUNT"
+                      precision="19"
+                      scale="6" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[CURRENCY]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="CURRENCY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[PERCENTAMOUNT]"
+                      dataType="numeric"
+                      name="PERCENTAMOUNT"
+                      precision="10"
+                      scale="5" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[COMBINATION]"
+                      dataType="i4"
+                      name="COMBINATION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[DELAYPMNTDAYS]"
+                      dataType="i4"
+                      name="DELAYPMNTDAYS" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[POSTATEOC]"
+                      dataType="i4"
+                      name="POSTATEOC" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[INCLUDEMERCOM]"
+                      dataType="i4"
+                      name="INCLUDEMERCOM" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[SEPARATETRXN]"
+                      dataType="i4"
+                      name="SEPARATETRXN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[EXCLUDETIP]"
+                      dataType="i4"
+                      name="EXCLUDETIP" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[SUMLINEITEMS]"
+                      dataType="i4"
+                      name="SUMLINEITEMS" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[PERUNIT]"
+                      dataType="i4"
+                      name="PERUNIT" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[LOGVERSION]"
+                      dataType="i4"
+                      name="LOGVERSION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[BASEDATE]"
+                      dataType="i4"
+                      name="BASEDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[CASHBACKCOMBINATION]"
+                      dataType="i4"
+                      name="CASHBACKCOMBINATION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[CASHBACKPERCENTAMOUNT]"
+                      dataType="numeric"
+                      name="CASHBACKPERCENTAMOUNT"
+                      precision="10"
+                      scale="5" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[CASHBACKFLATAMOUNT]"
+                      dataType="numeric"
+                      name="CASHBACKFLATAMOUNT"
+                      precision="19"
+                      scale="6" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[SEPCOMCHBK]"
+                      dataType="i4"
+                      name="SEPCOMCHBK" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[LIMITSHORTCODE]"
+                      dataType="wstr"
+                      length="10"
+                      name="LIMITSHORTCODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[USELIMITS]"
+                      dataType="i2"
+                      name="USELIMITS" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[REASONCODE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="REASONCODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[INCLUDEIRF]"
+                      dataType="i4"
+                      name="INCLUDEIRF" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[INCLUDEMAF]"
+                      dataType="i4"
+                      name="INCLUDEMAF" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[MAFPERCENTAGE]"
+                      dataType="numeric"
+                      name="MAFPERCENTAGE"
+                      precision="10"
+                      scale="5" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[MAFFLATAMOUNT]"
+                      dataType="numeric"
+                      name="MAFFLATAMOUNT"
+                      precision="19"
+                      scale="6" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[MAFCOMBINATION]"
+                      dataType="i4"
+                      name="MAFCOMBINATION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[MAFAPPLIESTO]"
+                      dataType="i4"
+                      name="MAFAPPLIESTO" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[BLENDEDMETHOD]"
+                      dataType="i2"
+                      name="BLENDEDMETHOD" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[CASHBACKSIGN]"
+                      dataType="wstr"
+                      length="1"
+                      name="CASHBACKSIGN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[ALLOWOVERWRITE]"
+                      dataType="i4"
+                      name="ALLOWOVERWRITE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      dataType="i8"
+                      name="BATCH_ID" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_COMMISSIONS_LOAD\RC_COMMISSIONS"
+              componentClassID="Microsoft.RowCount"
+              contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Counts rows as they pass through a data flow. For example, use the number of rows processed to determine whether or not to perform cleanup operations, or update text in an e-mail message to communicate processing status."
+              name="RC_COMMISSIONS">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable to hold the row count."
+                  name="VariableName">User::v_Rows_Read</property>
+              </properties>
+              <inputs>
+                <input
+                  refId="Package\DFT_COMMISSIONS_LOAD\RC_COMMISSIONS.Inputs[Row Count Input 1]"
+                  hasSideEffects="true"
+                  name="Row Count Input 1">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_COMMISSIONS_LOAD\RC_COMMISSIONS.Outputs[Row Count Output 1]"
+                  name="Row Count Output 1"
+                  synchronousInputId="Package\DFT_COMMISSIONS_LOAD\RC_COMMISSIONS.Inputs[Row Count Input 1]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS"
+              componentClassID="Attunity.SSISOraSrc"
+              contactInfo="Oracle Source;Microsoft Connector for Oracle by Attunity; Attunity Ltd.; All Rights Reserved; http://www.attunity.com;7"
+              description="Microsoft Oracle Source Component by Attunity"
+              name="SRC_COMMISSIONS"
+              usesDispositions="true"
+              version="6">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="The name of the table to be fetched."
+                  expressionType="Notify"
+                  name="TableName"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  expressionType="Notify"
+                  name="SqlCommand">SELECT INSTITUTION_ID	
+,SERNO	
+,DESCRIPTION	
+,PROFILESERNO	
+,TRXNTYPESERNO	
+,SIGN	
+,FLATAMOUNT	
+,CURRENCY	
+,PERCENTAMOUNT	
+,COMBINATION	
+,DELAYPMNTDAYS	
+,POSTATEOC	
+,INCLUDEMERCOM	
+,SEPARATETRXN	
+,EXCLUDETIP	
+,SUMLINEITEMS	
+,PERUNIT	
+,LOGVERSION	
+,BASEDATE	
+,CASHBACKCOMBINATION	
+,CASHBACKPERCENTAMOUNT	
+,CASHBACKFLATAMOUNT	
+,SEPCOMCHBK	
+,LIMITSHORTCODE	
+,USELIMITS	
+,REASONCODE	
+,INCLUDEIRF	
+,INCLUDEMAF	
+,MAFPERCENTAGE	
+,MAFFLATAMOUNT	
+,MAFCOMBINATION	
+,MAFAPPLIESTO	
+,BLENDEDMETHOD	
+,CASHBACKSIGN	
+,ALLOWOVERWRITE
+
+
+FROM TCTDBS.COMMISSIONS</property>
+                <property
+                  dataType="System.Int32"
+                  description="The number of rows fetched in a batch."
+                  expressionType="Notify"
+                  name="BatchSize">100</property>
+                <property
+                  dataType="System.Int32"
+                  description="Number of pre-fetched rows."
+                  expressionType="Notify"
+                  name="PrefetchCount">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Determines the chunk size allocation for LOB columns"
+                  expressionType="Notify"
+                  name="LobChunkSize">32768</property>
+                <property
+                  dataType="System.Int32"
+                  description="The code page to use when code page information is unavailable from the data source."
+                  expressionType="Notify"
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Int32"
+                  description="The mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">1</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Connections[MSOraConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_Prime_Attunity]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_Prime_Attunity]"
+                  description="The Oracle runtime connection"
+                  name="MSOraConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output]"
+                  errorRowDisposition="FailComponent"
+                  name="Oracle Source Output"
+                  truncationRowDisposition="FailComponent">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]"
+                      name="INSTITUTION_ID" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[SERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[SERNO]"
+                      name="SERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[DESCRIPTION]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[DESCRIPTION]"
+                      length="40"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[DESCRIPTION]"
+                      name="DESCRIPTION" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[PROFILESERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[PROFILESERNO]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[PROFILESERNO]"
+                      name="PROFILESERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[TRXNTYPESERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[TRXNTYPESERNO]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[TRXNTYPESERNO]"
+                      name="TRXNTYPESERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[SIGN]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[SIGN]"
+                      length="1"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[SIGN]"
+                      name="SIGN" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[FLATAMOUNT]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[FLATAMOUNT]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[FLATAMOUNT]"
+                      name="FLATAMOUNT"
+                      precision="19"
+                      scale="6" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[CURRENCY]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[CURRENCY]"
+                      length="3"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[CURRENCY]"
+                      name="CURRENCY" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[PERCENTAMOUNT]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[PERCENTAMOUNT]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[PERCENTAMOUNT]"
+                      name="PERCENTAMOUNT"
+                      precision="10"
+                      scale="5" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[COMBINATION]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[COMBINATION]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[COMBINATION]"
+                      name="COMBINATION" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[DELAYPMNTDAYS]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[DELAYPMNTDAYS]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[DELAYPMNTDAYS]"
+                      name="DELAYPMNTDAYS" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[POSTATEOC]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[POSTATEOC]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[POSTATEOC]"
+                      name="POSTATEOC" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[INCLUDEMERCOM]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[INCLUDEMERCOM]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[INCLUDEMERCOM]"
+                      name="INCLUDEMERCOM" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[SEPARATETRXN]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[SEPARATETRXN]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[SEPARATETRXN]"
+                      name="SEPARATETRXN" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[EXCLUDETIP]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[EXCLUDETIP]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[EXCLUDETIP]"
+                      name="EXCLUDETIP" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[SUMLINEITEMS]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[SUMLINEITEMS]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[SUMLINEITEMS]"
+                      name="SUMLINEITEMS" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[PERUNIT]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[PERUNIT]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[PERUNIT]"
+                      name="PERUNIT" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[LOGVERSION]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[LOGVERSION]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[LOGVERSION]"
+                      name="LOGVERSION" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[BASEDATE]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[BASEDATE]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[BASEDATE]"
+                      name="BASEDATE" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[CASHBACKCOMBINATION]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[CASHBACKCOMBINATION]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[CASHBACKCOMBINATION]"
+                      name="CASHBACKCOMBINATION" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[CASHBACKPERCENTAMOUNT]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[CASHBACKPERCENTAMOUNT]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[CASHBACKPERCENTAMOUNT]"
+                      name="CASHBACKPERCENTAMOUNT"
+                      precision="10"
+                      scale="5" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[CASHBACKFLATAMOUNT]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[CASHBACKFLATAMOUNT]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[CASHBACKFLATAMOUNT]"
+                      name="CASHBACKFLATAMOUNT"
+                      precision="19"
+                      scale="6" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[SEPCOMCHBK]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[SEPCOMCHBK]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[SEPCOMCHBK]"
+                      name="SEPCOMCHBK" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[LIMITSHORTCODE]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[LIMITSHORTCODE]"
+                      length="10"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[LIMITSHORTCODE]"
+                      name="LIMITSHORTCODE" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[USELIMITS]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[USELIMITS]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[USELIMITS]"
+                      name="USELIMITS" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[REASONCODE]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[REASONCODE]"
+                      length="4"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[REASONCODE]"
+                      name="REASONCODE" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[INCLUDEIRF]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[INCLUDEIRF]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[INCLUDEIRF]"
+                      name="INCLUDEIRF" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[INCLUDEMAF]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[INCLUDEMAF]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[INCLUDEMAF]"
+                      name="INCLUDEMAF" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[MAFPERCENTAGE]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[MAFPERCENTAGE]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[MAFPERCENTAGE]"
+                      name="MAFPERCENTAGE"
+                      precision="10"
+                      scale="5" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[MAFFLATAMOUNT]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[MAFFLATAMOUNT]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[MAFFLATAMOUNT]"
+                      name="MAFFLATAMOUNT"
+                      precision="19"
+                      scale="6" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[MAFCOMBINATION]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[MAFCOMBINATION]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[MAFCOMBINATION]"
+                      name="MAFCOMBINATION" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[MAFAPPLIESTO]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[MAFAPPLIESTO]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[MAFAPPLIESTO]"
+                      name="MAFAPPLIESTO" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[BLENDEDMETHOD]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[BLENDEDMETHOD]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[BLENDEDMETHOD]"
+                      name="BLENDEDMETHOD" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[CASHBACKSIGN]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[CASHBACKSIGN]"
+                      length="1"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[CASHBACKSIGN]"
+                      name="CASHBACKSIGN" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[ALLOWOVERWRITE]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[ALLOWOVERWRITE]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].Columns[ALLOWOVERWRITE]"
+                      name="ALLOWOVERWRITE" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[DESCRIPTION]"
+                      dataType="wstr"
+                      length="40"
+                      name="DESCRIPTION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[PROFILESERNO]"
+                      dataType="numeric"
+                      name="PROFILESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[TRXNTYPESERNO]"
+                      dataType="numeric"
+                      name="TRXNTYPESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[SIGN]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="SIGN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[FLATAMOUNT]"
+                      dataType="numeric"
+                      name="FLATAMOUNT"
+                      precision="19"
+                      scale="6" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[CURRENCY]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="CURRENCY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[PERCENTAMOUNT]"
+                      dataType="numeric"
+                      name="PERCENTAMOUNT"
+                      precision="10"
+                      scale="5" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[COMBINATION]"
+                      dataType="i4"
+                      name="COMBINATION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[DELAYPMNTDAYS]"
+                      dataType="i4"
+                      name="DELAYPMNTDAYS" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[POSTATEOC]"
+                      dataType="i4"
+                      name="POSTATEOC" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[INCLUDEMERCOM]"
+                      dataType="i4"
+                      name="INCLUDEMERCOM" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[SEPARATETRXN]"
+                      dataType="i4"
+                      name="SEPARATETRXN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[EXCLUDETIP]"
+                      dataType="i4"
+                      name="EXCLUDETIP" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[SUMLINEITEMS]"
+                      dataType="i4"
+                      name="SUMLINEITEMS" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[PERUNIT]"
+                      dataType="i4"
+                      name="PERUNIT" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[LOGVERSION]"
+                      dataType="i4"
+                      name="LOGVERSION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[BASEDATE]"
+                      dataType="i4"
+                      name="BASEDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[CASHBACKCOMBINATION]"
+                      dataType="i4"
+                      name="CASHBACKCOMBINATION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[CASHBACKPERCENTAMOUNT]"
+                      dataType="numeric"
+                      name="CASHBACKPERCENTAMOUNT"
+                      precision="10"
+                      scale="5" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[CASHBACKFLATAMOUNT]"
+                      dataType="numeric"
+                      name="CASHBACKFLATAMOUNT"
+                      precision="19"
+                      scale="6" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[SEPCOMCHBK]"
+                      dataType="i4"
+                      name="SEPCOMCHBK" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[LIMITSHORTCODE]"
+                      dataType="wstr"
+                      length="10"
+                      name="LIMITSHORTCODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[USELIMITS]"
+                      dataType="i1"
+                      name="USELIMITS" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[REASONCODE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="REASONCODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[INCLUDEIRF]"
+                      dataType="i4"
+                      name="INCLUDEIRF" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[INCLUDEMAF]"
+                      dataType="i4"
+                      name="INCLUDEMAF" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[MAFPERCENTAGE]"
+                      dataType="numeric"
+                      name="MAFPERCENTAGE"
+                      precision="10"
+                      scale="5" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[MAFFLATAMOUNT]"
+                      dataType="numeric"
+                      name="MAFFLATAMOUNT"
+                      precision="19"
+                      scale="6" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[MAFCOMBINATION]"
+                      dataType="i4"
+                      name="MAFCOMBINATION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[MAFAPPLIESTO]"
+                      dataType="i4"
+                      name="MAFAPPLIESTO" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[BLENDEDMETHOD]"
+                      dataType="i1"
+                      name="BLENDEDMETHOD" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[CASHBACKSIGN]"
+                      dataType="wstr"
+                      length="1"
+                      name="CASHBACKSIGN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[ALLOWOVERWRITE]"
+                      dataType="i4"
+                      name="ALLOWOVERWRITE" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output]"
+                  isErrorOut="true"
+                  name="Oracle Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[INSTITUTION_ID]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[INSTITUTION_ID]"
+                      name="INSTITUTION_ID" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[SERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[SERNO]"
+                      name="SERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[DESCRIPTION]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[DESCRIPTION]"
+                      length="40"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[DESCRIPTION]"
+                      name="DESCRIPTION" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[PROFILESERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[PROFILESERNO]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[PROFILESERNO]"
+                      name="PROFILESERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[TRXNTYPESERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[TRXNTYPESERNO]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[TRXNTYPESERNO]"
+                      name="TRXNTYPESERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[SIGN]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[SIGN]"
+                      length="1"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[SIGN]"
+                      name="SIGN" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[FLATAMOUNT]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[FLATAMOUNT]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[FLATAMOUNT]"
+                      name="FLATAMOUNT"
+                      precision="19"
+                      scale="6" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[CURRENCY]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[CURRENCY]"
+                      length="3"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[CURRENCY]"
+                      name="CURRENCY" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[PERCENTAMOUNT]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[PERCENTAMOUNT]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[PERCENTAMOUNT]"
+                      name="PERCENTAMOUNT"
+                      precision="10"
+                      scale="5" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[COMBINATION]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[COMBINATION]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[COMBINATION]"
+                      name="COMBINATION" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[DELAYPMNTDAYS]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[DELAYPMNTDAYS]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[DELAYPMNTDAYS]"
+                      name="DELAYPMNTDAYS" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[POSTATEOC]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[POSTATEOC]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[POSTATEOC]"
+                      name="POSTATEOC" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[INCLUDEMERCOM]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[INCLUDEMERCOM]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[INCLUDEMERCOM]"
+                      name="INCLUDEMERCOM" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[SEPARATETRXN]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[SEPARATETRXN]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[SEPARATETRXN]"
+                      name="SEPARATETRXN" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[EXCLUDETIP]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[EXCLUDETIP]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[EXCLUDETIP]"
+                      name="EXCLUDETIP" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[SUMLINEITEMS]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[SUMLINEITEMS]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[SUMLINEITEMS]"
+                      name="SUMLINEITEMS" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[PERUNIT]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[PERUNIT]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[PERUNIT]"
+                      name="PERUNIT" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[LOGVERSION]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[LOGVERSION]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[LOGVERSION]"
+                      name="LOGVERSION" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[BASEDATE]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[BASEDATE]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[BASEDATE]"
+                      name="BASEDATE" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[CASHBACKCOMBINATION]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[CASHBACKCOMBINATION]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[CASHBACKCOMBINATION]"
+                      name="CASHBACKCOMBINATION" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[CASHBACKPERCENTAMOUNT]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[CASHBACKPERCENTAMOUNT]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[CASHBACKPERCENTAMOUNT]"
+                      name="CASHBACKPERCENTAMOUNT"
+                      precision="10"
+                      scale="5" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[CASHBACKFLATAMOUNT]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[CASHBACKFLATAMOUNT]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[CASHBACKFLATAMOUNT]"
+                      name="CASHBACKFLATAMOUNT"
+                      precision="19"
+                      scale="6" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[SEPCOMCHBK]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[SEPCOMCHBK]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[SEPCOMCHBK]"
+                      name="SEPCOMCHBK" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[LIMITSHORTCODE]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[LIMITSHORTCODE]"
+                      length="10"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[LIMITSHORTCODE]"
+                      name="LIMITSHORTCODE" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[USELIMITS]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[USELIMITS]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[USELIMITS]"
+                      name="USELIMITS" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[REASONCODE]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[REASONCODE]"
+                      length="4"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[REASONCODE]"
+                      name="REASONCODE" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[INCLUDEIRF]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[INCLUDEIRF]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[INCLUDEIRF]"
+                      name="INCLUDEIRF" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[INCLUDEMAF]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[INCLUDEMAF]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[INCLUDEMAF]"
+                      name="INCLUDEMAF" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[MAFPERCENTAGE]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[MAFPERCENTAGE]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[MAFPERCENTAGE]"
+                      name="MAFPERCENTAGE"
+                      precision="10"
+                      scale="5" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[MAFFLATAMOUNT]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[MAFFLATAMOUNT]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[MAFFLATAMOUNT]"
+                      name="MAFFLATAMOUNT"
+                      precision="19"
+                      scale="6" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[MAFCOMBINATION]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[MAFCOMBINATION]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[MAFCOMBINATION]"
+                      name="MAFCOMBINATION" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[MAFAPPLIESTO]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[MAFAPPLIESTO]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[MAFAPPLIESTO]"
+                      name="MAFAPPLIESTO" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[BLENDEDMETHOD]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[BLENDEDMETHOD]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[BLENDEDMETHOD]"
+                      name="BLENDEDMETHOD" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[CASHBACKSIGN]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[CASHBACKSIGN]"
+                      length="1"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[CASHBACKSIGN]"
+                      name="CASHBACKSIGN" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[ALLOWOVERWRITE]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output].ExternalColumns[ALLOWOVERWRITE]"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[ALLOWOVERWRITE]"
+                      name="ALLOWOVERWRITE" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\DFT_COMMISSIONS_LOAD.Paths[Balanced Data Distributor Output 1]"
+              endId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS.Inputs[OLE DB Destination Input]"
+              name="Balanced Data Distributor Output 1"
+              startId="Package\DFT_COMMISSIONS_LOAD\BDD_COMMISSIONS.Outputs[Balanced Data Distributor Output 1]" />
+            <path
+              refId="Package\DFT_COMMISSIONS_LOAD.Paths[Balanced Data Distributor Output 2]"
+              endId="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1.Inputs[OLE DB Destination Input]"
+              name="Balanced Data Distributor Output 2"
+              startId="Package\DFT_COMMISSIONS_LOAD\BDD_COMMISSIONS.Outputs[Balanced Data Distributor Output 2]" />
+            <path
+              refId="Package\DFT_COMMISSIONS_LOAD.Paths[Derived Column Output]"
+              endId="Package\DFT_COMMISSIONS_LOAD\BDD_COMMISSIONS.Inputs[Balanced Data Distributor Input]"
+              name="Derived Column Output"
+              startId="Package\DFT_COMMISSIONS_LOAD\DC_BATCH.Outputs[Derived Column Output]" />
+            <path
+              refId="Package\DFT_COMMISSIONS_LOAD.Paths[Oracle Source Output]"
+              endId="Package\DFT_COMMISSIONS_LOAD\RC_COMMISSIONS.Inputs[Row Count Input 1]"
+              name="Oracle Source Output"
+              startId="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS.Outputs[Oracle Source Output]" />
+            <path
+              refId="Package\DFT_COMMISSIONS_LOAD.Paths[Row Count Output 1]"
+              endId="Package\DFT_COMMISSIONS_LOAD\DC_BATCH.Inputs[Derived Column Input]"
+              name="Row Count Output 1"
+              startId="Package\DFT_COMMISSIONS_LOAD\RC_COMMISSIONS.Outputs[Row Count Output 1]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_COMMISSIONS_GET_DEST_COUNT_LOAD"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{C3DFCD6D-85F9-4D7A-998E-7E9B5BE282C4}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_COMMISSIONS_GET_DEST_COUNT_LOAD"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_GET_DEST_COUNT_LOAD"</DTS:PropertyExpression>
+      <DTS:EventHandlers>
+        <DTS:EventHandler
+          DTS:refId="Package\SQL_COMMISSIONS_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]"
+          DTS:CreationName="OnPreExecute"
+          DTS:DTSID="{5A6A7A8F-197E-4062-BBAF-26CAD7A26379}"
+          DTS:EventID="1076330902"
+          DTS:EventName="OnPreExecute"
+          DTS:LocaleID="-1">
+          <DTS:Variables>
+            <DTS:Variable
+              DTS:CreationName=""
+              DTS:Description="The propagate property of the event"
+              DTS:DTSID="{F9544FFB-AAA5-4B86-9B3C-94AA3719DD66}"
+              DTS:IncludeInDebugDump="6789"
+              DTS:Namespace="System"
+              DTS:ObjectName="Propagate">
+              <DTS:VariableValue
+                DTS:DataType="11">-1</DTS:VariableValue>
+            </DTS:Variable>
+          </DTS:Variables>
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\SQL_COMMISSIONS_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]\SQL_COMMISSIONS_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{2EF650F2-8460-40C6-ACFD-6E6FD414DA62}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="SQL_COMMISSIONS_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+              <DTS:Variables />
+              <DTS:PropertyExpression
+                DTS:Name="Name">"SQL_"+ @[User::v_Task_Name]+"_UPDATE_DFT_LOAD_COMPLETED"</DTS:PropertyExpression>
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{1636D124-EDD7-4E17-8AC7-87A25FE17594}"
+                  SQLTask:SqlStatementSource="UPDATE DBO.BATCH_EXECUTION_STATUS&#xA; SET  &#xA;STATUS_FLAG = 'DFT LOAD COMPLETED'   WHERE&#xA; EXECUTION_ID = (&#xA;       SELECT MAX(EXECUTION_ID) EXECUTION_ID&#xA;       FROM DBO.BATCH_EXECUTION_STATUS&#xA;       WHERE PACKAGE_ID =?&#xA;       AND  BATCH_ID = ?&#xA;    )"
+                  SQLTask:TypeConversionMode="None" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="0"
+                    SQLTask:DtsVariableName="User::v_Package_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="1"
+                    SQLTask:DtsVariableName="User::v_Batch_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                </SQLTask:SqlTaskData>
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+        </DTS:EventHandler>
+      </DTS:EventHandlers>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{1FFCE957-6245-4848-A3E3-C2386D24EB58}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::v_Dest_Count_Query"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="0"
+            SQLTask:DtsVariableName="User::v_Rows_Inserted" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_COMMISSIONS_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{E1D144DC-DEE4-44C2-98E9-49BB33F5554B}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_COMMISSIONS_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_CHECK_PACKAGE_EXISTENCE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{1636D124-EDD7-4E17-8AC7-87A25FE17594}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_NAME VARCHAR(500) = ?&#xA;&#xA;EXEC [DBO].[SP_CHECK_PACKAGE_EXISTENCE]  @PACKAGE_NAME" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_COMMISSIONS_SP_GET_PACKAGE_BATCH_ID"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{935BE89C-B825-4F48-9ABC-3E46E8CDC466}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_COMMISSIONS_SP_GET_PACKAGE_BATCH_ID"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_GET_PACKAGE_BATCH_ID"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{1636D124-EDD7-4E17-8AC7-87A25FE17594}"
+          SQLTask:SqlStatementSource="&#xA;DECLARE @PACKAGE_NAME VARCHAR(500) = ?&#xA;DECLARE @PACKAGE_ID  INT &#xA;DECLARE @BATCH_ID BIGINT&#xA;&#xA;&#xA; EXEC [DBO].[SP_GET_PACKAGE_BATCH_ID] @PACKAGE_NAME,@PACKAGE_ID OUT,@BATCH_ID OUT&#xA; SELECT ? = @PACKAGE_ID &#xA; SELECT ? = @BATCH_ID" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_COMMISSIONS_SP_INSERT_EXECUTION_STATUS"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{C82D670B-54F3-4A06-9724-3C45D006927A}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_COMMISSIONS_SP_INSERT_EXECUTION_STATUS"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_INSERT_EXECUTION_STATUS"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{1636D124-EDD7-4E17-8AC7-87A25FE17594}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @PACKAGE_START_TIME DATETIME = ?&#xA;DECLARE @JOB_ID INT  =?&#xA;&#xA;EXEC [DBO].[SP_INSERT_EXECUTION_STATUS]           @PACKAGE_ID&#xA;,@BATCH_ID&#xA;,@PACKAGE_START_TIME&#xA;,@JOB_ID" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="System::StartTime"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="7"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="$Project::p_JOB_ID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_COMMISSIONS_SP_UPDATE_EXECUTION_STATUS_LOAD"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{955500F9-930E-4786-AAB5-0F168D70545A}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_COMMISSIONS_SP_UPDATE_EXECUTION_STATUS_LOAD"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_UPDATE_EXECUTION_STATUS_LOAD"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{1636D124-EDD7-4E17-8AC7-87A25FE17594}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @ROWS_READ BIGINT = ?&#xA;DECLARE @ROWS_INSERTED BIGINT = ?&#xA;DECLARE @ROWS_UPDATED BIGINT =0&#xA;DECLARE @ROWS_ERRORED  BIGINT=0&#xA;&#xA;&#xA;EXEC DBO.SP_UPDATE_EXECUTION_STATUS @PACKAGE_ID&#xA; , @BATCH_ID&#xA; , @ROWS_READ&#xA; , @ROWS_INSERTED&#xA; , @ROWS_UPDATED&#xA; , @ROWS_ERRORED" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::v_Rows_Read"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="User::v_Rows_Inserted"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_COMMISSIONS_TRUNCATE_STG_TABLE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{1617A89A-DFB0-4FA5-981B-7074CE52F472}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_COMMISSIONS_TRUNCATE_STG_TABLE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_TRUNCATE_STG_TABLE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{1FFCE957-6245-4848-A3E3-C2386D24EB58}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::v_Trunc_Query" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{E8480328-2518-43CA-8FB6-F431741E360D}"
+      DTS:From="Package\SQL_COMMISSIONS_SP_GET_PACKAGE_BATCH_ID"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\SQL_COMMISSIONS_SP_INSERT_EXECUTION_STATUS" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 10]"
+      DTS:CreationName=""
+      DTS:DTSID="{16FF0D70-4EF0-427B-9165-D33A1A8AF550}"
+      DTS:From="Package\SQL_COMMISSIONS_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 10"
+      DTS:To="Package\SQL_COMMISSIONS_SP_GET_PACKAGE_BATCH_ID" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 12]"
+      DTS:CreationName=""
+      DTS:DTSID="{25A44960-48AD-439F-9052-4E6E9971AE43}"
+      DTS:From="Package\DFT_COMMISSIONS_LOAD"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 12"
+      DTS:To="Package\SQL_COMMISSIONS_GET_DEST_COUNT_LOAD" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{F70EAAA8-53C6-476E-B03F-29F760450F15}"
+      DTS:From="Package\SQL_COMMISSIONS_SP_INSERT_EXECUTION_STATUS"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\SQL_COMMISSIONS_TRUNCATE_STG_TABLE" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 5]"
+      DTS:CreationName=""
+      DTS:DTSID="{2A55D36F-BC35-441B-B199-236F1F10BA0A}"
+      DTS:Expression="@[User::v_Inc_Date] == (DT_DBTIMESTAMP) &quot;1753-01-01&quot;"
+      DTS:From="Package\SQL_COMMISSIONS_TRUNCATE_STG_TABLE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 5"
+      DTS:To="Package\DFT_COMMISSIONS_LOAD" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 7]"
+      DTS:CreationName=""
+      DTS:DTSID="{A33FDA27-789D-4DA3-A7A1-BA29C0486A4E}"
+      DTS:Expression="@[User::v_Rows_Inserted] ==0"
+      DTS:From="Package\SQL_COMMISSIONS_GET_DEST_COUNT_LOAD"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 7"
+      DTS:To="Package\SQL_COMMISSIONS_SP_UPDATE_EXECUTION_STATUS_LOAD" />
+  </DTS:PrecedenceConstraints>
+  <DTS:EventHandlers>
+    <DTS:EventHandler
+      DTS:refId="Package.EventHandlers[OnError]"
+      DTS:CreationName="OnError"
+      DTS:DTSID="{2C662D9C-1E87-4CA4-8CD9-1EF2DB8A118D}"
+      DTS:EventID="2"
+      DTS:EventName="OnError"
+      DTS:LocaleID="-1">
+      <DTS:Variables>
+        <DTS:Variable
+          DTS:CreationName=""
+          DTS:Description="The propagate property of the event"
+          DTS:DTSID="{A47923E9-0846-4F38-AF4E-EE3764D9AC4E}"
+          DTS:IncludeInDebugDump="6789"
+          DTS:Namespace="System"
+          DTS:ObjectName="Propagate">
+          <DTS:VariableValue
+            DTS:DataType="11">-1</DTS:VariableValue>
+        </DTS:Variable>
+      </DTS:Variables>
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package.EventHandlers[OnError]\SQL_COMMISSIONS_SP_SSIS_ERRORLOG"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{EBF2B323-7183-44EA-917A-387AC7C25354}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="SQL_COMMISSIONS_SP_SSIS_ERRORLOG"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:PropertyExpression
+            DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_SSIS_ERRORLOG"</DTS:PropertyExpression>
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{1636D124-EDD7-4E17-8AC7-87A25FE17594}"
+              SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @PKG_GUID SYSNAME = ?&#xA;DECLARE @PACKAGE_NAME SYSNAME = ?&#xA;DECLARE @SOURCE_NAME VARCHAR(100) = ?&#xA;DECLARE @TASK_NAME VARCHAR(100) = ?&#xA;DECLARE @MACHINE_NAME VARCHAR(50) = ?&#xA;DECLARE @USER_NAME VARCHAR(50) = ?&#xA;DECLARE @ERROR_NUMBER INT = ?&#xA;DECLARE @ERROR_DESCRIPTION VARCHAR(MAX) = ?&#xA;DECLARE @PACKAGE_START_TIME DATETIME  = NULL&#xA;DECLARE @ROWS_READ BIGINT = ?&#xA;DECLARE @ROWS_INSERTED BIGINT = ?&#xA;DECLARE @ROWS_UPDATED BIGINT = NULL&#xA;DECLARE @ROWS_ERRORED BIGINT = NULL&#xA;&#xA;EXEC DBO.[SP_SSIS_ERRORLOG] @PACKAGE_ID&#xA;&#x9;,@BATCH_ID&#xA;&#x9;,@PKG_GUID&#xA;&#x9;,@PACKAGE_NAME&#xA;&#x9;,@SOURCE_NAME&#xA;&#x9;,@TASK_NAME&#xA;&#x9;,@MACHINE_NAME&#xA;&#x9;,@USER_NAME&#xA;&#x9;,@ERROR_NUMBER&#xA;&#x9;,@ERROR_DESCRIPTION&#xA;&#x9;,@PACKAGE_START_TIME&#xA;&#x9;,@ROWS_READ&#xA;&#x9;,@ROWS_INSERTED&#xA;&#x9;,@ROWS_UPDATED &#xA;&#x9;,@ROWS_ERRORED" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::v_Package_Id"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="1"
+                SQLTask:DtsVariableName="User::v_Batch_Id"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="2"
+                SQLTask:DtsVariableName="System::PackageID"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="3"
+                SQLTask:DtsVariableName="System::PackageName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="4"
+                SQLTask:DtsVariableName="System::SourceName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="5"
+                SQLTask:DtsVariableName="System::TaskName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="6"
+                SQLTask:DtsVariableName="System::MachineName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="7"
+                SQLTask:DtsVariableName="System::UserName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="8"
+                SQLTask:DtsVariableName="System::ErrorCode"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="9"
+                SQLTask:DtsVariableName="System::ErrorDescription"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="10"
+                SQLTask:DtsVariableName="User::v_Rows_Read"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="11"
+                SQLTask:DtsVariableName="User::v_Rows_Inserted"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+    </DTS:EventHandler>
+  </DTS:EventHandlers>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="377.6,41.6"
+          Id="Package\DFT_COMMISSIONS_LOAD"
+          TopLeft="602.021259162354,412.182348771409" />
+        <NodeLayout
+          Size="377.6,41.6"
+          Id="Package\SQL_COMMISSIONS_GET_DEST_COUNT_LOAD"
+          TopLeft="602.021259162354,513.852935964261" />
+        <NodeLayout
+          Size="377.6,41.6"
+          Id="Package\SQL_COMMISSIONS_SP_CHECK_PACKAGE_EXISTENCE"
+          TopLeft="602.021259162354,5.5" />
+        <NodeLayout
+          Size="377.6,41.6"
+          Id="Package\SQL_COMMISSIONS_SP_GET_PACKAGE_BATCH_ID"
+          TopLeft="602.021259162354,107.170587192852" />
+        <NodeLayout
+          Size="377.6,41.6"
+          Id="Package\SQL_COMMISSIONS_SP_INSERT_EXECUTION_STATUS"
+          TopLeft="602.021259162354,208.841174385704" />
+        <NodeLayout
+          Size="377.6,41.6"
+          Id="Package\SQL_COMMISSIONS_SP_UPDATE_EXECUTION_STATUS_LOAD"
+          TopLeft="602.021259162354,615.523523157113" />
+        <NodeLayout
+          Size="377.6,41.6"
+          Id="Package\SQL_COMMISSIONS_TRUNCATE_STG_TABLE"
+          TopLeft="602.021259162354,310.511761578557" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="791.021259162354,149.170587192852">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.670587192852"
+              Start="0,0"
+              End="0,52.170587192852">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.170587192852" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 10]"
+          TopLeft="791.021259162354,47.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.670587192852"
+              Start="0,0"
+              End="0,52.170587192852">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.170587192852" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 12]"
+          TopLeft="791.021259162354,454.182348771409">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.6705871928519"
+              Start="0,0"
+              End="0,52.1705871928519">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.1705871928519" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="791.021259162354,250.841174385704">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.670587192853"
+              Start="0,0"
+              End="0,52.170587192853">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.170587192853" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 5]"
+          TopLeft="791.021259162354,352.511761578557">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.670587192852"
+              Start="0,0"
+              End="0,52.170587192852">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.170587192852" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 7]"
+          TopLeft="791.021259162354,555.852935964261">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.6705871928521"
+              Start="0,0"
+              End="0,52.1705871928521">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.1705871928521" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <DtsEventHandler
+    design-time-name="Package.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="279.2,41.6"
+          Id="Package.EventHandlers[OnError]\SQL_COMMISSIONS_SP_SSIS_ERRORLOG"
+          TopLeft="251.928572713112,181.029413609357" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <TaskHost
+    design-time-name="Package\DFT_COMMISSIONS_LOAD">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="184,41.6"
+          Id="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS"
+          TopLeft="74.071428376801,425.213725427278" />
+        <NodeLayout
+          Size="184,41.6"
+          Id="Package\DFT_COMMISSIONS_LOAD\SRC_COMMISSIONS"
+          TopLeft="211.194184582784,67" />
+        <NodeLayout
+          Size="184,41.6"
+          Id="Package\DFT_COMMISSIONS_LOAD\RC_COMMISSIONS"
+          TopLeft="211.194184582784,148.837254904821" />
+        <NodeLayout
+          Size="184,41.6"
+          Id="Package\DFT_COMMISSIONS_LOAD\DC_BATCH"
+          TopLeft="211.194184582784,230.674509809641" />
+        <NodeLayout
+          Size="184,41.6"
+          Id="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1"
+          TopLeft="316.071428376801,425.213725427278" />
+        <NodeLayout
+          Size="184,41.6"
+          Id="Package\DFT_COMMISSIONS_LOAD\BDD_COMMISSIONS"
+          TopLeft="211.194184582784,312.511764714462" />
+        <EdgeLayout
+          Id="Package\DFT_COMMISSIONS_LOAD.Paths[Row Count Output 1]"
+          TopLeft="303.194184582784,190.837254904821">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,39.8372549048207"
+              Start="0,0"
+              End="0,32.3372549048207">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,32.3372549048207" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_COMMISSIONS_LOAD.Paths[Oracle Source Output]"
+          TopLeft="303.194184582784,109">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,39.8372549048207"
+              Start="0,0"
+              End="0,32.3372549048207">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,32.3372549048207" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_COMMISSIONS_LOAD.Paths[Derived Column Output]"
+          TopLeft="303.194184582784,272.674509809641">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,39.8372549048207"
+              Start="0,0"
+              End="0,32.3372549048207">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,32.3372549048207" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_COMMISSIONS_LOAD.Paths[Balanced Data Distributor Output 2]"
+          TopLeft="332.527517916117,354.511764714462">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="75.5439104606837,70.701960712816"
+              Start="0,0"
+              End="75.5439104606837,63.201960712816">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.6464840819168" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,24.6464840819168"
+                    Point2="0,28.6464840819168"
+                    Point3="4,28.6464840819168" />
+                  <mssgle:LineSegment
+                    End="71.5439104606837,28.6464840819168" />
+                  <mssgle:CubicBezierSegment
+                    Point1="71.5439104606837,28.6464840819168"
+                    Point2="75.5439104606837,28.6464840819168"
+                    Point3="75.5439104606837,32.6464840819168" />
+                  <mssgle:LineSegment
+                    End="75.5439104606837,63.201960712816" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-40.1141580509082,33.6464840819168,155.7722265625,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_COMMISSIONS_LOAD.Paths[Balanced Data Distributor Output 1]"
+          TopLeft="273.860851249451,354.511764714462">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-107.78942287265,70.701960712816"
+              Start="0,0"
+              End="-107.78942287265,63.201960712816">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.6464840819168" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,24.6464840819168"
+                    Point2="0,28.6464840819168"
+                    Point3="-4,28.6464840819168" />
+                  <mssgle:LineSegment
+                    End="-103.78942287265,28.6464840819168" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-103.78942287265,28.6464840819168"
+                    Point2="-107.78942287265,28.6464840819168"
+                    Point3="-107.78942287265,32.6464840819168" />
+                  <mssgle:LineSegment
+                    End="-107.78942287265,63.201960712816" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-131.595277842575,33.6464840819168,155.4011328125,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_COMMISSIONS_LOAD\DST_COMMISSIONS 1">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <DtsEventHandler
+    design-time-name="Package\SQL_COMMISSIONS_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="313,42"
+          Id="Package\SQL_COMMISSIONS_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]\SQL_COMMISSIONS_UPDATE_DFT_LOAD_COMPLETED"
+          TopLeft="570.3,184.7" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

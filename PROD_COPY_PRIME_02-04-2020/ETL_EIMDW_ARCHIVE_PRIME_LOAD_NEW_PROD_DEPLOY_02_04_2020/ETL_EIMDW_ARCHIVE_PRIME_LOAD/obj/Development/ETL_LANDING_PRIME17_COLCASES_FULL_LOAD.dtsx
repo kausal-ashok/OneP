@@ -1,0 +1,2864 @@
+<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="11/28/2018 8:48:53 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="LAPTOP-SBSNQ3DE"
+  DTS:CreatorName="LAPTOP-SBSNQ3DE\HP"
+  DTS:DTSID="{AC800844-9731-48B2-AE93-F514F8B69216}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="14.0.0600.250"
+  DTS:LocaleID="16393"
+  DTS:ObjectName="ETL_LANDING_PRIME17_COLCASES_FULL_LOAD"
+  DTS:PackageType="5"
+  DTS:ProtectionLevel="0"
+  DTS:VersionBuild="768"
+  DTS:VersionGUID="{B26B1DBD-181B-49E3-8ED2-4CE9778A6A52}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_AUDIT_FRAMEWORK]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{1928D8FE-A900-4AE7-8B88-A6E38F1B8457}"
+      DTS:ObjectName="CM_AUDIT_FRAMEWORK">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_AUDIT_FRAMEWORK_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_AUDIT_FRAMEWORK_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=AUDIT_FRAMEWORK_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{996F81FD-170F-46CF-90FB-832CF7F753FF}"
+      DTS:ObjectName="CM_EIMDW_LANDING_PRIME">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_LANDING_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_ARCHIVE_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=DEV_EIMDW_Landing_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_Prime_Attunity]"
+      DTS:CreationName="MSORA"
+      DTS:DTSID="{D3285823-EF0C-48CA-8FF4-68FA444DD0C4}"
+      DTS:ObjectName="CM_Prime_Attunity">
+      <DTS:PropertyExpression
+        DTS:Name="Password">@[$Project::p_PRIME_PWD]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_PRIME_SERVER]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="UserName">@[$Project::p_PRIME_USER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <OracleXMLPackage>
+          <OraConnectionString>SERVER=10.180.2.215:1522/prime;USERNAME=AMBERCONNECT;ORACLEHOME=;ORACLEHOME64=;WINAUTH=0</OraConnectionString>
+          <OraRetain>False</OraRetain>
+          <OraInitialCatalog></OraInitialCatalog>
+          <OraServerName>10.180.2.215:1522/prime</OraServerName>
+          <OraUserName>AMBERCONNECT</OraUserName>
+          <OraOracleHome></OraOracleHome>
+          <OraOracleHome64></OraOracleHome64>
+          <OraWinAuthentication>False</OraWinAuthentication>
+          <OraEnableDetailedTracing>False</OraEnableDetailedTracing>
+          <OraPassword
+            Sensitive="1"></OraPassword>
+        </OracleXMLPackage>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:LogProviders>
+    <DTS:LogProvider
+      DTS:ConfigString="CM_AUDIT_FRAMEWORK"
+      DTS:CreationName="Microsoft.LogProviderSQLServer"
+      DTS:Description="Writes log entries for events to a SQL Server database"
+      DTS:DTSID="{E92C4BFE-F9D2-4DCB-8589-27744BDC14A3}"
+      DTS:ObjectName="SSIS log provider for SQL Server">
+      <DTS:ObjectData>
+        <InnerObject />
+      </DTS:ObjectData>
+    </DTS:LogProvider>
+  </DTS:LogProviders>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{0226974A-40DD-401A-BA44-39FD7CEBECA7}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Batch_Id">
+      <DTS:VariableValue
+        DTS:DataType="20">-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{957DDA08-823A-480A-9C00-839533960561}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT COUNT(1) FROM &quot; +  @[User::v_Dest_Table]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Dest_Count_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT COUNT(1) FROM DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_COLCASES (NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{860F5DA2-1D69-4C61-B92A-7CA77CE31782}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="@[$Project::p_LANDING_DATABASE]  +&quot;.&quot;+ @[$Project::p_LANDING_SCHEMA] +&quot;.&quot;+&quot;SRC_PRIME17_COLCASES (NOLOCK)&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Dest_Table">
+      <DTS:VariableValue
+        DTS:DataType="8">DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_COLCASES (NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{A37FAFB5-2D45-4218-BFC2-1FBAFF7F03DE}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Package_Id">
+      <DTS:VariableValue
+        DTS:DataType="3">-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{4AB678F0-BE91-48D9-BF25-19EA9D15595B}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Rows_Inserted">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{9BE015E0-5AD1-4985-B85F-E4F415AD00D4}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Rows_Read">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{83B526A6-8433-4282-85F7-F3072B1073D6}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT INSTITUTION_ID&#x9;&#xA;,SERNO&#x9;&#xA;,CUSTSERNO&#x9;&#xA;,CACCSERNO&#x9;&#xA;,CACCPRODUCT&#x9;&#xA;,INVOICESERNO&#x9;&#xA;,INVOICEPARTITIONKEY&#x9;&#xA;,TYPESERNO&#x9;&#xA;,CREATEDON&#x9;&#xA;,BALANCE&#x9;&#xA;,OVERDUEAMOUNT&#x9;&#xA;,OVERLIMITAMOUNT&#x9;&#xA;,CURRENTOPERATOR&#x9;&#xA;,PREVIOUSOPERATOR&#x9;&#xA;,CUSTSTGENERAL&#x9;&#xA;,CUSTSTGENERALNEW&#x9;&#xA;,ACCSTGENERAL&#x9;&#xA;,CREATIONDUEDATE&#x9;&#xA;,CREATIONPRINTDUEDATE&#x9;&#xA;,LASTOPENED&#x9;&#xA;,NEXTEVALUATIONDATE&#x9;&#xA;,LASTCLOSED&#x9;&#xA;,CURRENTLYOPEN&#x9;&#xA;,CHECKEDOUT&#x9;&#xA;,STATUS&#x9;&#xA;,QUEUESERNO&#x9;&#xA;,ORIGALLOCPROFSERNO&#x9;&#xA;,LOGACTION&#x9;&#xA;,CONVERTED&#xA;FROM &quot;+  @[User::v_Source_Table]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Source_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT INSTITUTION_ID	
+,SERNO	
+,CUSTSERNO	
+,CACCSERNO	
+,CACCPRODUCT	
+,INVOICESERNO	
+,INVOICEPARTITIONKEY	
+,TYPESERNO	
+,CREATEDON	
+,BALANCE	
+,OVERDUEAMOUNT	
+,OVERLIMITAMOUNT	
+,CURRENTOPERATOR	
+,PREVIOUSOPERATOR	
+,CUSTSTGENERAL	
+,CUSTSTGENERALNEW	
+,ACCSTGENERAL	
+,CREATIONDUEDATE	
+,CREATIONPRINTDUEDATE	
+,LASTOPENED	
+,NEXTEVALUATIONDATE	
+,LASTCLOSED	
+,CURRENTLYOPEN	
+,CHECKEDOUT	
+,STATUS	
+,QUEUESERNO	
+,ORIGALLOCPROFSERNO	
+,LOGACTION	
+,CONVERTED
+FROM TCTDBS.COLCASES</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{6636F88E-EAC5-4A11-AC87-D9DD90EF7E0D}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Source_Table">
+      <DTS:VariableValue
+        DTS:DataType="8">TCTDBS.COLCASES</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{46C2BCAC-C2CA-4E6D-8F39-3BB5153DDB07}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Task_Name">
+      <DTS:VariableValue
+        DTS:DataType="8">COLCASES</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{835222C0-C372-499B-B4CC-32BAFEA9B53C}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;TRUNCATE TABLE &quot;  + REPLACE(@[User::v_Dest_Table],&quot;(NOLOCK)&quot;,&quot; &quot;)"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Trunc_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">TRUNCATE TABLE DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_COLCASES  </DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:LoggingOptions
+    DTS:FilterKind="0"
+    DTS:LoggingMode="1">
+    <DTS:Property
+      DTS:DataType="8"
+      DTS:Name="EventFilter">3,7,OnError,13,OnPostExecute,12,OnTaskFailed</DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnError"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnPostExecute"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnTaskFailed"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:SelectedLogProviders>
+      <DTS:SelectedLogProvider
+        DTS:InstanceID="{E92C4BFE-F9D2-4DCB-8589-27744BDC14A3}" />
+    </DTS:SelectedLogProviders>
+  </DTS:LoggingOptions>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\DFT_COLCASES_LOAD"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{B8793ED5-D3CB-46BF-A27C-E3FC3D582CE9}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="DFT_COLCASES_LOAD"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"DFT_"+@[User::v_Task_Name]+"_LOAD"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <pipeline
+          defaultBufferMaxRows="100000"
+          defaultBufferSize="20485760"
+          version="1">
+          <components>
+            <component
+              refId="Package\DFT_COLCASES_LOAD\BDD_COLCASES"
+              componentClassID="Microsoft.BDD"
+              contactInfo="Balanced Data Distributor;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Evaluates and directs rows in a dataset to multiple destinations."
+              name="BDD_COLCASES">
+              <inputs>
+                <input
+                  refId="Package\DFT_COLCASES_LOAD\BDD_COLCASES.Inputs[Balanced Data Distributor Input]"
+                  description="Input to the Balanced Data      Distributor Transformation"
+                  name="Balanced Data Distributor Input">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_COLCASES_LOAD\BDD_COLCASES.Outputs[Balanced Data Distributor Output 1]"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 1"
+                  synchronousInputId="Package\DFT_COLCASES_LOAD\BDD_COLCASES.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_COLCASES_LOAD\BDD_COLCASES.Outputs[Balanced Data Distributor Output 2]"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 2"
+                  synchronousInputId="Package\DFT_COLCASES_LOAD\BDD_COLCASES.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_COLCASES_LOAD\BDD_COLCASES.Outputs[Balanced Data Distributor Output 3]"
+                  dangling="true"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 3"
+                  synchronousInputId="Package\DFT_COLCASES_LOAD\BDD_COLCASES.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_COLCASES_LOAD\DC_BATCH"
+              componentClassID="Microsoft.DerivedColumn"
+              contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+              name="DC_BATCH"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\DFT_COLCASES_LOAD\DC_BATCH.Inputs[Derived Column Input]"
+                  description="Input to the Derived Column Transformation"
+                  name="Derived Column Input">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_COLCASES_LOAD\DC_BATCH.Outputs[Derived Column Output]"
+                  description="Default Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  name="Derived Column Output"
+                  synchronousInputId="Package\DFT_COLCASES_LOAD\DC_BATCH.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]"
+                      dataType="i8"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\DFT_COLCASES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]"
+                      name="BATCH_ID"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">@[User::v_Batch_Id]</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">@[User::v_Batch_Id]</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_COLCASES_LOAD\DC_BATCH.Outputs[Derived Column Error Output]"
+                  description="Error Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Derived Column Error Output"
+                  synchronousInputId="Package\DFT_COLCASES_LOAD\DC_BATCH.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_COLCASES_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_COLCASES_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_COLCASES_LOAD\DST_COLCASES"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="DST_COLCASES"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[LZOWN].[SRC_PRIME17_COLCASES]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS,ROWS_PER_BATCH = 1000000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].Columns[INSTITUTION_ID]"
+                      cachedDataType="i4"
+                      cachedName="INSTITUTION_ID"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].Columns[SERNO]"
+                      cachedDataType="numeric"
+                      cachedName="SERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[SERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].Columns[CUSTSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="CUSTSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[CUSTSERNO]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CUSTSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].Columns[CACCSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="CACCSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[CACCSERNO]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CACCSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].Columns[CACCPRODUCT]"
+                      cachedDataType="i4"
+                      cachedName="CACCPRODUCT"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[CACCPRODUCT]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CACCPRODUCT]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].Columns[INVOICESERNO]"
+                      cachedDataType="numeric"
+                      cachedName="INVOICESERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[INVOICESERNO]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[INVOICESERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].Columns[INVOICEPARTITIONKEY]"
+                      cachedDataType="numeric"
+                      cachedName="INVOICEPARTITIONKEY"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[INVOICEPARTITIONKEY]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[INVOICEPARTITIONKEY]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].Columns[TYPESERNO]"
+                      cachedDataType="numeric"
+                      cachedName="TYPESERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[TYPESERNO]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[TYPESERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].Columns[CREATEDON]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="CREATEDON"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[CREATEDON]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CREATEDON]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].Columns[BALANCE]"
+                      cachedDataType="numeric"
+                      cachedName="BALANCE"
+                      cachedPrecision="16"
+                      cachedScale="3"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[BALANCE]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[BALANCE]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].Columns[OVERDUEAMOUNT]"
+                      cachedDataType="numeric"
+                      cachedName="OVERDUEAMOUNT"
+                      cachedPrecision="16"
+                      cachedScale="3"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[OVERDUEAMOUNT]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[OVERDUEAMOUNT]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].Columns[OVERLIMITAMOUNT]"
+                      cachedDataType="numeric"
+                      cachedName="OVERLIMITAMOUNT"
+                      cachedPrecision="16"
+                      cachedScale="3"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[OVERLIMITAMOUNT]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[OVERLIMITAMOUNT]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].Columns[CURRENTOPERATOR]"
+                      cachedDataType="wstr"
+                      cachedLength="200"
+                      cachedName="CURRENTOPERATOR"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[CURRENTOPERATOR]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CURRENTOPERATOR]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].Columns[PREVIOUSOPERATOR]"
+                      cachedDataType="wstr"
+                      cachedLength="200"
+                      cachedName="PREVIOUSOPERATOR"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[PREVIOUSOPERATOR]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[PREVIOUSOPERATOR]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].Columns[CUSTSTGENERAL]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="CUSTSTGENERAL"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[CUSTSTGENERAL]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CUSTSTGENERAL]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].Columns[CUSTSTGENERALNEW]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="CUSTSTGENERALNEW"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[CUSTSTGENERALNEW]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CUSTSTGENERALNEW]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].Columns[ACCSTGENERAL]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="ACCSTGENERAL"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[ACCSTGENERAL]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[ACCSTGENERAL]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].Columns[CREATIONDUEDATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="CREATIONDUEDATE"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[CREATIONDUEDATE]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CREATIONDUEDATE]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].Columns[CREATIONPRINTDUEDATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="CREATIONPRINTDUEDATE"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[CREATIONPRINTDUEDATE]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CREATIONPRINTDUEDATE]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].Columns[LASTOPENED]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="LASTOPENED"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[LASTOPENED]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[LASTOPENED]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].Columns[NEXTEVALUATIONDATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="NEXTEVALUATIONDATE"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[NEXTEVALUATIONDATE]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[NEXTEVALUATIONDATE]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].Columns[LASTCLOSED]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="LASTCLOSED"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[LASTCLOSED]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[LASTCLOSED]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].Columns[CURRENTLYOPEN]"
+                      cachedDataType="i1"
+                      cachedName="CURRENTLYOPEN"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[CURRENTLYOPEN]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CURRENTLYOPEN]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].Columns[CHECKEDOUT]"
+                      cachedDataType="i4"
+                      cachedName="CHECKEDOUT"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[CHECKEDOUT]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CHECKEDOUT]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].Columns[STATUS]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="STATUS"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[STATUS]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[STATUS]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].Columns[QUEUESERNO]"
+                      cachedDataType="numeric"
+                      cachedName="QUEUESERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[QUEUESERNO]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[QUEUESERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].Columns[ORIGALLOCPROFSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="ORIGALLOCPROFSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[ORIGALLOCPROFSERNO]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[ORIGALLOCPROFSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].Columns[LOGACTION]"
+                      cachedDataType="wstr"
+                      cachedLength="11"
+                      cachedName="LOGACTION"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[LOGACTION]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[LOGACTION]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].Columns[CONVERTED]"
+                      cachedDataType="i1"
+                      cachedName="CONVERTED"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[CONVERTED]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CONVERTED]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].Columns[BATCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="BATCH_ID"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      lineageId="Package\DFT_COLCASES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[LD_SEQ_ID]"
+                      dataType="i4"
+                      name="LD_SEQ_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      dataType="i8"
+                      name="BATCH_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[CACCSERNO]"
+                      dataType="numeric"
+                      name="CACCSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[STATUS]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="STATUS" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[CONVERTED]"
+                      dataType="i2"
+                      name="CONVERTED" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[CUSTSERNO]"
+                      dataType="numeric"
+                      name="CUSTSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[CACCPRODUCT]"
+                      dataType="i4"
+                      name="CACCPRODUCT" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[INVOICESERNO]"
+                      dataType="numeric"
+                      name="INVOICESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[INVOICEPARTITIONKEY]"
+                      dataType="numeric"
+                      name="INVOICEPARTITIONKEY"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[TYPESERNO]"
+                      dataType="numeric"
+                      name="TYPESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[CREATEDON]"
+                      dataType="dbTimeStamp"
+                      name="CREATEDON" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[BALANCE]"
+                      dataType="numeric"
+                      name="BALANCE"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[OVERDUEAMOUNT]"
+                      dataType="numeric"
+                      name="OVERDUEAMOUNT"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[OVERLIMITAMOUNT]"
+                      dataType="numeric"
+                      name="OVERLIMITAMOUNT"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[CURRENTOPERATOR]"
+                      dataType="wstr"
+                      length="200"
+                      name="CURRENTOPERATOR" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[PREVIOUSOPERATOR]"
+                      dataType="wstr"
+                      length="200"
+                      name="PREVIOUSOPERATOR" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[CUSTSTGENERAL]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="CUSTSTGENERAL" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[CUSTSTGENERALNEW]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="CUSTSTGENERALNEW" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[ACCSTGENERAL]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="ACCSTGENERAL" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[CREATIONDUEDATE]"
+                      dataType="dbTimeStamp"
+                      name="CREATIONDUEDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[CREATIONPRINTDUEDATE]"
+                      dataType="dbTimeStamp"
+                      name="CREATIONPRINTDUEDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[LASTOPENED]"
+                      dataType="dbTimeStamp"
+                      name="LASTOPENED" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[NEXTEVALUATIONDATE]"
+                      dataType="dbTimeStamp"
+                      name="NEXTEVALUATIONDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[LASTCLOSED]"
+                      dataType="dbTimeStamp"
+                      name="LASTCLOSED" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[CURRENTLYOPEN]"
+                      dataType="i2"
+                      name="CURRENTLYOPEN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[CHECKEDOUT]"
+                      dataType="i4"
+                      name="CHECKEDOUT" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[QUEUESERNO]"
+                      dataType="numeric"
+                      name="QUEUESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[ORIGALLOCPROFSERNO]"
+                      dataType="numeric"
+                      name="ORIGALLOCPROFSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input].ExternalColumns[LOGACTION]"
+                      dataType="wstr"
+                      length="11"
+                      name="LOGACTION" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="DST_COLCASES 1"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[LZOWN].[SRC_PRIME17_COLCASES]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS,ROWS_PER_BATCH = 1000000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].Columns[INSTITUTION_ID]"
+                      cachedDataType="i4"
+                      cachedName="INSTITUTION_ID"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].Columns[SERNO]"
+                      cachedDataType="numeric"
+                      cachedName="SERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[SERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].Columns[CUSTSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="CUSTSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[CUSTSERNO]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CUSTSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].Columns[CACCSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="CACCSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[CACCSERNO]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CACCSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].Columns[CACCPRODUCT]"
+                      cachedDataType="i4"
+                      cachedName="CACCPRODUCT"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[CACCPRODUCT]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CACCPRODUCT]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].Columns[INVOICESERNO]"
+                      cachedDataType="numeric"
+                      cachedName="INVOICESERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[INVOICESERNO]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[INVOICESERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].Columns[INVOICEPARTITIONKEY]"
+                      cachedDataType="numeric"
+                      cachedName="INVOICEPARTITIONKEY"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[INVOICEPARTITIONKEY]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[INVOICEPARTITIONKEY]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].Columns[TYPESERNO]"
+                      cachedDataType="numeric"
+                      cachedName="TYPESERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[TYPESERNO]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[TYPESERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].Columns[CREATEDON]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="CREATEDON"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[CREATEDON]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CREATEDON]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].Columns[BALANCE]"
+                      cachedDataType="numeric"
+                      cachedName="BALANCE"
+                      cachedPrecision="16"
+                      cachedScale="3"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[BALANCE]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[BALANCE]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].Columns[OVERDUEAMOUNT]"
+                      cachedDataType="numeric"
+                      cachedName="OVERDUEAMOUNT"
+                      cachedPrecision="16"
+                      cachedScale="3"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[OVERDUEAMOUNT]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[OVERDUEAMOUNT]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].Columns[OVERLIMITAMOUNT]"
+                      cachedDataType="numeric"
+                      cachedName="OVERLIMITAMOUNT"
+                      cachedPrecision="16"
+                      cachedScale="3"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[OVERLIMITAMOUNT]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[OVERLIMITAMOUNT]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].Columns[CURRENTOPERATOR]"
+                      cachedDataType="wstr"
+                      cachedLength="200"
+                      cachedName="CURRENTOPERATOR"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[CURRENTOPERATOR]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CURRENTOPERATOR]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].Columns[PREVIOUSOPERATOR]"
+                      cachedDataType="wstr"
+                      cachedLength="200"
+                      cachedName="PREVIOUSOPERATOR"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[PREVIOUSOPERATOR]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[PREVIOUSOPERATOR]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].Columns[CUSTSTGENERAL]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="CUSTSTGENERAL"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[CUSTSTGENERAL]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CUSTSTGENERAL]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].Columns[CUSTSTGENERALNEW]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="CUSTSTGENERALNEW"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[CUSTSTGENERALNEW]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CUSTSTGENERALNEW]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].Columns[ACCSTGENERAL]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="ACCSTGENERAL"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[ACCSTGENERAL]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[ACCSTGENERAL]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].Columns[CREATIONDUEDATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="CREATIONDUEDATE"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[CREATIONDUEDATE]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CREATIONDUEDATE]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].Columns[CREATIONPRINTDUEDATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="CREATIONPRINTDUEDATE"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[CREATIONPRINTDUEDATE]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CREATIONPRINTDUEDATE]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].Columns[LASTOPENED]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="LASTOPENED"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[LASTOPENED]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[LASTOPENED]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].Columns[NEXTEVALUATIONDATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="NEXTEVALUATIONDATE"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[NEXTEVALUATIONDATE]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[NEXTEVALUATIONDATE]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].Columns[LASTCLOSED]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="LASTCLOSED"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[LASTCLOSED]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[LASTCLOSED]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].Columns[CURRENTLYOPEN]"
+                      cachedDataType="i1"
+                      cachedName="CURRENTLYOPEN"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[CURRENTLYOPEN]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CURRENTLYOPEN]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].Columns[CHECKEDOUT]"
+                      cachedDataType="i4"
+                      cachedName="CHECKEDOUT"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[CHECKEDOUT]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CHECKEDOUT]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].Columns[STATUS]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="STATUS"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[STATUS]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[STATUS]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].Columns[QUEUESERNO]"
+                      cachedDataType="numeric"
+                      cachedName="QUEUESERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[QUEUESERNO]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[QUEUESERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].Columns[ORIGALLOCPROFSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="ORIGALLOCPROFSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[ORIGALLOCPROFSERNO]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[ORIGALLOCPROFSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].Columns[LOGACTION]"
+                      cachedDataType="wstr"
+                      cachedLength="11"
+                      cachedName="LOGACTION"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[LOGACTION]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[LOGACTION]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].Columns[CONVERTED]"
+                      cachedDataType="i1"
+                      cachedName="CONVERTED"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[CONVERTED]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CONVERTED]" />
+                    <inputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].Columns[BATCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="BATCH_ID"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      lineageId="Package\DFT_COLCASES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[LD_SEQ_ID]"
+                      dataType="i4"
+                      name="LD_SEQ_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      dataType="i8"
+                      name="BATCH_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[CACCSERNO]"
+                      dataType="numeric"
+                      name="CACCSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[STATUS]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="STATUS" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[CONVERTED]"
+                      dataType="i2"
+                      name="CONVERTED" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[CUSTSERNO]"
+                      dataType="numeric"
+                      name="CUSTSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[CACCPRODUCT]"
+                      dataType="i4"
+                      name="CACCPRODUCT" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[INVOICESERNO]"
+                      dataType="numeric"
+                      name="INVOICESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[INVOICEPARTITIONKEY]"
+                      dataType="numeric"
+                      name="INVOICEPARTITIONKEY"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[TYPESERNO]"
+                      dataType="numeric"
+                      name="TYPESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[CREATEDON]"
+                      dataType="dbTimeStamp"
+                      name="CREATEDON" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[BALANCE]"
+                      dataType="numeric"
+                      name="BALANCE"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[OVERDUEAMOUNT]"
+                      dataType="numeric"
+                      name="OVERDUEAMOUNT"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[OVERLIMITAMOUNT]"
+                      dataType="numeric"
+                      name="OVERLIMITAMOUNT"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[CURRENTOPERATOR]"
+                      dataType="wstr"
+                      length="200"
+                      name="CURRENTOPERATOR" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[PREVIOUSOPERATOR]"
+                      dataType="wstr"
+                      length="200"
+                      name="PREVIOUSOPERATOR" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[CUSTSTGENERAL]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="CUSTSTGENERAL" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[CUSTSTGENERALNEW]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="CUSTSTGENERALNEW" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[ACCSTGENERAL]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="ACCSTGENERAL" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[CREATIONDUEDATE]"
+                      dataType="dbTimeStamp"
+                      name="CREATIONDUEDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[CREATIONPRINTDUEDATE]"
+                      dataType="dbTimeStamp"
+                      name="CREATIONPRINTDUEDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[LASTOPENED]"
+                      dataType="dbTimeStamp"
+                      name="LASTOPENED" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[NEXTEVALUATIONDATE]"
+                      dataType="dbTimeStamp"
+                      name="NEXTEVALUATIONDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[LASTCLOSED]"
+                      dataType="dbTimeStamp"
+                      name="LASTCLOSED" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[CURRENTLYOPEN]"
+                      dataType="i2"
+                      name="CURRENTLYOPEN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[CHECKEDOUT]"
+                      dataType="i4"
+                      name="CHECKEDOUT" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[QUEUESERNO]"
+                      dataType="numeric"
+                      name="QUEUESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[ORIGALLOCPROFSERNO]"
+                      dataType="numeric"
+                      name="ORIGALLOCPROFSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input].ExternalColumns[LOGACTION]"
+                      dataType="wstr"
+                      length="11"
+                      name="LOGACTION" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_COLCASES_LOAD\RC_COLCASES"
+              componentClassID="Microsoft.RowCount"
+              contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Counts rows as they pass through a data flow. For example, use the number of rows processed to determine whether or not to perform cleanup operations, or update text in an e-mail message to communicate processing status."
+              name="RC_COLCASES">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable to hold the row count."
+                  name="VariableName">User::v_Rows_Read</property>
+              </properties>
+              <inputs>
+                <input
+                  refId="Package\DFT_COLCASES_LOAD\RC_COLCASES.Inputs[Row Count Input 1]"
+                  hasSideEffects="true"
+                  name="Row Count Input 1">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_COLCASES_LOAD\RC_COLCASES.Outputs[Row Count Output 1]"
+                  name="Row Count Output 1"
+                  synchronousInputId="Package\DFT_COLCASES_LOAD\RC_COLCASES.Inputs[Row Count Input 1]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES"
+              componentClassID="Attunity.SSISOraSrc"
+              contactInfo="Oracle Source;Microsoft Connector for Oracle by Attunity; Attunity Ltd.; All Rights Reserved; http://www.attunity.com;7"
+              description="Microsoft Oracle Source Component by Attunity"
+              name="SRC_COLCASES"
+              usesDispositions="true"
+              version="6">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="The name of the table to be fetched."
+                  expressionType="Notify"
+                  name="TableName"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  expressionType="Notify"
+                  name="SqlCommand">SELECT * FROM TCTDBS.COLCASES</property>
+                <property
+                  dataType="System.Int32"
+                  description="The number of rows fetched in a batch."
+                  expressionType="Notify"
+                  name="BatchSize">100</property>
+                <property
+                  dataType="System.Int32"
+                  description="Number of pre-fetched rows."
+                  expressionType="Notify"
+                  name="PrefetchCount">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Determines the chunk size allocation for LOB columns"
+                  expressionType="Notify"
+                  name="LobChunkSize">32768</property>
+                <property
+                  dataType="System.Int32"
+                  description="The code page to use when code page information is unavailable from the data source."
+                  expressionType="Notify"
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Int32"
+                  description="The mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">1</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Connections[MSOraConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_Prime_Attunity]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_Prime_Attunity]"
+                  description="The Oracle runtime connection"
+                  name="MSOraConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output]"
+                  errorRowDisposition="FailComponent"
+                  name="Oracle Source Output"
+                  truncationRowDisposition="FailComponent">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]"
+                      name="INSTITUTION_ID" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[SERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[SERNO]"
+                      name="SERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CUSTSERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CUSTSERNO]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CUSTSERNO]"
+                      name="CUSTSERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CACCSERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CACCSERNO]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CACCSERNO]"
+                      name="CACCSERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CACCPRODUCT]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CACCPRODUCT]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CACCPRODUCT]"
+                      name="CACCPRODUCT" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[INVOICESERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[INVOICESERNO]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[INVOICESERNO]"
+                      name="INVOICESERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[INVOICEPARTITIONKEY]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[INVOICEPARTITIONKEY]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[INVOICEPARTITIONKEY]"
+                      name="INVOICEPARTITIONKEY"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[TYPESERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[TYPESERNO]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[TYPESERNO]"
+                      name="TYPESERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CREATEDON]"
+                      dataType="dbTimeStamp"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CREATEDON]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CREATEDON]"
+                      name="CREATEDON" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[BALANCE]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[BALANCE]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[BALANCE]"
+                      name="BALANCE"
+                      precision="16"
+                      scale="3" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[OVERDUEAMOUNT]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[OVERDUEAMOUNT]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[OVERDUEAMOUNT]"
+                      name="OVERDUEAMOUNT"
+                      precision="16"
+                      scale="3" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[OVERLIMITAMOUNT]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[OVERLIMITAMOUNT]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[OVERLIMITAMOUNT]"
+                      name="OVERLIMITAMOUNT"
+                      precision="16"
+                      scale="3" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CURRENTOPERATOR]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CURRENTOPERATOR]"
+                      length="200"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CURRENTOPERATOR]"
+                      name="CURRENTOPERATOR" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[PREVIOUSOPERATOR]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[PREVIOUSOPERATOR]"
+                      length="200"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[PREVIOUSOPERATOR]"
+                      name="PREVIOUSOPERATOR" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CUSTSTGENERAL]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CUSTSTGENERAL]"
+                      length="4"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CUSTSTGENERAL]"
+                      name="CUSTSTGENERAL" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CUSTSTGENERALNEW]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CUSTSTGENERALNEW]"
+                      length="4"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CUSTSTGENERALNEW]"
+                      name="CUSTSTGENERALNEW" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[ACCSTGENERAL]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[ACCSTGENERAL]"
+                      length="4"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[ACCSTGENERAL]"
+                      name="ACCSTGENERAL" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CREATIONDUEDATE]"
+                      dataType="dbTimeStamp"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CREATIONDUEDATE]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CREATIONDUEDATE]"
+                      name="CREATIONDUEDATE" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CREATIONPRINTDUEDATE]"
+                      dataType="dbTimeStamp"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CREATIONPRINTDUEDATE]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CREATIONPRINTDUEDATE]"
+                      name="CREATIONPRINTDUEDATE" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[LASTOPENED]"
+                      dataType="dbTimeStamp"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[LASTOPENED]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[LASTOPENED]"
+                      name="LASTOPENED" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[NEXTEVALUATIONDATE]"
+                      dataType="dbTimeStamp"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[NEXTEVALUATIONDATE]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[NEXTEVALUATIONDATE]"
+                      name="NEXTEVALUATIONDATE" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[LASTCLOSED]"
+                      dataType="dbTimeStamp"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[LASTCLOSED]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[LASTCLOSED]"
+                      name="LASTCLOSED" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CURRENTLYOPEN]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CURRENTLYOPEN]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CURRENTLYOPEN]"
+                      name="CURRENTLYOPEN" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CHECKEDOUT]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CHECKEDOUT]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CHECKEDOUT]"
+                      name="CHECKEDOUT" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[STATUS]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[STATUS]"
+                      length="1"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[STATUS]"
+                      name="STATUS" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[QUEUESERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[QUEUESERNO]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[QUEUESERNO]"
+                      name="QUEUESERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[ORIGALLOCPROFSERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[ORIGALLOCPROFSERNO]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[ORIGALLOCPROFSERNO]"
+                      name="ORIGALLOCPROFSERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[LOGACTION]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[LOGACTION]"
+                      length="11"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[LOGACTION]"
+                      name="LOGACTION" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CONVERTED]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CONVERTED]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].Columns[CONVERTED]"
+                      name="CONVERTED" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CUSTSERNO]"
+                      dataType="numeric"
+                      name="CUSTSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CACCSERNO]"
+                      dataType="numeric"
+                      name="CACCSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CACCPRODUCT]"
+                      dataType="i4"
+                      name="CACCPRODUCT" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[INVOICESERNO]"
+                      dataType="numeric"
+                      name="INVOICESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[INVOICEPARTITIONKEY]"
+                      dataType="numeric"
+                      name="INVOICEPARTITIONKEY"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[TYPESERNO]"
+                      dataType="numeric"
+                      name="TYPESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CREATEDON]"
+                      dataType="dbTimeStamp"
+                      name="CREATEDON" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[BALANCE]"
+                      dataType="numeric"
+                      name="BALANCE"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[OVERDUEAMOUNT]"
+                      dataType="numeric"
+                      name="OVERDUEAMOUNT"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[OVERLIMITAMOUNT]"
+                      dataType="numeric"
+                      name="OVERLIMITAMOUNT"
+                      precision="16"
+                      scale="3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CURRENTOPERATOR]"
+                      dataType="wstr"
+                      length="200"
+                      name="CURRENTOPERATOR" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[PREVIOUSOPERATOR]"
+                      dataType="wstr"
+                      length="200"
+                      name="PREVIOUSOPERATOR" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CUSTSTGENERAL]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="CUSTSTGENERAL" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CUSTSTGENERALNEW]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="CUSTSTGENERALNEW" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[ACCSTGENERAL]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="ACCSTGENERAL" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CREATIONDUEDATE]"
+                      dataType="dbTimeStamp"
+                      name="CREATIONDUEDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CREATIONPRINTDUEDATE]"
+                      dataType="dbTimeStamp"
+                      name="CREATIONPRINTDUEDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[LASTOPENED]"
+                      dataType="dbTimeStamp"
+                      name="LASTOPENED" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[NEXTEVALUATIONDATE]"
+                      dataType="dbTimeStamp"
+                      name="NEXTEVALUATIONDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[LASTCLOSED]"
+                      dataType="dbTimeStamp"
+                      name="LASTCLOSED" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CURRENTLYOPEN]"
+                      dataType="i1"
+                      name="CURRENTLYOPEN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CHECKEDOUT]"
+                      dataType="i4"
+                      name="CHECKEDOUT" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[STATUS]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="STATUS" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[QUEUESERNO]"
+                      dataType="numeric"
+                      name="QUEUESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[ORIGALLOCPROFSERNO]"
+                      dataType="numeric"
+                      name="ORIGALLOCPROFSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[LOGACTION]"
+                      dataType="wstr"
+                      length="11"
+                      name="LOGACTION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CONVERTED]"
+                      dataType="i1"
+                      name="CONVERTED" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output]"
+                  isErrorOut="true"
+                  name="Oracle Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[INSTITUTION_ID]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[INSTITUTION_ID]"
+                      name="INSTITUTION_ID" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[SERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[SERNO]"
+                      name="SERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[CUSTSERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CUSTSERNO]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[CUSTSERNO]"
+                      name="CUSTSERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[CACCSERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CACCSERNO]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[CACCSERNO]"
+                      name="CACCSERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[CACCPRODUCT]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CACCPRODUCT]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[CACCPRODUCT]"
+                      name="CACCPRODUCT" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[INVOICESERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[INVOICESERNO]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[INVOICESERNO]"
+                      name="INVOICESERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[INVOICEPARTITIONKEY]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[INVOICEPARTITIONKEY]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[INVOICEPARTITIONKEY]"
+                      name="INVOICEPARTITIONKEY"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[TYPESERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[TYPESERNO]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[TYPESERNO]"
+                      name="TYPESERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[CREATEDON]"
+                      dataType="dbTimeStamp"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CREATEDON]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[CREATEDON]"
+                      name="CREATEDON" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[BALANCE]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[BALANCE]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[BALANCE]"
+                      name="BALANCE"
+                      precision="16"
+                      scale="3" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[OVERDUEAMOUNT]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[OVERDUEAMOUNT]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[OVERDUEAMOUNT]"
+                      name="OVERDUEAMOUNT"
+                      precision="16"
+                      scale="3" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[OVERLIMITAMOUNT]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[OVERLIMITAMOUNT]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[OVERLIMITAMOUNT]"
+                      name="OVERLIMITAMOUNT"
+                      precision="16"
+                      scale="3" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[CURRENTOPERATOR]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CURRENTOPERATOR]"
+                      length="200"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[CURRENTOPERATOR]"
+                      name="CURRENTOPERATOR" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[PREVIOUSOPERATOR]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[PREVIOUSOPERATOR]"
+                      length="200"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[PREVIOUSOPERATOR]"
+                      name="PREVIOUSOPERATOR" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[CUSTSTGENERAL]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CUSTSTGENERAL]"
+                      length="4"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[CUSTSTGENERAL]"
+                      name="CUSTSTGENERAL" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[CUSTSTGENERALNEW]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CUSTSTGENERALNEW]"
+                      length="4"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[CUSTSTGENERALNEW]"
+                      name="CUSTSTGENERALNEW" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[ACCSTGENERAL]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[ACCSTGENERAL]"
+                      length="4"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[ACCSTGENERAL]"
+                      name="ACCSTGENERAL" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[CREATIONDUEDATE]"
+                      dataType="dbTimeStamp"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CREATIONDUEDATE]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[CREATIONDUEDATE]"
+                      name="CREATIONDUEDATE" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[CREATIONPRINTDUEDATE]"
+                      dataType="dbTimeStamp"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CREATIONPRINTDUEDATE]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[CREATIONPRINTDUEDATE]"
+                      name="CREATIONPRINTDUEDATE" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[LASTOPENED]"
+                      dataType="dbTimeStamp"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[LASTOPENED]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[LASTOPENED]"
+                      name="LASTOPENED" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[NEXTEVALUATIONDATE]"
+                      dataType="dbTimeStamp"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[NEXTEVALUATIONDATE]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[NEXTEVALUATIONDATE]"
+                      name="NEXTEVALUATIONDATE" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[LASTCLOSED]"
+                      dataType="dbTimeStamp"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[LASTCLOSED]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[LASTCLOSED]"
+                      name="LASTCLOSED" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[CURRENTLYOPEN]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CURRENTLYOPEN]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[CURRENTLYOPEN]"
+                      name="CURRENTLYOPEN" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[CHECKEDOUT]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CHECKEDOUT]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[CHECKEDOUT]"
+                      name="CHECKEDOUT" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[STATUS]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[STATUS]"
+                      length="1"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[STATUS]"
+                      name="STATUS" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[QUEUESERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[QUEUESERNO]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[QUEUESERNO]"
+                      name="QUEUESERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[ORIGALLOCPROFSERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[ORIGALLOCPROFSERNO]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[ORIGALLOCPROFSERNO]"
+                      name="ORIGALLOCPROFSERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[LOGACTION]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[LOGACTION]"
+                      length="11"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[LOGACTION]"
+                      name="LOGACTION" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[CONVERTED]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output].ExternalColumns[CONVERTED]"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[CONVERTED]"
+                      name="CONVERTED" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\DFT_COLCASES_LOAD.Paths[Balanced Data Distributor Output 1]"
+              endId="Package\DFT_COLCASES_LOAD\DST_COLCASES.Inputs[OLE DB Destination Input]"
+              name="Balanced Data Distributor Output 1"
+              startId="Package\DFT_COLCASES_LOAD\BDD_COLCASES.Outputs[Balanced Data Distributor Output 1]" />
+            <path
+              refId="Package\DFT_COLCASES_LOAD.Paths[Balanced Data Distributor Output 2]"
+              endId="Package\DFT_COLCASES_LOAD\DST_COLCASES 1.Inputs[OLE DB Destination Input]"
+              name="Balanced Data Distributor Output 2"
+              startId="Package\DFT_COLCASES_LOAD\BDD_COLCASES.Outputs[Balanced Data Distributor Output 2]" />
+            <path
+              refId="Package\DFT_COLCASES_LOAD.Paths[Derived Column Output]"
+              endId="Package\DFT_COLCASES_LOAD\BDD_COLCASES.Inputs[Balanced Data Distributor Input]"
+              name="Derived Column Output"
+              startId="Package\DFT_COLCASES_LOAD\DC_BATCH.Outputs[Derived Column Output]" />
+            <path
+              refId="Package\DFT_COLCASES_LOAD.Paths[Oracle Source Output]"
+              endId="Package\DFT_COLCASES_LOAD\RC_COLCASES.Inputs[Row Count Input 1]"
+              name="Oracle Source Output"
+              startId="Package\DFT_COLCASES_LOAD\SRC_COLCASES.Outputs[Oracle Source Output]" />
+            <path
+              refId="Package\DFT_COLCASES_LOAD.Paths[Row Count Output 1]"
+              endId="Package\DFT_COLCASES_LOAD\DC_BATCH.Inputs[Derived Column Input]"
+              name="Row Count Output 1"
+              startId="Package\DFT_COLCASES_LOAD\RC_COLCASES.Outputs[Row Count Output 1]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_COLCASES_GET_DEST_COUNT_LOAD"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{31F1BC41-37B6-4671-BB97-F158D14ACE96}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_COLCASES_GET_DEST_COUNT_LOAD"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_GET_DEST_COUNT_LOAD"</DTS:PropertyExpression>
+      <DTS:EventHandlers>
+        <DTS:EventHandler
+          DTS:refId="Package\SQL_COLCASES_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]"
+          DTS:CreationName="OnPreExecute"
+          DTS:DTSID="{38B5E3BC-FE7F-44E9-BC42-5150EAEEAD07}"
+          DTS:EventID="1076330902"
+          DTS:EventName="OnPreExecute"
+          DTS:LocaleID="-1">
+          <DTS:Variables>
+            <DTS:Variable
+              DTS:CreationName=""
+              DTS:Description="The propagate property of the event"
+              DTS:DTSID="{3A839552-62A3-42D8-81C8-502275CFB4C9}"
+              DTS:IncludeInDebugDump="6789"
+              DTS:Namespace="System"
+              DTS:ObjectName="Propagate">
+              <DTS:VariableValue
+                DTS:DataType="11">-1</DTS:VariableValue>
+            </DTS:Variable>
+          </DTS:Variables>
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\SQL_COLCASES_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]\SQL_COLCASES_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{D2EC2A2E-E28E-4B70-A063-39C837A0CB88}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="SQL_COLCASES_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+              <DTS:Variables />
+              <DTS:PropertyExpression
+                DTS:Name="Name">"SQL_"+ @[User::v_Task_Name]+"_UPDATE_DFT_LOAD_COMPLETED"</DTS:PropertyExpression>
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{1928D8FE-A900-4AE7-8B88-A6E38F1B8457}"
+                  SQLTask:SqlStatementSource="UPDATE DBO.BATCH_EXECUTION_STATUS&#xA; SET  &#xA;STATUS_FLAG = 'DFT LOAD COMPLETED'   WHERE&#xA; EXECUTION_ID = (&#xA;       SELECT MAX(EXECUTION_ID) EXECUTION_ID&#xA;       FROM DBO.BATCH_EXECUTION_STATUS&#xA;       WHERE PACKAGE_ID =?&#xA;       AND  BATCH_ID = ?&#xA;    )"
+                  SQLTask:TypeConversionMode="None" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="0"
+                    SQLTask:DtsVariableName="User::v_Package_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="1"
+                    SQLTask:DtsVariableName="User::v_Batch_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                </SQLTask:SqlTaskData>
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+        </DTS:EventHandler>
+      </DTS:EventHandlers>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{996F81FD-170F-46CF-90FB-832CF7F753FF}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::v_Dest_Count_Query"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="0"
+            SQLTask:DtsVariableName="User::v_Rows_Inserted" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_COLCASES_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{2731728D-6AAB-4B60-AE2D-63A23BBE3687}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_COLCASES_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_CHECK_PACKAGE_EXISTENCE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{1928D8FE-A900-4AE7-8B88-A6E38F1B8457}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_NAME VARCHAR(500) = ?&#xA;&#xA;EXEC [DBO].[SP_CHECK_PACKAGE_EXISTENCE]  @PACKAGE_NAME" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_COLCASES_SP_GET_PACKAGE_BATCH_ID"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{0BA40542-BEA9-4216-9079-FA22D0B2CDF5}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_COLCASES_SP_GET_PACKAGE_BATCH_ID"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_GET_PACKAGE_BATCH_ID"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{1928D8FE-A900-4AE7-8B88-A6E38F1B8457}"
+          SQLTask:SqlStatementSource="&#xA;DECLARE @PACKAGE_NAME VARCHAR(500) = ?&#xA;DECLARE @PACKAGE_ID  INT &#xA;DECLARE @BATCH_ID BIGINT&#xA;&#xA;&#xA; EXEC [DBO].[SP_GET_PACKAGE_BATCH_ID] @PACKAGE_NAME,@PACKAGE_ID OUT,@BATCH_ID OUT&#xA; SELECT ? = @PACKAGE_ID &#xA; SELECT ? = @BATCH_ID" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_COLCASES_SP_INSERT_EXECUTION_STATUS"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{64CBCA29-FCA9-4A69-9E8C-7D80C9898798}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_COLCASES_SP_INSERT_EXECUTION_STATUS"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_INSERT_EXECUTION_STATUS"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{1928D8FE-A900-4AE7-8B88-A6E38F1B8457}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @PACKAGE_START_TIME DATETIME = ?&#xA;DECLARE @JOB_ID INT  =?&#xA;&#xA;EXEC [DBO].[SP_INSERT_EXECUTION_STATUS]           @PACKAGE_ID&#xA;,@BATCH_ID&#xA;,@PACKAGE_START_TIME&#xA;,@JOB_ID" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="System::StartTime"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="7"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="$Project::p_JOB_ID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_COLCASES_SP_UPDATE_EXECUTION_STATUS_LOAD"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{5B3DC2AA-AD03-4B55-9394-598A3C511BD5}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_COLCASES_SP_UPDATE_EXECUTION_STATUS_LOAD"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_UPDATE_EXECUTION_STATUS_LOAD"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{1928D8FE-A900-4AE7-8B88-A6E38F1B8457}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @ROWS_READ BIGINT = ?&#xA;DECLARE @ROWS_INSERTED BIGINT = ?&#xA;DECLARE @ROWS_UPDATED BIGINT =0&#xA;DECLARE @ROWS_ERRORED  BIGINT=0&#xA;&#xA;&#xA;EXEC DBO.SP_UPDATE_EXECUTION_STATUS @PACKAGE_ID&#xA; , @BATCH_ID&#xA; , @ROWS_READ&#xA; , @ROWS_INSERTED&#xA; , @ROWS_UPDATED&#xA; , @ROWS_ERRORED" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::v_Rows_Read"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="User::v_Rows_Inserted"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_COLCASES_TRUNCATE_STG_TABLE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{9679081F-44FF-447B-834B-242D91467CBF}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_COLCASES_TRUNCATE_STG_TABLE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_TRUNCATE_STG_TABLE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{996F81FD-170F-46CF-90FB-832CF7F753FF}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::v_Trunc_Query" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{38BE9373-D83E-467D-9829-DCA6B9B2509D}"
+      DTS:From="Package\SQL_COLCASES_SP_GET_PACKAGE_BATCH_ID"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\SQL_COLCASES_SP_INSERT_EXECUTION_STATUS" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 10]"
+      DTS:CreationName=""
+      DTS:DTSID="{0CC93D71-45EC-446D-84EC-C932D5749B87}"
+      DTS:From="Package\SQL_COLCASES_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 10"
+      DTS:To="Package\SQL_COLCASES_SP_GET_PACKAGE_BATCH_ID" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 12]"
+      DTS:CreationName=""
+      DTS:DTSID="{5739A66A-55CA-48EA-BB72-9B072B10C0E2}"
+      DTS:From="Package\DFT_COLCASES_LOAD"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 12"
+      DTS:To="Package\SQL_COLCASES_GET_DEST_COUNT_LOAD" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{B9FEF77E-43F8-4BCA-A646-35AE6F2CEB6E}"
+      DTS:From="Package\SQL_COLCASES_SP_INSERT_EXECUTION_STATUS"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\SQL_COLCASES_TRUNCATE_STG_TABLE" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 5]"
+      DTS:CreationName=""
+      DTS:DTSID="{B3CBEF92-73AE-47A0-803A-E5F24AAF6CA5}"
+      DTS:Expression="@[User::v_Inc_Date] == (DT_DBTIMESTAMP) &quot;1753-01-01&quot;"
+      DTS:From="Package\SQL_COLCASES_TRUNCATE_STG_TABLE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 5"
+      DTS:To="Package\DFT_COLCASES_LOAD" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 7]"
+      DTS:CreationName=""
+      DTS:DTSID="{7476A274-1DD6-44F3-ABCA-01367945D126}"
+      DTS:Expression="@[User::v_Rows_Inserted] ==0"
+      DTS:From="Package\SQL_COLCASES_GET_DEST_COUNT_LOAD"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 7"
+      DTS:To="Package\SQL_COLCASES_SP_UPDATE_EXECUTION_STATUS_LOAD" />
+  </DTS:PrecedenceConstraints>
+  <DTS:EventHandlers>
+    <DTS:EventHandler
+      DTS:refId="Package.EventHandlers[OnError]"
+      DTS:CreationName="OnError"
+      DTS:DTSID="{C1375FDC-055B-40DF-8A23-72473E7C8D36}"
+      DTS:EventID="2"
+      DTS:EventName="OnError"
+      DTS:LocaleID="-1">
+      <DTS:Variables>
+        <DTS:Variable
+          DTS:CreationName=""
+          DTS:Description="The propagate property of the event"
+          DTS:DTSID="{5CC9D55A-F992-40B0-8A91-82D3D46887FC}"
+          DTS:IncludeInDebugDump="6789"
+          DTS:Namespace="System"
+          DTS:ObjectName="Propagate">
+          <DTS:VariableValue
+            DTS:DataType="11">-1</DTS:VariableValue>
+        </DTS:Variable>
+      </DTS:Variables>
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package.EventHandlers[OnError]\SQL_COLCASES_SP_SSIS_ERRORLOG"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{976C5A42-1B7F-4568-8AEC-AA6B2D2962F1}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="SQL_COLCASES_SP_SSIS_ERRORLOG"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:PropertyExpression
+            DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_SSIS_ERRORLOG"</DTS:PropertyExpression>
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{1928D8FE-A900-4AE7-8B88-A6E38F1B8457}"
+              SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @PKG_GUID SYSNAME = ?&#xA;DECLARE @PACKAGE_NAME SYSNAME = ?&#xA;DECLARE @SOURCE_NAME VARCHAR(100) = ?&#xA;DECLARE @TASK_NAME VARCHAR(100) = ?&#xA;DECLARE @MACHINE_NAME VARCHAR(50) = ?&#xA;DECLARE @USER_NAME VARCHAR(50) = ?&#xA;DECLARE @ERROR_NUMBER INT = ?&#xA;DECLARE @ERROR_DESCRIPTION VARCHAR(MAX) = ?&#xA;DECLARE @PACKAGE_START_TIME DATETIME  = NULL&#xA;DECLARE @ROWS_READ BIGINT = ?&#xA;DECLARE @ROWS_INSERTED BIGINT = ?&#xA;DECLARE @ROWS_UPDATED BIGINT = NULL&#xA;DECLARE @ROWS_ERRORED BIGINT = NULL&#xA;&#xA;EXEC DBO.[SP_SSIS_ERRORLOG] @PACKAGE_ID&#xA;&#x9;,@BATCH_ID&#xA;&#x9;,@PKG_GUID&#xA;&#x9;,@PACKAGE_NAME&#xA;&#x9;,@SOURCE_NAME&#xA;&#x9;,@TASK_NAME&#xA;&#x9;,@MACHINE_NAME&#xA;&#x9;,@USER_NAME&#xA;&#x9;,@ERROR_NUMBER&#xA;&#x9;,@ERROR_DESCRIPTION&#xA;&#x9;,@PACKAGE_START_TIME&#xA;&#x9;,@ROWS_READ&#xA;&#x9;,@ROWS_INSERTED&#xA;&#x9;,@ROWS_UPDATED &#xA;&#x9;,@ROWS_ERRORED" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::v_Package_Id"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="1"
+                SQLTask:DtsVariableName="User::v_Batch_Id"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="2"
+                SQLTask:DtsVariableName="System::PackageID"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="3"
+                SQLTask:DtsVariableName="System::PackageName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="4"
+                SQLTask:DtsVariableName="System::SourceName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="5"
+                SQLTask:DtsVariableName="System::TaskName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="6"
+                SQLTask:DtsVariableName="System::MachineName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="7"
+                SQLTask:DtsVariableName="System::UserName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="8"
+                SQLTask:DtsVariableName="System::ErrorCode"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="9"
+                SQLTask:DtsVariableName="System::ErrorDescription"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="10"
+                SQLTask:DtsVariableName="User::v_Rows_Read"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="11"
+                SQLTask:DtsVariableName="User::v_Rows_Inserted"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+    </DTS:EventHandler>
+  </DTS:EventHandlers>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="416,43"
+          Id="Package\DFT_COLCASES_LOAD"
+          TopLeft="602.878402019497,412.182348771409" />
+        <NodeLayout
+          Size="416,43"
+          Id="Package\SQL_COLCASES_GET_DEST_COUNT_LOAD"
+          TopLeft="602.878402019497,513.852935964261" />
+        <NodeLayout
+          Size="416,43"
+          Id="Package\SQL_COLCASES_SP_CHECK_PACKAGE_EXISTENCE"
+          TopLeft="602.878402019497,5.5" />
+        <NodeLayout
+          Size="416,43"
+          Id="Package\SQL_COLCASES_SP_GET_PACKAGE_BATCH_ID"
+          TopLeft="602.878402019497,107.170587192852" />
+        <NodeLayout
+          Size="416,43"
+          Id="Package\SQL_COLCASES_SP_INSERT_EXECUTION_STATUS"
+          TopLeft="602.878402019497,208.841174385704" />
+        <NodeLayout
+          Size="416,43"
+          Id="Package\SQL_COLCASES_SP_UPDATE_EXECUTION_STATUS_LOAD"
+          TopLeft="602.878402019497,615.523523157113" />
+        <NodeLayout
+          Size="416,43"
+          Id="Package\SQL_COLCASES_TRUNCATE_STG_TABLE"
+          TopLeft="602.878402019497,310.511761578557" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="810.878402019497,150.170587192852">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 10]"
+          TopLeft="810.878402019497,48.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 12]"
+          TopLeft="810.878402019497,455.182348771409">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="810.878402019497,251.841174385704">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 5]"
+          TopLeft="810.878402019497,353.511761578557">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 7]"
+          TopLeft="810.878402019497,556.852935964261">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <DtsEventHandler
+    design-time-name="Package.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="335,42"
+          Id="Package.EventHandlers[OnError]\SQL_COLCASES_SP_SSIS_ERRORLOG"
+          TopLeft="550.785720659762,203.041178469675" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <TaskHost
+    design-time-name="Package\DFT_COLCASES_LOAD">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="177,42"
+          Id="Package\DFT_COLCASES_LOAD\DST_COLCASES"
+          TopLeft="74.071428376801,425.213725427278" />
+        <NodeLayout
+          Size="177,42"
+          Id="Package\DFT_COLCASES_LOAD\RC_COLCASES"
+          TopLeft="191.958902153146,137.503921571487" />
+        <NodeLayout
+          Size="177,42"
+          Id="Package\DFT_COLCASES_LOAD\DST_COLCASES 1"
+          TopLeft="316.071428376801,425.213725427278" />
+        <NodeLayout
+          Size="177,42"
+          Id="Package\DFT_COLCASES_LOAD\DC_BATCH"
+          TopLeft="191.958902153146,225.007843142975" />
+        <NodeLayout
+          Size="177,42"
+          Id="Package\DFT_COLCASES_LOAD\SRC_COLCASES"
+          TopLeft="191.958902153146,50" />
+        <NodeLayout
+          Size="177,42"
+          Id="Package\DFT_COLCASES_LOAD\BDD_COLCASES"
+          TopLeft="191.958902153146,312.511764714462" />
+        <EdgeLayout
+          Id="Package\DFT_COLCASES_LOAD.Paths[Row Count Output 1]"
+          TopLeft="280.458902153146,179.503921571487">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,45.5039215714874"
+              Start="0,0"
+              End="0,38.0039215714874">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,38.0039215714874" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_COLCASES_LOAD.Paths[Oracle Source Output]"
+          TopLeft="280.458902153146,92">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,45.5039215714874"
+              Start="0,0"
+              End="0,38.0039215714874">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,38.0039215714874" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_COLCASES_LOAD.Paths[Derived Column Output]"
+          TopLeft="280.458902153146,267.007843142975">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,45.5039215714874"
+              Start="0,0"
+              End="0,38.0039215714874">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,38.0039215714874" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_COLCASES_LOAD.Paths[Balanced Data Distributor Output 2]"
+          TopLeft="308.625568819813,354.511764714462">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="95.9458595569879,70.7019607128159"
+              Start="0,0"
+              End="95.9458595569879,63.2019607128159">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.6608172206488" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,24.6608172206488"
+                    Point2="0,28.6608172206488"
+                    Point3="4,28.6608172206488" />
+                  <mssgle:LineSegment
+                    End="91.9458595569879,28.6608172206488" />
+                  <mssgle:CubicBezierSegment
+                    Point1="91.9458595569879,28.6608172206488"
+                    Point2="95.9458595569879,28.6608172206488"
+                    Point3="95.9458595569879,32.6608172206488" />
+                  <mssgle:LineSegment
+                    End="95.9458595569879,63.2019607128159" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-29.9131835027561,33.6608172206488,155.7722265625,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_COLCASES_LOAD.Paths[Balanced Data Distributor Output 1]"
+          TopLeft="252.29223548648,354.511764714462">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-89.7208071096788,70.7019607128159"
+              Start="0,0"
+              End="-89.7208071096788,63.2019607128159">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.6608172206488" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,24.6608172206488"
+                    Point2="0,28.6608172206488"
+                    Point3="-4,28.6608172206488" />
+                  <mssgle:LineSegment
+                    End="-85.7208071096788,28.6608172206488" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-85.7208071096788,28.6608172206488"
+                    Point2="-89.7208071096788,28.6608172206488"
+                    Point3="-89.7208071096788,32.6608172206488" />
+                  <mssgle:LineSegment
+                    End="-89.7208071096788,63.2019607128159" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-122.560969961089,33.6608172206488,155.4011328125,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_COLCASES_LOAD\DST_COLCASES">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_COLCASES_LOAD\DST_COLCASES 1">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_COLCASES_LOAD\SRC_COLCASES">
+    <Properties>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <DtsEventHandler
+    design-time-name="Package\SQL_COLCASES_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="313,42"
+          Id="Package\SQL_COLCASES_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]\SQL_COLCASES_UPDATE_DFT_LOAD_COMPLETED"
+          TopLeft="570.3,184.7" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

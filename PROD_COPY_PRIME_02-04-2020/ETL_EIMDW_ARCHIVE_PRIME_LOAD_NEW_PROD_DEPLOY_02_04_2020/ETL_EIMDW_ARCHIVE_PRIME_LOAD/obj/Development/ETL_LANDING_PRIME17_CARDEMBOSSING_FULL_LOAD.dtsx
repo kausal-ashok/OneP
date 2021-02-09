@@ -1,0 +1,3133 @@
+<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="11/28/2018 8:48:53 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="LAPTOP-SBSNQ3DE"
+  DTS:CreatorName="LAPTOP-SBSNQ3DE\HP"
+  DTS:DTSID="{31DAF854-3873-41F2-A3FB-BA31055C119C}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="14.0.0600.250"
+  DTS:LocaleID="16393"
+  DTS:ObjectName="ETL_LANDING_PRIME17_CARDEMBOSSING_FULL_LOAD"
+  DTS:PackageType="5"
+  DTS:ProtectionLevel="0"
+  DTS:VersionBuild="725"
+  DTS:VersionGUID="{CDC660B0-3106-49CA-8686-7C815868CA8D}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_AUDIT_FRAMEWORK]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{670B6162-B0EB-4CC3-AE89-0E0551216FCA}"
+      DTS:ObjectName="CM_AUDIT_FRAMEWORK">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_AUDIT_FRAMEWORK_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_AUDIT_FRAMEWORK_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=AUDIT_FRAMEWORK_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{7803BAE7-7621-4019-BB5C-B4B3B89F56F1}"
+      DTS:ObjectName="CM_EIMDW_LANDING_PRIME">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_LANDING_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_ARCHIVE_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=DEV_EIMDW_Landing_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_Prime_Attunity]"
+      DTS:CreationName="MSORA"
+      DTS:DTSID="{262C3AD8-525D-408E-994B-456F3510C178}"
+      DTS:ObjectName="CM_Prime_Attunity">
+      <DTS:PropertyExpression
+        DTS:Name="Password">@[$Project::p_PRIME_PWD]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_PRIME_SERVER]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="UserName">@[$Project::p_PRIME_USER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <OracleXMLPackage>
+          <OraConnectionString>SERVER=10.180.2.215:1522/prime;USERNAME=AMBERCONNECT;ORACLEHOME=;ORACLEHOME64=;WINAUTH=0</OraConnectionString>
+          <OraRetain>False</OraRetain>
+          <OraInitialCatalog></OraInitialCatalog>
+          <OraServerName>10.180.2.215:1522/prime</OraServerName>
+          <OraUserName>AMBERCONNECT</OraUserName>
+          <OraOracleHome></OraOracleHome>
+          <OraOracleHome64></OraOracleHome64>
+          <OraWinAuthentication>False</OraWinAuthentication>
+          <OraEnableDetailedTracing>False</OraEnableDetailedTracing>
+          <OraPassword
+            Sensitive="1"></OraPassword>
+        </OracleXMLPackage>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:LogProviders>
+    <DTS:LogProvider
+      DTS:ConfigString="CM_AUDIT_FRAMEWORK"
+      DTS:CreationName="Microsoft.LogProviderSQLServer"
+      DTS:Description="Writes log entries for events to a SQL Server database"
+      DTS:DTSID="{AC881509-60F6-47C6-BA24-966B66BAF4B2}"
+      DTS:ObjectName="SSIS log provider for SQL Server">
+      <DTS:ObjectData>
+        <InnerObject />
+      </DTS:ObjectData>
+    </DTS:LogProvider>
+  </DTS:LogProviders>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{0DFA3407-9593-4A16-A14C-F6C0A05C6585}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Batch_Id">
+      <DTS:VariableValue
+        DTS:DataType="20">-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{9BD01FD4-24CF-492E-96AC-8EE313E9232B}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT COUNT(1) FROM &quot; +  @[User::v_Dest_Table]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Dest_Count_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT COUNT(1) FROM DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_CARDEMBOSSING (NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{B56F6BD7-3EB2-4A52-8ACE-4F48DA7B62CA}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="@[$Project::p_LANDING_DATABASE]  +&quot;.&quot;+ @[$Project::p_LANDING_SCHEMA] +&quot;.&quot;+&quot;SRC_PRIME17_CARDEMBOSSING (NOLOCK)&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Dest_Table">
+      <DTS:VariableValue
+        DTS:DataType="8">DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_CARDEMBOSSING (NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{CB574ED0-DA90-4625-A759-2D5868674F3B}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Package_Id">
+      <DTS:VariableValue
+        DTS:DataType="3">-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{B7F1C52E-8B57-45E0-B595-8D26EB3B2BAE}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Rows_Inserted">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{087B409E-ECF9-4868-BD3E-C3A36C310044}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Rows_Read">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{B020A887-79B4-4EC7-928F-D25BB5B665EB}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT  INSTITUTION_ID&#x9;&#xA;,SERNO&#x9;&#xA;,PRODUCTIONPROFILE&#x9;&#xA;,SECURITYPROFILE&#x9;&#xA;,EMBNAME&#x9;&#xA;,EMBCOMPANY&#x9;&#xA;,EMBVALIDFROM&#x9;&#xA;,EMBNOPIN&#x9;&#xA;,EMBPINENCRYPTIONKEYTYPE&#x9;&#xA;,EMBPIN&#x9;&#xA;,EMBPINOFFSET&#x9;&#xA;,EMBPREVPINOFFSET&#x9;&#xA;,EMBPVV&#x9;&#xA;,TELECODE&#x9;&#xA;,TELEBANKPIN&#x9;&#xA;,TELEBANKPVV&#x9;&#xA;,REISSUECOUNT&#x9;&#xA;,REISSUEDATE&#x9;&#xA;,RENEWDATE&#x9;&#xA;,LOGACTION&#x9;&#xA;,EMBPVKI&#x9;&#xA;,EMBPREVPIN&#x9;&#xA;,EMBPREVPVV&#x9;&#xA;,EMBPREVPVKI&#x9;&#xA;,EMBSENDPVV&#x9;&#xA;,CARDSEQUENCE&#x9;&#xA;,CARDTYPE&#x9;&#xA;,CARDINTERFACE&#x9;&#xA;,CHIPAPPLCODE&#x9;&#xA;,LASTUPDATED&#x9;&#xA;,EMBOSSINGNAMEFROMPERSON&#x9;&#xA;,CONVERTED&#x9;&#xA;,EMBPINBACKUP&#x9;&#xA;,EMBPREVPINBACKUP &#xA;&#xA;FROM &quot;+  @[User::v_Source_Table]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Source_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT  INSTITUTION_ID	
+,SERNO	
+,PRODUCTIONPROFILE	
+,SECURITYPROFILE	
+,EMBNAME	
+,EMBCOMPANY	
+,EMBVALIDFROM	
+,EMBNOPIN	
+,EMBPINENCRYPTIONKEYTYPE	
+,EMBPIN	
+,EMBPINOFFSET	
+,EMBPREVPINOFFSET	
+,EMBPVV	
+,TELECODE	
+,TELEBANKPIN	
+,TELEBANKPVV	
+,REISSUECOUNT	
+,REISSUEDATE	
+,RENEWDATE	
+,LOGACTION	
+,EMBPVKI	
+,EMBPREVPIN	
+,EMBPREVPVV	
+,EMBPREVPVKI	
+,EMBSENDPVV	
+,CARDSEQUENCE	
+,CARDTYPE	
+,CARDINTERFACE	
+,CHIPAPPLCODE	
+,LASTUPDATED	
+,EMBOSSINGNAMEFROMPERSON	
+,CONVERTED	
+,EMBPINBACKUP	
+,EMBPREVPINBACKUP 
+
+FROM TCTDBS.CARDEMBOSSING</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{AA0B2E9B-A398-472E-908E-4CFF6115E2DD}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Source_Table">
+      <DTS:VariableValue
+        DTS:DataType="8">TCTDBS.CARDEMBOSSING</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{30F9DDF5-95CF-4FBF-9C60-9BF8E763D397}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Task_Name">
+      <DTS:VariableValue
+        DTS:DataType="8">CARDEMBOSSING</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{33D7DAF6-CE47-457B-B09B-9AC21F14562F}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;TRUNCATE TABLE &quot;  + REPLACE(@[User::v_Dest_Table],&quot;(NOLOCK)&quot;,&quot; &quot;)"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Trunc_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">TRUNCATE TABLE DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_CARDEMBOSSING  </DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:LoggingOptions
+    DTS:FilterKind="0"
+    DTS:LoggingMode="1">
+    <DTS:Property
+      DTS:DataType="8"
+      DTS:Name="EventFilter">3,7,OnError,13,OnPostExecute,12,OnTaskFailed</DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnError"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnPostExecute"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnTaskFailed"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:SelectedLogProviders>
+      <DTS:SelectedLogProvider
+        DTS:InstanceID="{AC881509-60F6-47C6-BA24-966B66BAF4B2}" />
+    </DTS:SelectedLogProviders>
+  </DTS:LoggingOptions>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\DFT_CARDEMBOSSING_LOAD"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{485B2A32-062F-4B90-97C1-744806A2E984}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="DFT_CARDEMBOSSING_LOAD"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"DFT_"+@[User::v_Task_Name]+"_LOAD"</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="[SRC_CARDEMBOSSING].[SqlCommand]">@[User::v_Source_Query]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <pipeline
+          defaultBufferMaxRows="100000"
+          defaultBufferSize="20485760"
+          version="1">
+          <components>
+            <component
+              refId="Package\DFT_CARDEMBOSSING_LOAD\BDD_CARDEMBOSSING"
+              componentClassID="Microsoft.BDD"
+              contactInfo="Balanced Data Distributor;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Evaluates and directs rows in a dataset to multiple destinations."
+              name="BDD_CARDEMBOSSING">
+              <inputs>
+                <input
+                  refId="Package\DFT_CARDEMBOSSING_LOAD\BDD_CARDEMBOSSING.Inputs[Balanced Data Distributor Input]"
+                  description="Input to the Balanced Data      Distributor Transformation"
+                  name="Balanced Data Distributor Input">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_CARDEMBOSSING_LOAD\BDD_CARDEMBOSSING.Outputs[Balanced Data Distributor Output 1]"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 1"
+                  synchronousInputId="Package\DFT_CARDEMBOSSING_LOAD\BDD_CARDEMBOSSING.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_CARDEMBOSSING_LOAD\BDD_CARDEMBOSSING.Outputs[Balanced Data Distributor Output 2]"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 2"
+                  synchronousInputId="Package\DFT_CARDEMBOSSING_LOAD\BDD_CARDEMBOSSING.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_CARDEMBOSSING_LOAD\BDD_CARDEMBOSSING.Outputs[Balanced Data Distributor Output 3]"
+                  dangling="true"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 3"
+                  synchronousInputId="Package\DFT_CARDEMBOSSING_LOAD\BDD_CARDEMBOSSING.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_CARDEMBOSSING_LOAD\DC_BATCH"
+              componentClassID="Microsoft.DerivedColumn"
+              contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+              name="DC_BATCH"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\DFT_CARDEMBOSSING_LOAD\DC_BATCH.Inputs[Derived Column Input]"
+                  description="Input to the Derived Column Transformation"
+                  name="Derived Column Input">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_CARDEMBOSSING_LOAD\DC_BATCH.Outputs[Derived Column Output]"
+                  description="Default Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  name="Derived Column Output"
+                  synchronousInputId="Package\DFT_CARDEMBOSSING_LOAD\DC_BATCH.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]"
+                      dataType="i8"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]"
+                      name="BATCH_ID"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">@[User::v_Batch_Id]</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">@[User::v_Batch_Id]</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_CARDEMBOSSING_LOAD\DC_BATCH.Outputs[Derived Column Error Output]"
+                  description="Error Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Derived Column Error Output"
+                  synchronousInputId="Package\DFT_CARDEMBOSSING_LOAD\DC_BATCH.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="DST_CARDEMBOSSING"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[LZOWN].[SRC_PRIME17_CARDEMBOSSING]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS,ROWS_PER_BATCH = 1000000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[INSTITUTION_ID]"
+                      cachedDataType="i4"
+                      cachedName="INSTITUTION_ID"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[SERNO]"
+                      cachedDataType="numeric"
+                      cachedName="SERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[SERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[PRODUCTIONPROFILE]"
+                      cachedDataType="numeric"
+                      cachedName="PRODUCTIONPROFILE"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[PRODUCTIONPROFILE]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[PRODUCTIONPROFILE]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[SECURITYPROFILE]"
+                      cachedDataType="numeric"
+                      cachedName="SECURITYPROFILE"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[SECURITYPROFILE]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[SECURITYPROFILE]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[EMBNAME]"
+                      cachedDataType="wstr"
+                      cachedLength="30"
+                      cachedName="EMBNAME"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[EMBNAME]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBNAME]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[EMBCOMPANY]"
+                      cachedDataType="wstr"
+                      cachedLength="30"
+                      cachedName="EMBCOMPANY"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[EMBCOMPANY]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBCOMPANY]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[EMBVALIDFROM]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="EMBVALIDFROM"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[EMBVALIDFROM]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBVALIDFROM]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[EMBNOPIN]"
+                      cachedDataType="i4"
+                      cachedName="EMBNOPIN"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[EMBNOPIN]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBNOPIN]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[EMBPINENCRYPTIONKEYTYPE]"
+                      cachedDataType="i1"
+                      cachedName="EMBPINENCRYPTIONKEYTYPE"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[EMBPINENCRYPTIONKEYTYPE]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPINENCRYPTIONKEYTYPE]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[EMBPIN]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="16"
+                      cachedName="EMBPIN"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[EMBPIN]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPIN]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[EMBPINOFFSET]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="16"
+                      cachedName="EMBPINOFFSET"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[EMBPINOFFSET]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPINOFFSET]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[EMBPREVPINOFFSET]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="16"
+                      cachedName="EMBPREVPINOFFSET"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[EMBPREVPINOFFSET]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPREVPINOFFSET]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[EMBPVV]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="EMBPVV"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[EMBPVV]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPVV]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[TELECODE]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="6"
+                      cachedName="TELECODE"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[TELECODE]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[TELECODE]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[TELEBANKPIN]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="16"
+                      cachedName="TELEBANKPIN"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[TELEBANKPIN]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[TELEBANKPIN]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[TELEBANKPVV]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="TELEBANKPVV"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[TELEBANKPVV]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[TELEBANKPVV]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[REISSUECOUNT]"
+                      cachedDataType="i4"
+                      cachedName="REISSUECOUNT"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[REISSUECOUNT]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[REISSUECOUNT]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[REISSUEDATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="REISSUEDATE"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[REISSUEDATE]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[REISSUEDATE]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[RENEWDATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="RENEWDATE"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[RENEWDATE]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[RENEWDATE]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[LOGACTION]"
+                      cachedDataType="wstr"
+                      cachedLength="11"
+                      cachedName="LOGACTION"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[LOGACTION]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[LOGACTION]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[EMBPVKI]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="EMBPVKI"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[EMBPVKI]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPVKI]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[EMBPREVPIN]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="16"
+                      cachedName="EMBPREVPIN"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[EMBPREVPIN]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPREVPIN]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[EMBPREVPVV]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="EMBPREVPVV"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[EMBPREVPVV]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPREVPVV]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[EMBPREVPVKI]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="EMBPREVPVKI"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[EMBPREVPVKI]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPREVPVKI]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[EMBSENDPVV]"
+                      cachedDataType="i4"
+                      cachedName="EMBSENDPVV"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[EMBSENDPVV]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBSENDPVV]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[CARDSEQUENCE]"
+                      cachedDataType="i4"
+                      cachedName="CARDSEQUENCE"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[CARDSEQUENCE]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[CARDSEQUENCE]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[CARDTYPE]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="CARDTYPE"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[CARDTYPE]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[CARDTYPE]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[CARDINTERFACE]"
+                      cachedDataType="i1"
+                      cachedName="CARDINTERFACE"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[CARDINTERFACE]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[CARDINTERFACE]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[CHIPAPPLCODE]"
+                      cachedDataType="wstr"
+                      cachedLength="10"
+                      cachedName="CHIPAPPLCODE"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[CHIPAPPLCODE]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[CHIPAPPLCODE]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[LASTUPDATED]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="LASTUPDATED"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[LASTUPDATED]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[LASTUPDATED]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[EMBOSSINGNAMEFROMPERSON]"
+                      cachedDataType="i1"
+                      cachedName="EMBOSSINGNAMEFROMPERSON"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[EMBOSSINGNAMEFROMPERSON]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBOSSINGNAMEFROMPERSON]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[CONVERTED]"
+                      cachedDataType="i1"
+                      cachedName="CONVERTED"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[CONVERTED]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[CONVERTED]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[EMBPINBACKUP]"
+                      cachedDataType="wstr"
+                      cachedLength="16"
+                      cachedName="EMBPINBACKUP"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[EMBPINBACKUP]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPINBACKUP]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[EMBPREVPINBACKUP]"
+                      cachedDataType="wstr"
+                      cachedLength="16"
+                      cachedName="EMBPREVPINBACKUP"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[EMBPREVPINBACKUP]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPREVPINBACKUP]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].Columns[BATCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="BATCH_ID"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[LD_SEQ_ID]"
+                      dataType="i4"
+                      name="LD_SEQ_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[LOGACTION]"
+                      dataType="wstr"
+                      length="11"
+                      name="LOGACTION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[PRODUCTIONPROFILE]"
+                      dataType="numeric"
+                      name="PRODUCTIONPROFILE"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[SECURITYPROFILE]"
+                      dataType="numeric"
+                      name="SECURITYPROFILE"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[EMBNAME]"
+                      dataType="wstr"
+                      length="30"
+                      name="EMBNAME" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[EMBCOMPANY]"
+                      dataType="wstr"
+                      length="30"
+                      name="EMBCOMPANY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[EMBVALIDFROM]"
+                      dataType="dbTimeStamp"
+                      name="EMBVALIDFROM" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[EMBNOPIN]"
+                      dataType="i4"
+                      name="EMBNOPIN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[EMBPINENCRYPTIONKEYTYPE]"
+                      dataType="i2"
+                      name="EMBPINENCRYPTIONKEYTYPE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[EMBPIN]"
+                      codePage="1252"
+                      dataType="str"
+                      length="16"
+                      name="EMBPIN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[EMBPINOFFSET]"
+                      codePage="1252"
+                      dataType="str"
+                      length="16"
+                      name="EMBPINOFFSET" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[EMBPREVPINOFFSET]"
+                      codePage="1252"
+                      dataType="str"
+                      length="16"
+                      name="EMBPREVPINOFFSET" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[EMBPVV]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="EMBPVV" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[TELECODE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="6"
+                      name="TELECODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[TELEBANKPIN]"
+                      codePage="1252"
+                      dataType="str"
+                      length="16"
+                      name="TELEBANKPIN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[TELEBANKPVV]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="TELEBANKPVV" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[REISSUECOUNT]"
+                      dataType="i4"
+                      name="REISSUECOUNT" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[REISSUEDATE]"
+                      dataType="dbTimeStamp"
+                      name="REISSUEDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[RENEWDATE]"
+                      dataType="dbTimeStamp"
+                      name="RENEWDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[EMBPVKI]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="EMBPVKI" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[EMBPREVPIN]"
+                      codePage="1252"
+                      dataType="str"
+                      length="16"
+                      name="EMBPREVPIN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[EMBPREVPVV]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="EMBPREVPVV" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[EMBPREVPVKI]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="EMBPREVPVKI" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[EMBSENDPVV]"
+                      dataType="i4"
+                      name="EMBSENDPVV" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[CARDSEQUENCE]"
+                      dataType="i4"
+                      name="CARDSEQUENCE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[CARDTYPE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="CARDTYPE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[CARDINTERFACE]"
+                      dataType="i2"
+                      name="CARDINTERFACE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[CHIPAPPLCODE]"
+                      dataType="wstr"
+                      length="10"
+                      name="CHIPAPPLCODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[LASTUPDATED]"
+                      dataType="dbTimeStamp"
+                      name="LASTUPDATED" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[EMBOSSINGNAMEFROMPERSON]"
+                      dataType="i2"
+                      name="EMBOSSINGNAMEFROMPERSON" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[CONVERTED]"
+                      dataType="i2"
+                      name="CONVERTED" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[EMBPINBACKUP]"
+                      dataType="wstr"
+                      length="16"
+                      name="EMBPINBACKUP" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[EMBPREVPINBACKUP]"
+                      dataType="wstr"
+                      length="16"
+                      name="EMBPREVPINBACKUP" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      dataType="i8"
+                      name="BATCH_ID" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="DST_CARDEMBOSSING 1"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[LZOWN].[SRC_PRIME17_CARDEMBOSSING]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS,ROWS_PER_BATCH = 1000000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[INSTITUTION_ID]"
+                      cachedDataType="i4"
+                      cachedName="INSTITUTION_ID"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[SERNO]"
+                      cachedDataType="numeric"
+                      cachedName="SERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[SERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[PRODUCTIONPROFILE]"
+                      cachedDataType="numeric"
+                      cachedName="PRODUCTIONPROFILE"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[PRODUCTIONPROFILE]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[PRODUCTIONPROFILE]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[SECURITYPROFILE]"
+                      cachedDataType="numeric"
+                      cachedName="SECURITYPROFILE"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[SECURITYPROFILE]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[SECURITYPROFILE]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[EMBNAME]"
+                      cachedDataType="wstr"
+                      cachedLength="30"
+                      cachedName="EMBNAME"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBNAME]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBNAME]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[EMBCOMPANY]"
+                      cachedDataType="wstr"
+                      cachedLength="30"
+                      cachedName="EMBCOMPANY"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBCOMPANY]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBCOMPANY]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[EMBVALIDFROM]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="EMBVALIDFROM"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBVALIDFROM]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBVALIDFROM]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[EMBNOPIN]"
+                      cachedDataType="i4"
+                      cachedName="EMBNOPIN"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBNOPIN]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBNOPIN]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[EMBPINENCRYPTIONKEYTYPE]"
+                      cachedDataType="i1"
+                      cachedName="EMBPINENCRYPTIONKEYTYPE"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBPINENCRYPTIONKEYTYPE]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPINENCRYPTIONKEYTYPE]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[EMBPIN]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="16"
+                      cachedName="EMBPIN"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBPIN]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPIN]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[EMBPINOFFSET]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="16"
+                      cachedName="EMBPINOFFSET"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBPINOFFSET]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPINOFFSET]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[EMBPREVPINOFFSET]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="16"
+                      cachedName="EMBPREVPINOFFSET"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBPREVPINOFFSET]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPREVPINOFFSET]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[EMBPVV]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="EMBPVV"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBPVV]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPVV]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[TELECODE]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="6"
+                      cachedName="TELECODE"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[TELECODE]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[TELECODE]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[TELEBANKPIN]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="16"
+                      cachedName="TELEBANKPIN"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[TELEBANKPIN]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[TELEBANKPIN]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[TELEBANKPVV]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="TELEBANKPVV"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[TELEBANKPVV]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[TELEBANKPVV]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[REISSUECOUNT]"
+                      cachedDataType="i4"
+                      cachedName="REISSUECOUNT"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[REISSUECOUNT]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[REISSUECOUNT]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[REISSUEDATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="REISSUEDATE"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[REISSUEDATE]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[REISSUEDATE]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[RENEWDATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="RENEWDATE"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[RENEWDATE]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[RENEWDATE]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[LOGACTION]"
+                      cachedDataType="wstr"
+                      cachedLength="11"
+                      cachedName="LOGACTION"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[LOGACTION]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[LOGACTION]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[EMBPVKI]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="EMBPVKI"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBPVKI]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPVKI]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[EMBPREVPIN]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="16"
+                      cachedName="EMBPREVPIN"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBPREVPIN]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPREVPIN]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[EMBPREVPVV]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="EMBPREVPVV"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBPREVPVV]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPREVPVV]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[EMBPREVPVKI]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="EMBPREVPVKI"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBPREVPVKI]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPREVPVKI]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[EMBSENDPVV]"
+                      cachedDataType="i4"
+                      cachedName="EMBSENDPVV"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBSENDPVV]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBSENDPVV]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[CARDSEQUENCE]"
+                      cachedDataType="i4"
+                      cachedName="CARDSEQUENCE"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[CARDSEQUENCE]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[CARDSEQUENCE]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[CARDTYPE]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="CARDTYPE"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[CARDTYPE]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[CARDTYPE]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[CARDINTERFACE]"
+                      cachedDataType="i1"
+                      cachedName="CARDINTERFACE"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[CARDINTERFACE]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[CARDINTERFACE]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[CHIPAPPLCODE]"
+                      cachedDataType="wstr"
+                      cachedLength="10"
+                      cachedName="CHIPAPPLCODE"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[CHIPAPPLCODE]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[CHIPAPPLCODE]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[LASTUPDATED]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="LASTUPDATED"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[LASTUPDATED]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[LASTUPDATED]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[EMBOSSINGNAMEFROMPERSON]"
+                      cachedDataType="i1"
+                      cachedName="EMBOSSINGNAMEFROMPERSON"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBOSSINGNAMEFROMPERSON]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBOSSINGNAMEFROMPERSON]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[CONVERTED]"
+                      cachedDataType="i1"
+                      cachedName="CONVERTED"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[CONVERTED]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[CONVERTED]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[EMBPINBACKUP]"
+                      cachedDataType="wstr"
+                      cachedLength="16"
+                      cachedName="EMBPINBACKUP"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBPINBACKUP]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPINBACKUP]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[EMBPREVPINBACKUP]"
+                      cachedDataType="wstr"
+                      cachedLength="16"
+                      cachedName="EMBPREVPINBACKUP"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBPREVPINBACKUP]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPREVPINBACKUP]" />
+                    <inputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].Columns[BATCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="BATCH_ID"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[LD_SEQ_ID]"
+                      dataType="i4"
+                      name="LD_SEQ_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[LOGACTION]"
+                      dataType="wstr"
+                      length="11"
+                      name="LOGACTION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[PRODUCTIONPROFILE]"
+                      dataType="numeric"
+                      name="PRODUCTIONPROFILE"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[SECURITYPROFILE]"
+                      dataType="numeric"
+                      name="SECURITYPROFILE"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBNAME]"
+                      dataType="wstr"
+                      length="30"
+                      name="EMBNAME" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBCOMPANY]"
+                      dataType="wstr"
+                      length="30"
+                      name="EMBCOMPANY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBVALIDFROM]"
+                      dataType="dbTimeStamp"
+                      name="EMBVALIDFROM" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBNOPIN]"
+                      dataType="i4"
+                      name="EMBNOPIN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBPINENCRYPTIONKEYTYPE]"
+                      dataType="i2"
+                      name="EMBPINENCRYPTIONKEYTYPE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBPIN]"
+                      codePage="1252"
+                      dataType="str"
+                      length="16"
+                      name="EMBPIN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBPINOFFSET]"
+                      codePage="1252"
+                      dataType="str"
+                      length="16"
+                      name="EMBPINOFFSET" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBPREVPINOFFSET]"
+                      codePage="1252"
+                      dataType="str"
+                      length="16"
+                      name="EMBPREVPINOFFSET" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBPVV]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="EMBPVV" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[TELECODE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="6"
+                      name="TELECODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[TELEBANKPIN]"
+                      codePage="1252"
+                      dataType="str"
+                      length="16"
+                      name="TELEBANKPIN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[TELEBANKPVV]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="TELEBANKPVV" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[REISSUECOUNT]"
+                      dataType="i4"
+                      name="REISSUECOUNT" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[REISSUEDATE]"
+                      dataType="dbTimeStamp"
+                      name="REISSUEDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[RENEWDATE]"
+                      dataType="dbTimeStamp"
+                      name="RENEWDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBPVKI]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="EMBPVKI" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBPREVPIN]"
+                      codePage="1252"
+                      dataType="str"
+                      length="16"
+                      name="EMBPREVPIN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBPREVPVV]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="EMBPREVPVV" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBPREVPVKI]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="EMBPREVPVKI" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBSENDPVV]"
+                      dataType="i4"
+                      name="EMBSENDPVV" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[CARDSEQUENCE]"
+                      dataType="i4"
+                      name="CARDSEQUENCE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[CARDTYPE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="CARDTYPE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[CARDINTERFACE]"
+                      dataType="i2"
+                      name="CARDINTERFACE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[CHIPAPPLCODE]"
+                      dataType="wstr"
+                      length="10"
+                      name="CHIPAPPLCODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[LASTUPDATED]"
+                      dataType="dbTimeStamp"
+                      name="LASTUPDATED" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBOSSINGNAMEFROMPERSON]"
+                      dataType="i2"
+                      name="EMBOSSINGNAMEFROMPERSON" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[CONVERTED]"
+                      dataType="i2"
+                      name="CONVERTED" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBPINBACKUP]"
+                      dataType="wstr"
+                      length="16"
+                      name="EMBPINBACKUP" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[EMBPREVPINBACKUP]"
+                      dataType="wstr"
+                      length="16"
+                      name="EMBPREVPINBACKUP" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      dataType="i8"
+                      name="BATCH_ID" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_CARDEMBOSSING_LOAD\RC_CARDEMBOSSING"
+              componentClassID="Microsoft.RowCount"
+              contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Counts rows as they pass through a data flow. For example, use the number of rows processed to determine whether or not to perform cleanup operations, or update text in an e-mail message to communicate processing status."
+              name="RC_CARDEMBOSSING">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable to hold the row count."
+                  name="VariableName">User::v_Rows_Read</property>
+              </properties>
+              <inputs>
+                <input
+                  refId="Package\DFT_CARDEMBOSSING_LOAD\RC_CARDEMBOSSING.Inputs[Row Count Input 1]"
+                  hasSideEffects="true"
+                  name="Row Count Input 1">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_CARDEMBOSSING_LOAD\RC_CARDEMBOSSING.Outputs[Row Count Output 1]"
+                  name="Row Count Output 1"
+                  synchronousInputId="Package\DFT_CARDEMBOSSING_LOAD\RC_CARDEMBOSSING.Inputs[Row Count Input 1]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING"
+              componentClassID="Attunity.SSISOraSrc"
+              contactInfo="Oracle Source;Microsoft Connector for Oracle by Attunity; Attunity Ltd.; All Rights Reserved; http://www.attunity.com;7"
+              description="Microsoft Oracle Source Component by Attunity"
+              name="SRC_CARDEMBOSSING"
+              usesDispositions="true"
+              version="6">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="The name of the table to be fetched."
+                  expressionType="Notify"
+                  name="TableName"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  expressionType="Notify"
+                  name="SqlCommand">SELECT  INSTITUTION_ID	
+,SERNO	
+,PRODUCTIONPROFILE	
+,SECURITYPROFILE	
+,EMBNAME	
+,EMBCOMPANY	
+,EMBVALIDFROM	
+,EMBNOPIN	
+,EMBPINENCRYPTIONKEYTYPE	
+,EMBPIN	
+,EMBPINOFFSET	
+,EMBPREVPINOFFSET	
+,EMBPVV	
+,TELECODE	
+,TELEBANKPIN	
+,TELEBANKPVV	
+,REISSUECOUNT	
+,REISSUEDATE	
+,RENEWDATE	
+,LOGACTION	
+,EMBPVKI	
+,EMBPREVPIN	
+,EMBPREVPVV	
+,EMBPREVPVKI	
+,EMBSENDPVV	
+,CARDSEQUENCE	
+,CARDTYPE	
+,CARDINTERFACE	
+,CHIPAPPLCODE	
+,LASTUPDATED	
+,EMBOSSINGNAMEFROMPERSON	
+,CONVERTED	
+,EMBPINBACKUP	
+,EMBPREVPINBACKUP 
+
+FROM TCTDBS.CARDEMBOSSING</property>
+                <property
+                  dataType="System.Int32"
+                  description="The number of rows fetched in a batch."
+                  expressionType="Notify"
+                  name="BatchSize">100</property>
+                <property
+                  dataType="System.Int32"
+                  description="Number of pre-fetched rows."
+                  expressionType="Notify"
+                  name="PrefetchCount">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Determines the chunk size allocation for LOB columns"
+                  expressionType="Notify"
+                  name="LobChunkSize">32768</property>
+                <property
+                  dataType="System.Int32"
+                  description="The code page to use when code page information is unavailable from the data source."
+                  expressionType="Notify"
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Int32"
+                  description="The mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">1</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Connections[MSOraConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_Prime_Attunity]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_Prime_Attunity]"
+                  description="The Oracle runtime connection"
+                  name="MSOraConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output]"
+                  errorRowDisposition="FailComponent"
+                  name="Oracle Source Output"
+                  truncationRowDisposition="FailComponent">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]"
+                      name="INSTITUTION_ID" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[SERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[SERNO]"
+                      name="SERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[PRODUCTIONPROFILE]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[PRODUCTIONPROFILE]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[PRODUCTIONPROFILE]"
+                      name="PRODUCTIONPROFILE"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[SECURITYPROFILE]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[SECURITYPROFILE]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[SECURITYPROFILE]"
+                      name="SECURITYPROFILE"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBNAME]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBNAME]"
+                      length="30"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBNAME]"
+                      name="EMBNAME" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBCOMPANY]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBCOMPANY]"
+                      length="30"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBCOMPANY]"
+                      name="EMBCOMPANY" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBVALIDFROM]"
+                      dataType="dbTimeStamp"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBVALIDFROM]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBVALIDFROM]"
+                      name="EMBVALIDFROM" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBNOPIN]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBNOPIN]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBNOPIN]"
+                      name="EMBNOPIN" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPINENCRYPTIONKEYTYPE]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBPINENCRYPTIONKEYTYPE]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPINENCRYPTIONKEYTYPE]"
+                      name="EMBPINENCRYPTIONKEYTYPE" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPIN]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBPIN]"
+                      length="16"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPIN]"
+                      name="EMBPIN" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPINOFFSET]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBPINOFFSET]"
+                      length="16"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPINOFFSET]"
+                      name="EMBPINOFFSET" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPREVPINOFFSET]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBPREVPINOFFSET]"
+                      length="16"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPREVPINOFFSET]"
+                      name="EMBPREVPINOFFSET" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPVV]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBPVV]"
+                      length="4"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPVV]"
+                      name="EMBPVV" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[TELECODE]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[TELECODE]"
+                      length="6"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[TELECODE]"
+                      name="TELECODE" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[TELEBANKPIN]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[TELEBANKPIN]"
+                      length="16"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[TELEBANKPIN]"
+                      name="TELEBANKPIN" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[TELEBANKPVV]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[TELEBANKPVV]"
+                      length="4"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[TELEBANKPVV]"
+                      name="TELEBANKPVV" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[REISSUECOUNT]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[REISSUECOUNT]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[REISSUECOUNT]"
+                      name="REISSUECOUNT" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[REISSUEDATE]"
+                      dataType="dbTimeStamp"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[REISSUEDATE]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[REISSUEDATE]"
+                      name="REISSUEDATE" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[RENEWDATE]"
+                      dataType="dbTimeStamp"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[RENEWDATE]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[RENEWDATE]"
+                      name="RENEWDATE" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[LOGACTION]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[LOGACTION]"
+                      length="11"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[LOGACTION]"
+                      name="LOGACTION" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPVKI]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBPVKI]"
+                      length="1"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPVKI]"
+                      name="EMBPVKI" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPREVPIN]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBPREVPIN]"
+                      length="16"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPREVPIN]"
+                      name="EMBPREVPIN" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPREVPVV]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBPREVPVV]"
+                      length="4"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPREVPVV]"
+                      name="EMBPREVPVV" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPREVPVKI]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBPREVPVKI]"
+                      length="1"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPREVPVKI]"
+                      name="EMBPREVPVKI" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBSENDPVV]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBSENDPVV]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBSENDPVV]"
+                      name="EMBSENDPVV" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[CARDSEQUENCE]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[CARDSEQUENCE]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[CARDSEQUENCE]"
+                      name="CARDSEQUENCE" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[CARDTYPE]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[CARDTYPE]"
+                      length="1"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[CARDTYPE]"
+                      name="CARDTYPE" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[CARDINTERFACE]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[CARDINTERFACE]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[CARDINTERFACE]"
+                      name="CARDINTERFACE" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[CHIPAPPLCODE]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[CHIPAPPLCODE]"
+                      length="10"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[CHIPAPPLCODE]"
+                      name="CHIPAPPLCODE" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[LASTUPDATED]"
+                      dataType="dbTimeStamp"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[LASTUPDATED]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[LASTUPDATED]"
+                      name="LASTUPDATED" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBOSSINGNAMEFROMPERSON]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBOSSINGNAMEFROMPERSON]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBOSSINGNAMEFROMPERSON]"
+                      name="EMBOSSINGNAMEFROMPERSON" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[CONVERTED]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[CONVERTED]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[CONVERTED]"
+                      name="CONVERTED" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPINBACKUP]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBPINBACKUP]"
+                      length="16"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPINBACKUP]"
+                      name="EMBPINBACKUP" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPREVPINBACKUP]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBPREVPINBACKUP]"
+                      length="16"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].Columns[EMBPREVPINBACKUP]"
+                      name="EMBPREVPINBACKUP" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[PRODUCTIONPROFILE]"
+                      dataType="numeric"
+                      name="PRODUCTIONPROFILE"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[SECURITYPROFILE]"
+                      dataType="numeric"
+                      name="SECURITYPROFILE"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBNAME]"
+                      dataType="wstr"
+                      length="30"
+                      name="EMBNAME" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBCOMPANY]"
+                      dataType="wstr"
+                      length="30"
+                      name="EMBCOMPANY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBVALIDFROM]"
+                      dataType="dbTimeStamp"
+                      name="EMBVALIDFROM" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBNOPIN]"
+                      dataType="i4"
+                      name="EMBNOPIN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBPINENCRYPTIONKEYTYPE]"
+                      dataType="i1"
+                      name="EMBPINENCRYPTIONKEYTYPE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBPIN]"
+                      codePage="1252"
+                      dataType="str"
+                      length="16"
+                      name="EMBPIN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBPINOFFSET]"
+                      codePage="1252"
+                      dataType="str"
+                      length="16"
+                      name="EMBPINOFFSET" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBPREVPINOFFSET]"
+                      codePage="1252"
+                      dataType="str"
+                      length="16"
+                      name="EMBPREVPINOFFSET" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBPVV]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="EMBPVV" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[TELECODE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="6"
+                      name="TELECODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[TELEBANKPIN]"
+                      codePage="1252"
+                      dataType="str"
+                      length="16"
+                      name="TELEBANKPIN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[TELEBANKPVV]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="TELEBANKPVV" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[REISSUECOUNT]"
+                      dataType="i4"
+                      name="REISSUECOUNT" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[REISSUEDATE]"
+                      dataType="dbTimeStamp"
+                      name="REISSUEDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[RENEWDATE]"
+                      dataType="dbTimeStamp"
+                      name="RENEWDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[LOGACTION]"
+                      dataType="wstr"
+                      length="11"
+                      name="LOGACTION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBPVKI]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="EMBPVKI" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBPREVPIN]"
+                      codePage="1252"
+                      dataType="str"
+                      length="16"
+                      name="EMBPREVPIN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBPREVPVV]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="EMBPREVPVV" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBPREVPVKI]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="EMBPREVPVKI" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBSENDPVV]"
+                      dataType="i4"
+                      name="EMBSENDPVV" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[CARDSEQUENCE]"
+                      dataType="i4"
+                      name="CARDSEQUENCE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[CARDTYPE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="CARDTYPE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[CARDINTERFACE]"
+                      dataType="i1"
+                      name="CARDINTERFACE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[CHIPAPPLCODE]"
+                      dataType="wstr"
+                      length="10"
+                      name="CHIPAPPLCODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[LASTUPDATED]"
+                      dataType="dbTimeStamp"
+                      name="LASTUPDATED" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBOSSINGNAMEFROMPERSON]"
+                      dataType="i1"
+                      name="EMBOSSINGNAMEFROMPERSON" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[CONVERTED]"
+                      dataType="i1"
+                      name="CONVERTED" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBPINBACKUP]"
+                      dataType="wstr"
+                      length="16"
+                      name="EMBPINBACKUP" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBPREVPINBACKUP]"
+                      dataType="wstr"
+                      length="16"
+                      name="EMBPREVPINBACKUP" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output]"
+                  isErrorOut="true"
+                  name="Oracle Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[INSTITUTION_ID]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[INSTITUTION_ID]"
+                      name="INSTITUTION_ID" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[SERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[SERNO]"
+                      name="SERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[PRODUCTIONPROFILE]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[PRODUCTIONPROFILE]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[PRODUCTIONPROFILE]"
+                      name="PRODUCTIONPROFILE"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[SECURITYPROFILE]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[SECURITYPROFILE]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[SECURITYPROFILE]"
+                      name="SECURITYPROFILE"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[EMBNAME]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBNAME]"
+                      length="30"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[EMBNAME]"
+                      name="EMBNAME" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[EMBCOMPANY]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBCOMPANY]"
+                      length="30"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[EMBCOMPANY]"
+                      name="EMBCOMPANY" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[EMBVALIDFROM]"
+                      dataType="dbTimeStamp"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBVALIDFROM]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[EMBVALIDFROM]"
+                      name="EMBVALIDFROM" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[EMBNOPIN]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBNOPIN]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[EMBNOPIN]"
+                      name="EMBNOPIN" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[EMBPINENCRYPTIONKEYTYPE]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBPINENCRYPTIONKEYTYPE]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[EMBPINENCRYPTIONKEYTYPE]"
+                      name="EMBPINENCRYPTIONKEYTYPE" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[EMBPIN]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBPIN]"
+                      length="16"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[EMBPIN]"
+                      name="EMBPIN" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[EMBPINOFFSET]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBPINOFFSET]"
+                      length="16"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[EMBPINOFFSET]"
+                      name="EMBPINOFFSET" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[EMBPREVPINOFFSET]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBPREVPINOFFSET]"
+                      length="16"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[EMBPREVPINOFFSET]"
+                      name="EMBPREVPINOFFSET" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[EMBPVV]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBPVV]"
+                      length="4"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[EMBPVV]"
+                      name="EMBPVV" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[TELECODE]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[TELECODE]"
+                      length="6"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[TELECODE]"
+                      name="TELECODE" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[TELEBANKPIN]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[TELEBANKPIN]"
+                      length="16"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[TELEBANKPIN]"
+                      name="TELEBANKPIN" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[TELEBANKPVV]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[TELEBANKPVV]"
+                      length="4"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[TELEBANKPVV]"
+                      name="TELEBANKPVV" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[REISSUECOUNT]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[REISSUECOUNT]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[REISSUECOUNT]"
+                      name="REISSUECOUNT" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[REISSUEDATE]"
+                      dataType="dbTimeStamp"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[REISSUEDATE]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[REISSUEDATE]"
+                      name="REISSUEDATE" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[RENEWDATE]"
+                      dataType="dbTimeStamp"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[RENEWDATE]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[RENEWDATE]"
+                      name="RENEWDATE" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[LOGACTION]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[LOGACTION]"
+                      length="11"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[LOGACTION]"
+                      name="LOGACTION" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[EMBPVKI]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBPVKI]"
+                      length="1"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[EMBPVKI]"
+                      name="EMBPVKI" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[EMBPREVPIN]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBPREVPIN]"
+                      length="16"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[EMBPREVPIN]"
+                      name="EMBPREVPIN" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[EMBPREVPVV]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBPREVPVV]"
+                      length="4"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[EMBPREVPVV]"
+                      name="EMBPREVPVV" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[EMBPREVPVKI]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBPREVPVKI]"
+                      length="1"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[EMBPREVPVKI]"
+                      name="EMBPREVPVKI" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[EMBSENDPVV]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBSENDPVV]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[EMBSENDPVV]"
+                      name="EMBSENDPVV" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[CARDSEQUENCE]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[CARDSEQUENCE]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[CARDSEQUENCE]"
+                      name="CARDSEQUENCE" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[CARDTYPE]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[CARDTYPE]"
+                      length="1"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[CARDTYPE]"
+                      name="CARDTYPE" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[CARDINTERFACE]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[CARDINTERFACE]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[CARDINTERFACE]"
+                      name="CARDINTERFACE" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[CHIPAPPLCODE]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[CHIPAPPLCODE]"
+                      length="10"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[CHIPAPPLCODE]"
+                      name="CHIPAPPLCODE" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[LASTUPDATED]"
+                      dataType="dbTimeStamp"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[LASTUPDATED]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[LASTUPDATED]"
+                      name="LASTUPDATED" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[EMBOSSINGNAMEFROMPERSON]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBOSSINGNAMEFROMPERSON]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[EMBOSSINGNAMEFROMPERSON]"
+                      name="EMBOSSINGNAMEFROMPERSON" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[CONVERTED]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[CONVERTED]"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[CONVERTED]"
+                      name="CONVERTED" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[EMBPINBACKUP]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBPINBACKUP]"
+                      length="16"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[EMBPINBACKUP]"
+                      name="EMBPINBACKUP" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[EMBPREVPINBACKUP]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output].ExternalColumns[EMBPREVPINBACKUP]"
+                      length="16"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[EMBPREVPINBACKUP]"
+                      name="EMBPREVPINBACKUP" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\DFT_CARDEMBOSSING_LOAD.Paths[Balanced Data Distributor Output 1]"
+              endId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING.Inputs[OLE DB Destination Input]"
+              name="Balanced Data Distributor Output 1"
+              startId="Package\DFT_CARDEMBOSSING_LOAD\BDD_CARDEMBOSSING.Outputs[Balanced Data Distributor Output 1]" />
+            <path
+              refId="Package\DFT_CARDEMBOSSING_LOAD.Paths[Balanced Data Distributor Output 2]"
+              endId="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1.Inputs[OLE DB Destination Input]"
+              name="Balanced Data Distributor Output 2"
+              startId="Package\DFT_CARDEMBOSSING_LOAD\BDD_CARDEMBOSSING.Outputs[Balanced Data Distributor Output 2]" />
+            <path
+              refId="Package\DFT_CARDEMBOSSING_LOAD.Paths[Derived Column Output]"
+              endId="Package\DFT_CARDEMBOSSING_LOAD\BDD_CARDEMBOSSING.Inputs[Balanced Data Distributor Input]"
+              name="Derived Column Output"
+              startId="Package\DFT_CARDEMBOSSING_LOAD\DC_BATCH.Outputs[Derived Column Output]" />
+            <path
+              refId="Package\DFT_CARDEMBOSSING_LOAD.Paths[Oracle Source Output]"
+              endId="Package\DFT_CARDEMBOSSING_LOAD\RC_CARDEMBOSSING.Inputs[Row Count Input 1]"
+              name="Oracle Source Output"
+              startId="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING.Outputs[Oracle Source Output]" />
+            <path
+              refId="Package\DFT_CARDEMBOSSING_LOAD.Paths[Row Count Output 1]"
+              endId="Package\DFT_CARDEMBOSSING_LOAD\DC_BATCH.Inputs[Derived Column Input]"
+              name="Row Count Output 1"
+              startId="Package\DFT_CARDEMBOSSING_LOAD\RC_CARDEMBOSSING.Outputs[Row Count Output 1]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_CARDEMBOSSING_GET_DEST_COUNT_LOAD"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{C7527B63-AC05-4067-B969-5AA3549B9C75}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_CARDEMBOSSING_GET_DEST_COUNT_LOAD"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_GET_DEST_COUNT_LOAD"</DTS:PropertyExpression>
+      <DTS:EventHandlers>
+        <DTS:EventHandler
+          DTS:refId="Package\SQL_CARDEMBOSSING_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]"
+          DTS:CreationName="OnPreExecute"
+          DTS:DTSID="{D357E122-9927-4E32-918B-91F18C81A23A}"
+          DTS:EventID="1076330902"
+          DTS:EventName="OnPreExecute"
+          DTS:LocaleID="-1">
+          <DTS:Variables>
+            <DTS:Variable
+              DTS:CreationName=""
+              DTS:Description="The propagate property of the event"
+              DTS:DTSID="{E8F943F3-24AC-44D2-B24E-D49399D092F5}"
+              DTS:IncludeInDebugDump="6789"
+              DTS:Namespace="System"
+              DTS:ObjectName="Propagate">
+              <DTS:VariableValue
+                DTS:DataType="11">-1</DTS:VariableValue>
+            </DTS:Variable>
+          </DTS:Variables>
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\SQL_CARDEMBOSSING_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]\SQL_CARDEMBOSSING_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{A6374EEC-A870-4957-8100-E53243AF6BFA}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="SQL_CARDEMBOSSING_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+              <DTS:Variables />
+              <DTS:PropertyExpression
+                DTS:Name="Name">"SQL_"+ @[User::v_Task_Name]+"_UPDATE_DFT_LOAD_COMPLETED"</DTS:PropertyExpression>
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{670B6162-B0EB-4CC3-AE89-0E0551216FCA}"
+                  SQLTask:SqlStatementSource="UPDATE DBO.BATCH_EXECUTION_STATUS&#xA; SET  &#xA;STATUS_FLAG = 'DFT LOAD COMPLETED'   WHERE&#xA; EXECUTION_ID = (&#xA;       SELECT MAX(EXECUTION_ID) EXECUTION_ID&#xA;       FROM DBO.BATCH_EXECUTION_STATUS&#xA;       WHERE PACKAGE_ID =?&#xA;       AND  BATCH_ID = ?&#xA;    )"
+                  SQLTask:TypeConversionMode="None" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="0"
+                    SQLTask:DtsVariableName="User::v_Package_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="1"
+                    SQLTask:DtsVariableName="User::v_Batch_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                </SQLTask:SqlTaskData>
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+        </DTS:EventHandler>
+      </DTS:EventHandlers>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{7803BAE7-7621-4019-BB5C-B4B3B89F56F1}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::v_Dest_Count_Query"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="0"
+            SQLTask:DtsVariableName="User::v_Rows_Inserted" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_CARDEMBOSSING_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{A7255D79-EBB6-46E8-9C4B-29ABB7CCEC5F}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_CARDEMBOSSING_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_CHECK_PACKAGE_EXISTENCE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{670B6162-B0EB-4CC3-AE89-0E0551216FCA}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_NAME VARCHAR(500) = ?&#xA;&#xA;EXEC [DBO].[SP_CHECK_PACKAGE_EXISTENCE]  @PACKAGE_NAME" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_CARDEMBOSSING_SP_GET_PACKAGE_BATCH_ID"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{C7A938E5-936F-4038-8D21-07AAE5373F23}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_CARDEMBOSSING_SP_GET_PACKAGE_BATCH_ID"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_GET_PACKAGE_BATCH_ID"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{670B6162-B0EB-4CC3-AE89-0E0551216FCA}"
+          SQLTask:SqlStatementSource="&#xA;DECLARE @PACKAGE_NAME VARCHAR(500) = ?&#xA;DECLARE @PACKAGE_ID  INT &#xA;DECLARE @BATCH_ID BIGINT&#xA;&#xA;&#xA; EXEC [DBO].[SP_GET_PACKAGE_BATCH_ID] @PACKAGE_NAME,@PACKAGE_ID OUT,@BATCH_ID OUT&#xA; SELECT ? = @PACKAGE_ID &#xA; SELECT ? = @BATCH_ID" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_CARDEMBOSSING_SP_INSERT_EXECUTION_STATUS"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{0CC7017B-B305-4E9C-91CE-F5C5F87D8B3D}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_CARDEMBOSSING_SP_INSERT_EXECUTION_STATUS"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_INSERT_EXECUTION_STATUS"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{670B6162-B0EB-4CC3-AE89-0E0551216FCA}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @PACKAGE_START_TIME DATETIME = ?&#xA;DECLARE @JOB_ID INT  =?&#xA;&#xA;EXEC [DBO].[SP_INSERT_EXECUTION_STATUS]           @PACKAGE_ID&#xA;,@BATCH_ID&#xA;,@PACKAGE_START_TIME&#xA;,@JOB_ID" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="System::StartTime"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="7"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="$Project::p_JOB_ID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_CARDEMBOSSING_SP_UPDATE_EXECUTION_STATUS_LOAD"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{6F53EFB1-0892-49EA-8A86-B182C746C29F}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_CARDEMBOSSING_SP_UPDATE_EXECUTION_STATUS_LOAD"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_UPDATE_EXECUTION_STATUS_LOAD"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{670B6162-B0EB-4CC3-AE89-0E0551216FCA}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @ROWS_READ BIGINT = ?&#xA;DECLARE @ROWS_INSERTED BIGINT = ?&#xA;DECLARE @ROWS_UPDATED BIGINT =0&#xA;DECLARE @ROWS_ERRORED  BIGINT=0&#xA;&#xA;&#xA;EXEC DBO.SP_UPDATE_EXECUTION_STATUS @PACKAGE_ID&#xA; , @BATCH_ID&#xA; , @ROWS_READ&#xA; , @ROWS_INSERTED&#xA; , @ROWS_UPDATED&#xA; , @ROWS_ERRORED" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::v_Rows_Read"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="User::v_Rows_Inserted"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_CARDEMBOSSING_TRUNCATE_STG_TABLE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{8220B590-DC7C-4E1E-A76E-2CBD9B295347}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_CARDEMBOSSING_TRUNCATE_STG_TABLE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_TRUNCATE_STG_TABLE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{7803BAE7-7621-4019-BB5C-B4B3B89F56F1}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::v_Trunc_Query" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{FF682D2A-31A4-4207-83E9-38EBCBFEE3A7}"
+      DTS:From="Package\SQL_CARDEMBOSSING_SP_GET_PACKAGE_BATCH_ID"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\SQL_CARDEMBOSSING_SP_INSERT_EXECUTION_STATUS" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 10]"
+      DTS:CreationName=""
+      DTS:DTSID="{95849732-1C2E-485D-ADA6-56278AC63454}"
+      DTS:From="Package\SQL_CARDEMBOSSING_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 10"
+      DTS:To="Package\SQL_CARDEMBOSSING_SP_GET_PACKAGE_BATCH_ID" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 12]"
+      DTS:CreationName=""
+      DTS:DTSID="{C8DB2F19-B659-449A-BA38-F3E28A7B78E6}"
+      DTS:From="Package\DFT_CARDEMBOSSING_LOAD"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 12"
+      DTS:To="Package\SQL_CARDEMBOSSING_GET_DEST_COUNT_LOAD" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{3AF6693B-E33A-4F6E-817D-C576FBA0D88E}"
+      DTS:From="Package\SQL_CARDEMBOSSING_SP_INSERT_EXECUTION_STATUS"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\SQL_CARDEMBOSSING_TRUNCATE_STG_TABLE" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 5]"
+      DTS:CreationName=""
+      DTS:DTSID="{6E729566-BAFE-4DCA-9738-A5F07D5145F8}"
+      DTS:Expression="@[User::v_Inc_Date] == (DT_DBTIMESTAMP) &quot;1753-01-01&quot;"
+      DTS:From="Package\SQL_CARDEMBOSSING_TRUNCATE_STG_TABLE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 5"
+      DTS:To="Package\DFT_CARDEMBOSSING_LOAD" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 7]"
+      DTS:CreationName=""
+      DTS:DTSID="{85E761D4-9B6B-42A9-8591-EF1182D90E20}"
+      DTS:Expression="@[User::v_Rows_Inserted] ==0"
+      DTS:From="Package\SQL_CARDEMBOSSING_GET_DEST_COUNT_LOAD"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 7"
+      DTS:To="Package\SQL_CARDEMBOSSING_SP_UPDATE_EXECUTION_STATUS_LOAD" />
+  </DTS:PrecedenceConstraints>
+  <DTS:EventHandlers>
+    <DTS:EventHandler
+      DTS:refId="Package.EventHandlers[OnError]"
+      DTS:CreationName="OnError"
+      DTS:DTSID="{895927CC-5C08-49BC-8EA4-F4724A652836}"
+      DTS:EventID="2"
+      DTS:EventName="OnError"
+      DTS:LocaleID="-1">
+      <DTS:Variables>
+        <DTS:Variable
+          DTS:CreationName=""
+          DTS:Description="The propagate property of the event"
+          DTS:DTSID="{C491FC36-F4D4-4CE5-B21A-3FE9C7ACD4AA}"
+          DTS:IncludeInDebugDump="6789"
+          DTS:Namespace="System"
+          DTS:ObjectName="Propagate">
+          <DTS:VariableValue
+            DTS:DataType="11">-1</DTS:VariableValue>
+        </DTS:Variable>
+      </DTS:Variables>
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package.EventHandlers[OnError]\SQL_CARDEMBOSSING_SP_SSIS_ERRORLOG"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{AA0ACE90-0417-4556-A3B6-4B0DEC7B4730}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="SQL_CARDEMBOSSING_SP_SSIS_ERRORLOG"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:PropertyExpression
+            DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_SSIS_ERRORLOG"</DTS:PropertyExpression>
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{670B6162-B0EB-4CC3-AE89-0E0551216FCA}"
+              SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @PKG_GUID SYSNAME = ?&#xA;DECLARE @PACKAGE_NAME SYSNAME = ?&#xA;DECLARE @SOURCE_NAME VARCHAR(100) = ?&#xA;DECLARE @TASK_NAME VARCHAR(100) = ?&#xA;DECLARE @MACHINE_NAME VARCHAR(50) = ?&#xA;DECLARE @USER_NAME VARCHAR(50) = ?&#xA;DECLARE @ERROR_NUMBER INT = ?&#xA;DECLARE @ERROR_DESCRIPTION VARCHAR(MAX) = ?&#xA;DECLARE @PACKAGE_START_TIME DATETIME  = NULL&#xA;DECLARE @ROWS_READ BIGINT = ?&#xA;DECLARE @ROWS_INSERTED BIGINT = ?&#xA;DECLARE @ROWS_UPDATED BIGINT = NULL&#xA;DECLARE @ROWS_ERRORED BIGINT = NULL&#xA;&#xA;EXEC DBO.[SP_SSIS_ERRORLOG] @PACKAGE_ID&#xA;&#x9;,@BATCH_ID&#xA;&#x9;,@PKG_GUID&#xA;&#x9;,@PACKAGE_NAME&#xA;&#x9;,@SOURCE_NAME&#xA;&#x9;,@TASK_NAME&#xA;&#x9;,@MACHINE_NAME&#xA;&#x9;,@USER_NAME&#xA;&#x9;,@ERROR_NUMBER&#xA;&#x9;,@ERROR_DESCRIPTION&#xA;&#x9;,@PACKAGE_START_TIME&#xA;&#x9;,@ROWS_READ&#xA;&#x9;,@ROWS_INSERTED&#xA;&#x9;,@ROWS_UPDATED &#xA;&#x9;,@ROWS_ERRORED" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::v_Package_Id"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="1"
+                SQLTask:DtsVariableName="User::v_Batch_Id"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="2"
+                SQLTask:DtsVariableName="System::PackageID"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="3"
+                SQLTask:DtsVariableName="System::PackageName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="4"
+                SQLTask:DtsVariableName="System::SourceName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="5"
+                SQLTask:DtsVariableName="System::TaskName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="6"
+                SQLTask:DtsVariableName="System::MachineName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="7"
+                SQLTask:DtsVariableName="System::UserName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="8"
+                SQLTask:DtsVariableName="System::ErrorCode"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="9"
+                SQLTask:DtsVariableName="System::ErrorDescription"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="10"
+                SQLTask:DtsVariableName="User::v_Rows_Read"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="11"
+                SQLTask:DtsVariableName="User::v_Rows_Inserted"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+    </DTS:EventHandler>
+  </DTS:EventHandlers>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="388.8,41.6"
+          Id="Package\DFT_CARDEMBOSSING_LOAD"
+          TopLeft="602.878402019497,412.182348771409" />
+        <NodeLayout
+          Size="388.8,41.6"
+          Id="Package\SQL_CARDEMBOSSING_GET_DEST_COUNT_LOAD"
+          TopLeft="602.878402019497,513.852935964261" />
+        <NodeLayout
+          Size="388.8,41.6"
+          Id="Package\SQL_CARDEMBOSSING_SP_CHECK_PACKAGE_EXISTENCE"
+          TopLeft="602.878402019497,5.5" />
+        <NodeLayout
+          Size="388.8,41.6"
+          Id="Package\SQL_CARDEMBOSSING_SP_GET_PACKAGE_BATCH_ID"
+          TopLeft="602.878402019497,107.170587192852" />
+        <NodeLayout
+          Size="388.8,41.6"
+          Id="Package\SQL_CARDEMBOSSING_SP_INSERT_EXECUTION_STATUS"
+          TopLeft="602.878402019497,208.841174385704" />
+        <NodeLayout
+          Size="388.8,41.6"
+          Id="Package\SQL_CARDEMBOSSING_SP_UPDATE_EXECUTION_STATUS_LOAD"
+          TopLeft="596.878402019497,615.523523157113" />
+        <NodeLayout
+          Size="388.8,41.6"
+          Id="Package\SQL_CARDEMBOSSING_TRUNCATE_STG_TABLE"
+          TopLeft="602.878402019497,310.511761578557" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="797.378402019497,149.170587192852">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.670587192852"
+              Start="0,0"
+              End="0,52.170587192852">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.170587192852" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 10]"
+          TopLeft="797.378402019497,47.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.670587192852"
+              Start="0,0"
+              End="0,52.170587192852">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.170587192852" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 12]"
+          TopLeft="797.378402019497,454.182348771409">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.6705871928519"
+              Start="0,0"
+              End="0,52.1705871928519">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.1705871928519" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="797.378402019497,250.841174385704">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.670587192853"
+              Start="0,0"
+              End="0,52.170587192853">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.170587192853" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 5]"
+          TopLeft="797.378402019497,352.511761578557">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.670587192852"
+              Start="0,0"
+              End="0,52.170587192852">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.170587192852" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 7]"
+          TopLeft="794.378402019497,555.852935964261">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.6705871928521"
+              Start="0,0"
+              End="0,52.1705871928521">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.1705871928521" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <DtsEventHandler
+    design-time-name="Package.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="292.8,41.6"
+          Id="Package.EventHandlers[OnError]\SQL_CARDEMBOSSING_SP_SSIS_ERRORLOG"
+          TopLeft="305.357145630583,171.57058989119" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <TaskHost
+    design-time-name="Package\DFT_CARDEMBOSSING_LOAD">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="198.4,41.6"
+          Id="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING"
+          TopLeft="74.071428376801,425.213725427278" />
+        <NodeLayout
+          Size="198.4,41.6"
+          Id="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1"
+          TopLeft="316.071428376801,425.213725427278" />
+        <NodeLayout
+          Size="198.4,41.6"
+          Id="Package\DFT_CARDEMBOSSING_LOAD\SRC_CARDEMBOSSING"
+          TopLeft="208.194184582784,59" />
+        <NodeLayout
+          Size="198.4,41.6"
+          Id="Package\DFT_CARDEMBOSSING_LOAD\DC_BATCH"
+          TopLeft="208.194184582784,228.007843142975" />
+        <NodeLayout
+          Size="198.4,41.6"
+          Id="Package\DFT_CARDEMBOSSING_LOAD\RC_CARDEMBOSSING"
+          TopLeft="208.194184582784,143.503921571487" />
+        <NodeLayout
+          Size="198.4,41.6"
+          Id="Package\DFT_CARDEMBOSSING_LOAD\BDD_CARDEMBOSSING"
+          TopLeft="208.194184582784,312.511764714462" />
+        <EdgeLayout
+          Id="Package\DFT_CARDEMBOSSING_LOAD.Paths[Row Count Output 1]"
+          TopLeft="307.194184582784,185.503921571487">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,42.5039215714873"
+              Start="0,0"
+              End="0,35.0039215714873">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,35.0039215714873" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_CARDEMBOSSING_LOAD.Paths[Oracle Source Output]"
+          TopLeft="307.194184582784,101">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,42.5039215714873"
+              Start="0,0"
+              End="0,35.0039215714873">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,35.0039215714873" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_CARDEMBOSSING_LOAD.Paths[Derived Column Output]"
+          TopLeft="307.194184582784,270.007843142975">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,42.5039215714874"
+              Start="0,0"
+              End="0,35.0039215714874">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,35.0039215714874" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_CARDEMBOSSING_LOAD.Paths[Balanced Data Distributor Output 2]"
+          TopLeft="338.860851249451,354.511764714462">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="76.2105771273499,70.701960712816"
+              Start="0,0"
+              End="76.2105771273499,63.201960712816">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.6208337955688" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,24.6208337955688"
+                    Point2="0,28.6208337955688"
+                    Point3="4,28.6208337955688" />
+                  <mssgle:LineSegment
+                    End="72.2105771273499,28.6208337955688" />
+                  <mssgle:CubicBezierSegment
+                    Point1="72.2105771273499,28.6208337955688"
+                    Point2="76.2105771273499,28.6208337955688"
+                    Point3="76.2105771273499,32.6208337955688" />
+                  <mssgle:LineSegment
+                    End="76.2105771273499,63.201960712816" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-39.7808247175751,33.6208337955688,155.7722265625,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_CARDEMBOSSING_LOAD.Paths[Balanced Data Distributor Output 1]"
+          TopLeft="275.527517916118,354.511764714462">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-102.456089539317,70.701960712816"
+              Start="0,0"
+              End="-102.456089539317,63.201960712816">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.6208337955688" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,24.6208337955688"
+                    Point2="0,28.6208337955688"
+                    Point3="-4,28.6208337955688" />
+                  <mssgle:LineSegment
+                    End="-98.4560895393168,28.6208337955688" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-98.4560895393168,28.6208337955688"
+                    Point2="-102.456089539317,28.6208337955688"
+                    Point3="-102.456089539317,32.6208337955688" />
+                  <mssgle:LineSegment
+                    End="-102.456089539317,63.201960712816" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-128.928611175908,33.6208337955688,155.4011328125,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_CARDEMBOSSING_LOAD\DST_CARDEMBOSSING 1">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <DtsEventHandler
+    design-time-name="Package\SQL_CARDEMBOSSING_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="313,42"
+          Id="Package\SQL_CARDEMBOSSING_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]\SQL_CARDEMBOSSING_UPDATE_DFT_LOAD_COMPLETED"
+          TopLeft="570.3,184.7" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

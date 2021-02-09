@@ -1,0 +1,2244 @@
+<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="11/28/2018 8:48:53 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="LAPTOP-SBSNQ3DE"
+  DTS:CreatorName="LAPTOP-SBSNQ3DE\HP"
+  DTS:DTSID="{03C48506-4EAB-432A-9338-3F1848905428}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="14.0.0600.250"
+  DTS:LocaleID="16393"
+  DTS:ObjectName="ETL_ARCHIVE_PRIME17_COUNTRIES_FULL_LOAD"
+  DTS:PackageType="5"
+  DTS:ProtectionLevel="0"
+  DTS:VersionBuild="652"
+  DTS:VersionGUID="{3A6C0E8F-FD61-49CA-95E8-1411676838B0}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_AUDIT_FRAMEWORK]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{1B36B1B3-EC30-4A3A-81CA-3DCC667CC409}"
+      DTS:ObjectName="CM_AUDIT_FRAMEWORK">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_AUDIT_FRAMEWORK_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_AUDIT_FRAMEWORK_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=AUDIT_FRAMEWORK_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_EIMDW_ARCHIVE_PRIME]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{55A1724B-4133-48CA-B144-926FA025DB26}"
+      DTS:ObjectName="CM_EIMDW_ARCHIVE_PRIME">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_ARCHIVE_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_ARCHIVE_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=DEV_EIMDW_Archive_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{9AAD2CBF-7DA8-496E-B90B-BCB6D0E7F678}"
+      DTS:ObjectName="CM_EIMDW_LANDING_PRIME">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_LANDING_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_ARCHIVE_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=DEV_EIMDW_Landing_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:LogProviders>
+    <DTS:LogProvider
+      DTS:ConfigString="CM_AUDIT_FRAMEWORK"
+      DTS:CreationName="Microsoft.LogProviderSQLServer"
+      DTS:Description="Writes log entries for events to a SQL Server database"
+      DTS:DTSID="{84D5B11C-3244-48D4-AEAA-9A7265CE7F4E}"
+      DTS:ObjectName="SSIS log provider for SQL Server">
+      <DTS:ObjectData>
+        <InnerObject />
+      </DTS:ObjectData>
+    </DTS:LogProvider>
+  </DTS:LogProviders>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{D2CD1713-D58E-40BE-B4E1-888FD2FAEE18}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Batch_Id">
+      <DTS:VariableValue
+        DTS:DataType="20">-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{129D060C-92EA-4990-9DE5-A4DECFF8CCE5}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT COUNT(1) FROM &quot; +  @[User::v_Dest_Table]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Dest_Count_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT COUNT(1) FROM DEV_EIMDW_Archive_FIN10.[ARCHOWN].PRIME17_COUNTRIES (NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{B93CD1E6-B760-4876-A497-00193D510BD4}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="@[$Project::p_ARCHIVE_DATABASE]  +&quot;.&quot;+ @[$Project::p_ARCHIVE_SCHEMA] +&quot;.&quot;+&quot;PRIME17_COUNTRIES (NOLOCK)&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Dest_Table">
+      <DTS:VariableValue
+        DTS:DataType="8">DEV_EIMDW_Archive_FIN10.[ARCHOWN].PRIME17_COUNTRIES (NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{86C6B8E3-380F-4AAA-89BE-D64DE1673CA0}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Package_Id">
+      <DTS:VariableValue
+        DTS:DataType="3">-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{4EFAB532-4E93-4D20-92B3-C3A19C31D177}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Rows_Inserted">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{FDB9ADA3-EF2D-4111-991D-D523D731AF71}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Rows_Read">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{F10562F0-24B8-4F91-AF07-3DD1E19FD1E8}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;&#xA;SELECT &#xA;       INSTITUTION_ID&#xA;      ,SERNO&#xA;      ,NUMCODE&#xA;      ,ALPHACODE&#xA;      ,NAME&#xA;      ,ALPHACODE3CHAR&#xA;      ,REPORTDISTRICT&#xA;      ,NAMESTRINGID&#xA;      ,JCBCONTINENTID&#xA;  FROM &quot;+  @[User::v_Source_Table]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Source_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">
+SELECT 
+       INSTITUTION_ID
+      ,SERNO
+      ,NUMCODE
+      ,ALPHACODE
+      ,NAME
+      ,ALPHACODE3CHAR
+      ,REPORTDISTRICT
+      ,NAMESTRINGID
+      ,JCBCONTINENTID
+  FROM DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_COUNTRIES (NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{D61CD2DE-D1F3-4194-98F1-FD0FB246A1C5}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="@[$Project::p_LANDING_DATABASE]   +&quot;.&quot;+  @[$Project::p_LANDING_SCHEMA] +&quot;.&quot;+&quot;SRC_PRIME17_COUNTRIES (NOLOCK)&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Source_Table">
+      <DTS:VariableValue
+        DTS:DataType="8">DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_COUNTRIES (NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{2C08342A-6A90-432B-9563-6BAC023883D1}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Task_Name">
+      <DTS:VariableValue
+        DTS:DataType="8">COUNTRIES</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{6D972EA3-7B58-4487-B6F1-589D70A0A031}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;TRUNCATE TABLE &quot;  + REPLACE(@[User::v_Dest_Table],&quot;(NOLOCK)&quot;,&quot; &quot;)"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Trunc_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">TRUNCATE TABLE DEV_EIMDW_Archive_FIN10.[ARCHOWN].PRIME17_COUNTRIES  </DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:LoggingOptions
+    DTS:FilterKind="0"
+    DTS:LoggingMode="1">
+    <DTS:Property
+      DTS:DataType="8"
+      DTS:Name="EventFilter">3,7,OnError,13,OnPostExecute,12,OnTaskFailed</DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnError"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnPostExecute"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnTaskFailed"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:SelectedLogProviders>
+      <DTS:SelectedLogProvider
+        DTS:InstanceID="{84D5B11C-3244-48D4-AEAA-9A7265CE7F4E}" />
+    </DTS:SelectedLogProviders>
+  </DTS:LoggingOptions>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\DFT_COUNTRIES_LOAD"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{D79D585F-DACE-45E5-8A35-0CAF772EA649}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="DFT_COUNTRIES_LOAD"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"DFT_"+@[User::v_Task_Name]+"_LOAD"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <pipeline
+          defaultBufferMaxRows="100000"
+          defaultBufferSize="20485760"
+          version="1">
+          <components>
+            <component
+              refId="Package\DFT_COUNTRIES_LOAD\BDD_COUNTRIES"
+              componentClassID="Microsoft.BDD"
+              contactInfo="Balanced Data Distributor;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Evaluates and directs rows in a dataset to multiple destinations."
+              name="BDD_COUNTRIES">
+              <inputs>
+                <input
+                  refId="Package\DFT_COUNTRIES_LOAD\BDD_COUNTRIES.Inputs[Balanced Data Distributor Input]"
+                  description="Input to the Balanced Data      Distributor Transformation"
+                  name="Balanced Data Distributor Input">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_COUNTRIES_LOAD\BDD_COUNTRIES.Outputs[Balanced Data Distributor Output 1]"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 1"
+                  synchronousInputId="Package\DFT_COUNTRIES_LOAD\BDD_COUNTRIES.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_COUNTRIES_LOAD\BDD_COUNTRIES.Outputs[Balanced Data Distributor Output 2]"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 2"
+                  synchronousInputId="Package\DFT_COUNTRIES_LOAD\BDD_COUNTRIES.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_COUNTRIES_LOAD\BDD_COUNTRIES.Outputs[Balanced Data Distributor Output 3]"
+                  dangling="true"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 3"
+                  synchronousInputId="Package\DFT_COUNTRIES_LOAD\BDD_COUNTRIES.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_COUNTRIES_LOAD\DC_BATCH"
+              componentClassID="Microsoft.DerivedColumn"
+              contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+              name="DC_BATCH"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\DFT_COUNTRIES_LOAD\DC_BATCH.Inputs[Derived Column Input]"
+                  description="Input to the Derived Column Transformation"
+                  name="Derived Column Input">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_COUNTRIES_LOAD\DC_BATCH.Outputs[Derived Column Output]"
+                  description="Default Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  name="Derived Column Output"
+                  synchronousInputId="Package\DFT_COUNTRIES_LOAD\DC_BATCH.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[CRTE_BTCH_ID]"
+                      dataType="i8"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[CRTE_BTCH_ID]"
+                      name="CRTE_BTCH_ID"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">@[User::v_Batch_Id]</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">@[User::v_Batch_Id]</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[START_DATE]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[START_DATE]"
+                      name="START_DATE"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">[GETDATE]()</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">GETDATE()</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[ACTIVE_FLAG]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      length="1"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[ACTIVE_FLAG]"
+                      name="ACTIVE_FLAG"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">(DT_STR,1,1252)"Y"</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">(DT_STR,1,1252)"Y"</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[DELETE_FLAG]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      length="1"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[DELETE_FLAG]"
+                      name="DELETE_FLAG"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">(DT_STR,1,1252)"N"</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">(DT_STR,1,1252)"N"</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[END_DATE]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[END_DATE]"
+                      name="END_DATE"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">(DT_DBTIMESTAMP)"9999-12-31"</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">(DT_DBTIMESTAMP)"9999-12-31"</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_COUNTRIES_LOAD\DC_BATCH.Outputs[Derived Column Error Output]"
+                  description="Error Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Derived Column Error Output"
+                  synchronousInputId="Package\DFT_COUNTRIES_LOAD\DC_BATCH.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="DST_COUNTRIES"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[ARCHOWN].[PRIME17_COUNTRIES]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS,ROWS_PER_BATCH = 1000000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_ARCHIVE_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_ARCHIVE_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].Columns[INSTITUTION_ID]"
+                      cachedDataType="i4"
+                      cachedName="INSTITUTION_ID"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[INSTITUTION_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].Columns[SERNO]"
+                      cachedDataType="numeric"
+                      cachedName="SERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[SERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].Columns[NUMCODE]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="3"
+                      cachedName="NUMCODE"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].ExternalColumns[NUMCODE]"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[NUMCODE]" />
+                    <inputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].Columns[ALPHACODE]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="2"
+                      cachedName="ALPHACODE"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].ExternalColumns[ALPHACODE]"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[ALPHACODE]" />
+                    <inputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].Columns[NAME]"
+                      cachedDataType="wstr"
+                      cachedLength="30"
+                      cachedName="NAME"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].ExternalColumns[NAME]"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[NAME]" />
+                    <inputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].Columns[ALPHACODE3CHAR]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="3"
+                      cachedName="ALPHACODE3CHAR"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].ExternalColumns[ALPHACODE3CHAR]"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[ALPHACODE3CHAR]" />
+                    <inputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].Columns[REPORTDISTRICT]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="2"
+                      cachedName="REPORTDISTRICT"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].ExternalColumns[REPORTDISTRICT]"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[REPORTDISTRICT]" />
+                    <inputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].Columns[NAMESTRINGID]"
+                      cachedDataType="numeric"
+                      cachedName="NAMESTRINGID"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].ExternalColumns[NAMESTRINGID]"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[NAMESTRINGID]" />
+                    <inputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].Columns[JCBCONTINENTID]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="JCBCONTINENTID"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].ExternalColumns[JCBCONTINENTID]"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[JCBCONTINENTID]" />
+                    <inputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].Columns[CRTE_BTCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="CRTE_BTCH_ID"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].ExternalColumns[CRTE_BTCH_ID]"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[CRTE_BTCH_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].Columns[START_DATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="START_DATE"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].ExternalColumns[START_DATE]"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[START_DATE]" />
+                    <inputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].Columns[ACTIVE_FLAG]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="ACTIVE_FLAG"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].ExternalColumns[ACTIVE_FLAG]"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[ACTIVE_FLAG]" />
+                    <inputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].Columns[DELETE_FLAG]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="DELETE_FLAG"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].ExternalColumns[DELETE_FLAG]"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[DELETE_FLAG]" />
+                    <inputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].Columns[END_DATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="END_DATE"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].ExternalColumns[END_DATE]"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[END_DATE]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].ExternalColumns[CRTE_BTCH_ID]"
+                      dataType="i4"
+                      name="CRTE_BTCH_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].ExternalColumns[UPDT_BTCH_ID]"
+                      dataType="i4"
+                      name="UPDT_BTCH_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].ExternalColumns[START_DATE]"
+                      dataType="dbTimeStamp"
+                      name="START_DATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].ExternalColumns[END_DATE]"
+                      dataType="dbTimeStamp"
+                      name="END_DATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].ExternalColumns[ACTIVE_FLAG]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="ACTIVE_FLAG" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].ExternalColumns[DELETE_FLAG]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="DELETE_FLAG" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].ExternalColumns[SERNO_SEQ_ID]"
+                      dataType="i4"
+                      name="SERNO_SEQ_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].ExternalColumns[NUMCODE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="NUMCODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].ExternalColumns[ALPHACODE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="2"
+                      name="ALPHACODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].ExternalColumns[NAME]"
+                      dataType="wstr"
+                      length="30"
+                      name="NAME" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].ExternalColumns[ALPHACODE3CHAR]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="ALPHACODE3CHAR" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].ExternalColumns[REPORTDISTRICT]"
+                      codePage="1252"
+                      dataType="str"
+                      length="2"
+                      name="REPORTDISTRICT" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].ExternalColumns[NAMESTRINGID]"
+                      dataType="numeric"
+                      name="NAMESTRINGID"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input].ExternalColumns[JCBCONTINENTID]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="JCBCONTINENTID" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="DST_COUNTRIES1"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[ARCHOWN].[PRIME17_COUNTRIES]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">true</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS,ROWS_PER_BATCH = 1000000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_ARCHIVE_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_ARCHIVE_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].Columns[INSTITUTION_ID]"
+                      cachedDataType="i4"
+                      cachedName="INSTITUTION_ID"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[INSTITUTION_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].Columns[SERNO]"
+                      cachedDataType="numeric"
+                      cachedName="SERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[SERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].Columns[NUMCODE]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="3"
+                      cachedName="NUMCODE"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].ExternalColumns[NUMCODE]"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[NUMCODE]" />
+                    <inputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].Columns[ALPHACODE]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="2"
+                      cachedName="ALPHACODE"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].ExternalColumns[ALPHACODE]"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[ALPHACODE]" />
+                    <inputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].Columns[NAME]"
+                      cachedDataType="wstr"
+                      cachedLength="30"
+                      cachedName="NAME"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].ExternalColumns[NAME]"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[NAME]" />
+                    <inputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].Columns[ALPHACODE3CHAR]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="3"
+                      cachedName="ALPHACODE3CHAR"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].ExternalColumns[ALPHACODE3CHAR]"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[ALPHACODE3CHAR]" />
+                    <inputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].Columns[REPORTDISTRICT]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="2"
+                      cachedName="REPORTDISTRICT"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].ExternalColumns[REPORTDISTRICT]"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[REPORTDISTRICT]" />
+                    <inputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].Columns[NAMESTRINGID]"
+                      cachedDataType="numeric"
+                      cachedName="NAMESTRINGID"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].ExternalColumns[NAMESTRINGID]"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[NAMESTRINGID]" />
+                    <inputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].Columns[JCBCONTINENTID]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="JCBCONTINENTID"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].ExternalColumns[JCBCONTINENTID]"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[JCBCONTINENTID]" />
+                    <inputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].Columns[CRTE_BTCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="CRTE_BTCH_ID"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].ExternalColumns[CRTE_BTCH_ID]"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[CRTE_BTCH_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].Columns[START_DATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="START_DATE"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].ExternalColumns[START_DATE]"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[START_DATE]" />
+                    <inputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].Columns[ACTIVE_FLAG]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="ACTIVE_FLAG"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].ExternalColumns[ACTIVE_FLAG]"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[ACTIVE_FLAG]" />
+                    <inputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].Columns[DELETE_FLAG]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="DELETE_FLAG"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].ExternalColumns[DELETE_FLAG]"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[DELETE_FLAG]" />
+                    <inputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].Columns[END_DATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="END_DATE"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].ExternalColumns[END_DATE]"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[END_DATE]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].ExternalColumns[CRTE_BTCH_ID]"
+                      dataType="i4"
+                      name="CRTE_BTCH_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].ExternalColumns[UPDT_BTCH_ID]"
+                      dataType="i4"
+                      name="UPDT_BTCH_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].ExternalColumns[START_DATE]"
+                      dataType="dbTimeStamp"
+                      name="START_DATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].ExternalColumns[END_DATE]"
+                      dataType="dbTimeStamp"
+                      name="END_DATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].ExternalColumns[ACTIVE_FLAG]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="ACTIVE_FLAG" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].ExternalColumns[DELETE_FLAG]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="DELETE_FLAG" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].ExternalColumns[SERNO_SEQ_ID]"
+                      dataType="i4"
+                      name="SERNO_SEQ_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].ExternalColumns[NUMCODE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="NUMCODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].ExternalColumns[ALPHACODE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="2"
+                      name="ALPHACODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].ExternalColumns[NAME]"
+                      dataType="wstr"
+                      length="30"
+                      name="NAME" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].ExternalColumns[ALPHACODE3CHAR]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="ALPHACODE3CHAR" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].ExternalColumns[REPORTDISTRICT]"
+                      codePage="1252"
+                      dataType="str"
+                      length="2"
+                      name="REPORTDISTRICT" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].ExternalColumns[NAMESTRINGID]"
+                      dataType="numeric"
+                      name="NAMESTRINGID"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input].ExternalColumns[JCBCONTINENTID]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="JCBCONTINENTID" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_COUNTRIES_LOAD\RC_COUNTRIES"
+              componentClassID="Microsoft.RowCount"
+              contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Counts rows as they pass through a data flow. For example, use the number of rows processed to determine whether or not to perform cleanup operations, or update text in an e-mail message to communicate processing status."
+              name="RC_COUNTRIES">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable to hold the row count."
+                  name="VariableName">User::v_Rows_Read</property>
+              </properties>
+              <inputs>
+                <input
+                  refId="Package\DFT_COUNTRIES_LOAD\RC_COUNTRIES.Inputs[Row Count Input 1]"
+                  hasSideEffects="true"
+                  name="Row Count Input 1">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_COUNTRIES_LOAD\RC_COUNTRIES.Outputs[Row Count Output 1]"
+                  name="Row Count Output 1"
+                  synchronousInputId="Package\DFT_COUNTRIES_LOAD\RC_COUNTRIES.Inputs[Row Count Input 1]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="SRC_COUNTRIES"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset"></property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable">User::v_Source_Query</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[INSTITUTION_ID]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[INSTITUTION_ID]"
+                      name="INSTITUTION_ID"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[SERNO]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[SERNO]"
+                      name="SERNO"
+                      precision="10"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[NUMCODE]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].ExternalColumns[NUMCODE]"
+                      length="3"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[NUMCODE]"
+                      name="NUMCODE"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[ALPHACODE]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].ExternalColumns[ALPHACODE]"
+                      length="2"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[ALPHACODE]"
+                      name="ALPHACODE"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[NAME]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].ExternalColumns[NAME]"
+                      length="30"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[NAME]"
+                      name="NAME"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[ALPHACODE3CHAR]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].ExternalColumns[ALPHACODE3CHAR]"
+                      length="3"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[ALPHACODE3CHAR]"
+                      name="ALPHACODE3CHAR"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[REPORTDISTRICT]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].ExternalColumns[REPORTDISTRICT]"
+                      length="2"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[REPORTDISTRICT]"
+                      name="REPORTDISTRICT"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[NAMESTRINGID]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].ExternalColumns[NAMESTRINGID]"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[NAMESTRINGID]"
+                      name="NAMESTRINGID"
+                      precision="10"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[JCBCONTINENTID]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].ExternalColumns[JCBCONTINENTID]"
+                      length="1"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].Columns[JCBCONTINENTID]"
+                      name="JCBCONTINENTID"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].ExternalColumns[NUMCODE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="NUMCODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].ExternalColumns[ALPHACODE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="2"
+                      name="ALPHACODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].ExternalColumns[NAME]"
+                      dataType="wstr"
+                      length="30"
+                      name="NAME" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].ExternalColumns[ALPHACODE3CHAR]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="ALPHACODE3CHAR" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].ExternalColumns[REPORTDISTRICT]"
+                      codePage="1252"
+                      dataType="str"
+                      length="2"
+                      name="REPORTDISTRICT" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].ExternalColumns[NAMESTRINGID]"
+                      dataType="numeric"
+                      name="NAMESTRINGID"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output].ExternalColumns[JCBCONTINENTID]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="JCBCONTINENTID" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Error Output].Columns[INSTITUTION_ID]"
+                      dataType="i4"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Error Output].Columns[INSTITUTION_ID]"
+                      name="INSTITUTION_ID" />
+                    <outputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Error Output].Columns[SERNO]"
+                      dataType="numeric"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Error Output].Columns[SERNO]"
+                      name="SERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Error Output].Columns[NUMCODE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Error Output].Columns[NUMCODE]"
+                      name="NUMCODE" />
+                    <outputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Error Output].Columns[ALPHACODE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="2"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Error Output].Columns[ALPHACODE]"
+                      name="ALPHACODE" />
+                    <outputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Error Output].Columns[NAME]"
+                      dataType="wstr"
+                      length="30"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Error Output].Columns[NAME]"
+                      name="NAME" />
+                    <outputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Error Output].Columns[ALPHACODE3CHAR]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Error Output].Columns[ALPHACODE3CHAR]"
+                      name="ALPHACODE3CHAR" />
+                    <outputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Error Output].Columns[REPORTDISTRICT]"
+                      codePage="1252"
+                      dataType="str"
+                      length="2"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Error Output].Columns[REPORTDISTRICT]"
+                      name="REPORTDISTRICT" />
+                    <outputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Error Output].Columns[NAMESTRINGID]"
+                      dataType="numeric"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Error Output].Columns[NAMESTRINGID]"
+                      name="NAMESTRINGID"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Error Output].Columns[JCBCONTINENTID]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Error Output].Columns[JCBCONTINENTID]"
+                      name="JCBCONTINENTID" />
+                    <outputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\DFT_COUNTRIES_LOAD.Paths[Balanced Data Distributor Output 1]"
+              endId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES.Inputs[OLE DB Destination Input]"
+              name="Balanced Data Distributor Output 1"
+              startId="Package\DFT_COUNTRIES_LOAD\BDD_COUNTRIES.Outputs[Balanced Data Distributor Output 1]" />
+            <path
+              refId="Package\DFT_COUNTRIES_LOAD.Paths[Balanced Data Distributor Output 2]"
+              endId="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1.Inputs[OLE DB Destination Input]"
+              name="Balanced Data Distributor Output 2"
+              startId="Package\DFT_COUNTRIES_LOAD\BDD_COUNTRIES.Outputs[Balanced Data Distributor Output 2]" />
+            <path
+              refId="Package\DFT_COUNTRIES_LOAD.Paths[Derived Column Output]"
+              endId="Package\DFT_COUNTRIES_LOAD\BDD_COUNTRIES.Inputs[Balanced Data Distributor Input]"
+              name="Derived Column Output"
+              startId="Package\DFT_COUNTRIES_LOAD\DC_BATCH.Outputs[Derived Column Output]" />
+            <path
+              refId="Package\DFT_COUNTRIES_LOAD.Paths[OLE DB Source Output]"
+              endId="Package\DFT_COUNTRIES_LOAD\RC_COUNTRIES.Inputs[Row Count Input 1]"
+              name="OLE DB Source Output"
+              startId="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES.Outputs[OLE DB Source Output]" />
+            <path
+              refId="Package\DFT_COUNTRIES_LOAD.Paths[Row Count Output 1]"
+              endId="Package\DFT_COUNTRIES_LOAD\DC_BATCH.Inputs[Derived Column Input]"
+              name="Row Count Output 1"
+              startId="Package\DFT_COUNTRIES_LOAD\RC_COUNTRIES.Outputs[Row Count Output 1]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_COUNTRIES_GET_DEST_COUNT_LOAD"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{CC14759E-4130-48B3-88D5-6CC5FE825049}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_COUNTRIES_GET_DEST_COUNT_LOAD"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_GET_DEST_COUNT_LOAD"</DTS:PropertyExpression>
+      <DTS:EventHandlers>
+        <DTS:EventHandler
+          DTS:refId="Package\SQL_COUNTRIES_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]"
+          DTS:CreationName="OnPreExecute"
+          DTS:DTSID="{1766057E-2596-4BAC-A880-C3B2A712CF8C}"
+          DTS:EventID="1076330902"
+          DTS:EventName="OnPreExecute"
+          DTS:LocaleID="-1">
+          <DTS:Variables>
+            <DTS:Variable
+              DTS:CreationName=""
+              DTS:Description="The propagate property of the event"
+              DTS:DTSID="{DC5114AA-DA30-4F9A-A487-D58ED9E1399C}"
+              DTS:IncludeInDebugDump="6789"
+              DTS:Namespace="System"
+              DTS:ObjectName="Propagate">
+              <DTS:VariableValue
+                DTS:DataType="11">-1</DTS:VariableValue>
+            </DTS:Variable>
+          </DTS:Variables>
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\SQL_COUNTRIES_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]\SQL_COUNTRIES_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{4B1168D0-0326-48BA-9ECE-4246D3435522}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="SQL_COUNTRIES_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+              <DTS:Variables />
+              <DTS:PropertyExpression
+                DTS:Name="Name">"SQL_"+ @[User::v_Task_Name]+"_UPDATE_DFT_LOAD_COMPLETED"</DTS:PropertyExpression>
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{1B36B1B3-EC30-4A3A-81CA-3DCC667CC409}"
+                  SQLTask:SqlStatementSource="UPDATE DBO.BATCH_EXECUTION_STATUS&#xA; SET  &#xA;STATUS_FLAG = 'DFT LOAD COMPLETED'   WHERE&#xA; EXECUTION_ID = (&#xA;       SELECT MAX(EXECUTION_ID) EXECUTION_ID&#xA;       FROM DBO.BATCH_EXECUTION_STATUS&#xA;       WHERE PACKAGE_ID =?&#xA;       AND  BATCH_ID = ?&#xA;    )"
+                  SQLTask:TypeConversionMode="None" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="0"
+                    SQLTask:DtsVariableName="User::v_Package_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="1"
+                    SQLTask:DtsVariableName="User::v_Batch_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                </SQLTask:SqlTaskData>
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+        </DTS:EventHandler>
+      </DTS:EventHandlers>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{55A1724B-4133-48CA-B144-926FA025DB26}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::v_Dest_Count_Query"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="0"
+            SQLTask:DtsVariableName="User::v_Rows_Inserted" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_COUNTRIES_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{7F598F12-66D5-4E8C-A9DA-219E2E3C971B}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_COUNTRIES_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_CHECK_PACKAGE_EXISTENCE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{1B36B1B3-EC30-4A3A-81CA-3DCC667CC409}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_NAME VARCHAR(500) = ?&#xA;&#xA;EXEC [DBO].[SP_CHECK_PACKAGE_EXISTENCE]  @PACKAGE_NAME " xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_COUNTRIES_SP_GET_PACKAGE_BATCH_ID"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{2A27BB51-2396-4F3D-8072-CAFB63C64562}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_COUNTRIES_SP_GET_PACKAGE_BATCH_ID"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_GET_PACKAGE_BATCH_ID"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{1B36B1B3-EC30-4A3A-81CA-3DCC667CC409}"
+          SQLTask:SqlStatementSource="&#xA;DECLARE @PACKAGE_NAME VARCHAR(500) = ?&#xA;DECLARE @PACKAGE_ID  INT &#xA;DECLARE @BATCH_ID BIGINT&#xA;&#xA;&#xA; EXEC [DBO].[SP_GET_PACKAGE_BATCH_ID]  @PACKAGE_NAME,@PACKAGE_ID OUT,@BATCH_ID OUT&#xA; SELECT ? = @PACKAGE_ID &#xA; SELECT ? = @BATCH_ID" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_COUNTRIES_SP_INSERT_EXECUTION_STATUS"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{64A1B3E9-3B12-4B17-AC46-13A3DA981524}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_COUNTRIES_SP_INSERT_EXECUTION_STATUS"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_INSERT_EXECUTION_STATUS"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{1B36B1B3-EC30-4A3A-81CA-3DCC667CC409}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @PACKAGE_START_TIME DATETIME = ?&#xA;DECLARE @JOB_ID INT  =?&#xA;&#xA;EXEC [DBO].[SP_INSERT_EXECUTION_STATUS]               @PACKAGE_ID&#xA;,@BATCH_ID&#xA;,@PACKAGE_START_TIME&#xA;,@JOB_ID" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="System::StartTime"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="7"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="$Project::p_JOB_ID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_COUNTRIES_SP_UPDATE_EXECUTION_STATUS_LOAD"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{5B2E3429-3C42-46B3-A78C-9B25EEF05E32}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_COUNTRIES_SP_UPDATE_EXECUTION_STATUS_LOAD"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_UPDATE_EXECUTION_STATUS_LOAD"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{1B36B1B3-EC30-4A3A-81CA-3DCC667CC409}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @ROWS_READ BIGINT = ?&#xA;DECLARE @ROWS_INSERTED BIGINT = ?&#xA;DECLARE @ROWS_UPDATED BIGINT =0&#xA;DECLARE @ROWS_ERRORED  BIGINT=0&#xA;&#xA;&#xA;EXEC DBO.SP_UPDATE_EXECUTION_STATUS @PACKAGE_ID&#xA; , @BATCH_ID&#xA; , @ROWS_READ&#xA; , @ROWS_INSERTED&#xA; , @ROWS_UPDATED&#xA; , @ROWS_ERRORED" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::v_Rows_Read"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="User::v_Rows_Inserted"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_COUNTRIES_TRUNCATE_STG_TABLE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{AF883496-8862-4F59-A5D9-1CC7D2644530}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_COUNTRIES_TRUNCATE_STG_TABLE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_TRUNCATE_STG_TABLE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{55A1724B-4133-48CA-B144-926FA025DB26}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::v_Trunc_Query" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{ACC0AA06-8493-4AA5-8616-806B920DF413}"
+      DTS:From="Package\SQL_COUNTRIES_SP_GET_PACKAGE_BATCH_ID"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\SQL_COUNTRIES_SP_INSERT_EXECUTION_STATUS" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 10]"
+      DTS:CreationName=""
+      DTS:DTSID="{559DBF6C-EF53-43DF-9A58-9082506277B4}"
+      DTS:From="Package\SQL_COUNTRIES_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 10"
+      DTS:To="Package\SQL_COUNTRIES_SP_GET_PACKAGE_BATCH_ID" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 12]"
+      DTS:CreationName=""
+      DTS:DTSID="{90505F0E-C12F-4D36-8A67-5307ECEC6D4A}"
+      DTS:From="Package\DFT_COUNTRIES_LOAD"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 12"
+      DTS:To="Package\SQL_COUNTRIES_GET_DEST_COUNT_LOAD" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{21D7C1EC-6F4C-4335-AB25-9CE70229EA95}"
+      DTS:From="Package\SQL_COUNTRIES_SP_INSERT_EXECUTION_STATUS"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\SQL_COUNTRIES_TRUNCATE_STG_TABLE" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 5]"
+      DTS:CreationName=""
+      DTS:DTSID="{E2A09A71-AE80-47F6-9E5A-DEE29E600E26}"
+      DTS:Expression="@[User::v_Inc_Date] == (DT_DBTIMESTAMP) &quot;1753-01-01&quot;"
+      DTS:From="Package\SQL_COUNTRIES_TRUNCATE_STG_TABLE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 5"
+      DTS:To="Package\DFT_COUNTRIES_LOAD" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 7]"
+      DTS:CreationName=""
+      DTS:DTSID="{89B4BAB2-0165-4D93-B37B-74385794B751}"
+      DTS:Expression="@[User::v_Rows_Inserted] ==0"
+      DTS:From="Package\SQL_COUNTRIES_GET_DEST_COUNT_LOAD"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 7"
+      DTS:To="Package\SQL_COUNTRIES_SP_UPDATE_EXECUTION_STATUS_LOAD" />
+  </DTS:PrecedenceConstraints>
+  <DTS:EventHandlers>
+    <DTS:EventHandler
+      DTS:refId="Package.EventHandlers[OnError]"
+      DTS:CreationName="OnError"
+      DTS:DTSID="{BF72B96D-E516-4B4B-A9DD-B930AE147A4D}"
+      DTS:EventID="2"
+      DTS:EventName="OnError"
+      DTS:LocaleID="-1">
+      <DTS:Variables>
+        <DTS:Variable
+          DTS:CreationName=""
+          DTS:Description="The propagate property of the event"
+          DTS:DTSID="{1BCC26BF-7E93-483D-989B-24F7AEC5B4E4}"
+          DTS:IncludeInDebugDump="6789"
+          DTS:Namespace="System"
+          DTS:ObjectName="Propagate">
+          <DTS:VariableValue
+            DTS:DataType="11">-1</DTS:VariableValue>
+        </DTS:Variable>
+      </DTS:Variables>
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package.EventHandlers[OnError]\SQL_COUNTRIES_SP_SSIS_ERRORLOG"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{90B1ADDA-BFD2-4398-A368-0E1ECEA54124}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="SQL_COUNTRIES_SP_SSIS_ERRORLOG"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:PropertyExpression
+            DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_SSIS_ERRORLOG"</DTS:PropertyExpression>
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{1B36B1B3-EC30-4A3A-81CA-3DCC667CC409}"
+              SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @PKG_GUID SYSNAME = ?&#xA;DECLARE @PACKAGE_NAME SYSNAME = ?&#xA;DECLARE @SOURCE_NAME VARCHAR(100) = ?&#xA;DECLARE @TASK_NAME VARCHAR(100) = ?&#xA;DECLARE @MACHINE_NAME VARCHAR(50) = ?&#xA;DECLARE @USER_NAME VARCHAR(50) = ?&#xA;DECLARE @ERROR_NUMBER INT = ?&#xA;DECLARE @ERROR_DESCRIPTION VARCHAR(MAX) = ?&#xA;DECLARE @PACKAGE_START_TIME DATETIME  = NULL&#xA;DECLARE @ROWS_READ BIGINT = ?&#xA;DECLARE @ROWS_INSERTED BIGINT = ?&#xA;DECLARE @ROWS_UPDATED BIGINT = NULL&#xA;DECLARE @ROWS_ERRORED BIGINT = NULL&#xA;&#xA;EXEC DBO.[SP_SSIS_ERRORLOG] @PACKAGE_ID&#xA;&#x9;,@BATCH_ID&#xA;&#x9;,@PKG_GUID&#xA;&#x9;,@PACKAGE_NAME&#xA;&#x9;,@SOURCE_NAME&#xA;&#x9;,@TASK_NAME&#xA;&#x9;,@MACHINE_NAME&#xA;&#x9;,@USER_NAME&#xA;&#x9;,@ERROR_NUMBER&#xA;&#x9;,@ERROR_DESCRIPTION&#xA;&#x9;,@PACKAGE_START_TIME&#xA;&#x9;,@ROWS_READ&#xA;&#x9;,@ROWS_INSERTED&#xA;&#x9;,@ROWS_UPDATED &#xA;&#x9;,@ROWS_ERRORED" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::v_Package_Id"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="1"
+                SQLTask:DtsVariableName="User::v_Batch_Id"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="2"
+                SQLTask:DtsVariableName="System::PackageID"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="3"
+                SQLTask:DtsVariableName="System::PackageName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="4"
+                SQLTask:DtsVariableName="System::SourceName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="5"
+                SQLTask:DtsVariableName="System::TaskName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="6"
+                SQLTask:DtsVariableName="System::MachineName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="7"
+                SQLTask:DtsVariableName="System::UserName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="8"
+                SQLTask:DtsVariableName="System::ErrorCode"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="9"
+                SQLTask:DtsVariableName="System::ErrorDescription"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="10"
+                SQLTask:DtsVariableName="User::v_Rows_Read"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="11"
+                SQLTask:DtsVariableName="User::v_Rows_Inserted"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+    </DTS:EventHandler>
+  </DTS:EventHandlers>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="363.2,41.6"
+          Id="Package\DFT_COUNTRIES_LOAD"
+          TopLeft="602.021259162354,412.182348771409" />
+        <NodeLayout
+          Size="363.2,41.6"
+          Id="Package\SQL_COUNTRIES_GET_DEST_COUNT_LOAD"
+          TopLeft="602.021259162354,513.852935964261" />
+        <NodeLayout
+          Size="363.2,41.6"
+          Id="Package\SQL_COUNTRIES_SP_CHECK_PACKAGE_EXISTENCE"
+          TopLeft="602.021259162354,5.5" />
+        <NodeLayout
+          Size="363.2,41.6"
+          Id="Package\SQL_COUNTRIES_SP_GET_PACKAGE_BATCH_ID"
+          TopLeft="602.021259162354,107.170587192852" />
+        <NodeLayout
+          Size="363.2,41.6"
+          Id="Package\SQL_COUNTRIES_SP_INSERT_EXECUTION_STATUS"
+          TopLeft="602.021259162354,208.841174385704" />
+        <NodeLayout
+          Size="363.2,41.6"
+          Id="Package\SQL_COUNTRIES_SP_UPDATE_EXECUTION_STATUS_LOAD"
+          TopLeft="602.021259162354,615.523523157113" />
+        <NodeLayout
+          Size="363.2,41.6"
+          Id="Package\SQL_COUNTRIES_TRUNCATE_STG_TABLE"
+          TopLeft="602.021259162354,310.511761578557" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="783.521259162354,149.170587192852">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.6705871928522"
+              Start="0,0"
+              End="0,52.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 10]"
+          TopLeft="783.521259162354,47.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.6705871928522"
+              Start="0,0"
+              End="0,52.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 12]"
+          TopLeft="783.521259162354,454.182348771409">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.6705871928522"
+              Start="0,0"
+              End="0,52.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="783.521259162354,250.841174385704">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.6705871928522"
+              Start="0,0"
+              End="0,52.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 5]"
+          TopLeft="783.521259162354,352.511761578557">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.6705871928522"
+              Start="0,0"
+              End="0,52.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 7]"
+          TopLeft="783.521259162354,555.852935964261">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.6705871928522"
+              Start="0,0"
+              End="0,52.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <DtsEventHandler
+    design-time-name="Package.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="264,41.6"
+          Id="Package.EventHandlers[OnError]\SQL_COUNTRIES_SP_SSIS_ERRORLOG"
+          TopLeft="301.928573462428,153.535296039516" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <TaskHost
+    design-time-name="Package\DFT_COUNTRIES_LOAD">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="167.2,41.6"
+          Id="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1"
+          TopLeft="318.357142701441,348.743136119513" />
+        <NodeLayout
+          Size="167.2,41.6"
+          Id="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES"
+          TopLeft="207.273800449872,0.094116548848362" />
+        <NodeLayout
+          Size="167.2,41.6"
+          Id="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES"
+          TopLeft="76.3571427014408,348.743136119513" />
+        <NodeLayout
+          Size="167.2,41.6"
+          Id="Package\DFT_COUNTRIES_LOAD\DC_BATCH"
+          TopLeft="207.273800449872,157.392155787414" />
+        <NodeLayout
+          Size="167.2,41.6"
+          Id="Package\DFT_COUNTRIES_LOAD\RC_COUNTRIES"
+          TopLeft="207.273800449872,78.7431361681312" />
+        <NodeLayout
+          Size="167.2,41.6"
+          Id="Package\DFT_COUNTRIES_LOAD\BDD_COUNTRIES"
+          TopLeft="207.273800449872,236.041175406697" />
+        <EdgeLayout
+          Id="Package\DFT_COUNTRIES_LOAD.Paths[Balanced Data Distributor Output 2]"
+          TopLeft="317.273800449872,278.041175406697">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="84.5833422515687,70.701960712816"
+              Start="0,0"
+              End="84.5833422515687,63.201960712816">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.6833577269076" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,24.6833577269076"
+                    Point2="0,28.6833577269076"
+                    Point3="4,28.6833577269076" />
+                  <mssgle:LineSegment
+                    End="80.5833422515687,28.6833577269076" />
+                  <mssgle:CubicBezierSegment
+                    Point1="80.5833422515687,28.6833577269076"
+                    Point2="84.5833422515687,28.6833577269076"
+                    Point3="84.5833422515687,32.6833577269076" />
+                  <mssgle:LineSegment
+                    End="84.5833422515687,63.201960712816" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-35.5944421554657,33.6833577269076,155.7722265625,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_COUNTRIES_LOAD.Paths[Balanced Data Distributor Output 1]"
+          TopLeft="264.273800449872,278.041175406697">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-104.416657748431,70.701960712816"
+              Start="0,0"
+              End="-104.416657748431,63.201960712816">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.6833577269076" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,24.6833577269076"
+                    Point2="0,28.6833577269076"
+                    Point3="-4,28.6833577269076" />
+                  <mssgle:LineSegment
+                    End="-100.416657748431,28.6833577269076" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-100.416657748431,28.6833577269076"
+                    Point2="-104.416657748431,28.6833577269076"
+                    Point3="-104.416657748431,32.6833577269076" />
+                  <mssgle:LineSegment
+                    End="-104.416657748431,63.201960712816" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-129.908895280466,33.6833577269076,155.4011328125,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_COUNTRIES_LOAD.Paths[Row Count Output 1]"
+          TopLeft="290.773800449872,120.743136168131">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,36.6490196192829"
+              Start="0,0"
+              End="0,29.1490196192829">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,29.1490196192829" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_COUNTRIES_LOAD.Paths[OLE DB Source Output]"
+          TopLeft="290.773800449872,42.0941165488484">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,36.6490196192829"
+              Start="0,0"
+              End="0,29.1490196192829">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,29.1490196192829" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_COUNTRIES_LOAD.Paths[Derived Column Output]"
+          TopLeft="290.773800449872,199.392155787414">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,36.6490196192829"
+              Start="0,0"
+              End="0,29.1490196192829">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,29.1490196192829" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES1">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_COUNTRIES_LOAD\SRC_COUNTRIES">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_COUNTRIES_LOAD\DST_COUNTRIES">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <DtsEventHandler
+    design-time-name="Package\SQL_COUNTRIES_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="329,42"
+          Id="Package\SQL_COUNTRIES_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]\SQL_COUNTRIES_UPDATE_DFT_LOAD_COMPLETED"
+          TopLeft="570.3,184.7" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

@@ -1,0 +1,1945 @@
+<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="11/28/2018 8:48:53 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="LAPTOP-SBSNQ3DE"
+  DTS:CreatorName="LAPTOP-SBSNQ3DE\HP"
+  DTS:DTSID="{A05416B3-90D0-43A8-9CF9-F8DAF03B8E90}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="14.0.0600.250"
+  DTS:LocaleID="16393"
+  DTS:ObjectName="ETL_LANDING_PRIME17_CACCOUNTRELATIONS_FULL_LOAD"
+  DTS:PackageType="5"
+  DTS:ProtectionLevel="0"
+  DTS:VersionBuild="755"
+  DTS:VersionGUID="{C29DD76E-B238-4361-904E-6B26A319DD1E}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_AUDIT_FRAMEWORK]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{1AF5DA4E-F222-4BEA-9E22-D8578D381D67}"
+      DTS:ObjectName="CM_AUDIT_FRAMEWORK">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_AUDIT_FRAMEWORK_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_AUDIT_FRAMEWORK_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=AUDIT_FRAMEWORK_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{148C22F8-DD3A-4ED7-B32E-3FEA2601A396}"
+      DTS:ObjectName="CM_EIMDW_LANDING_PRIME">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_LANDING_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_ARCHIVE_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=DEV_EIMDW_Landing_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_Prime_Attunity]"
+      DTS:CreationName="MSORA"
+      DTS:DTSID="{C0595BF8-9249-47CA-B18A-04D8EF58AB5A}"
+      DTS:ObjectName="CM_Prime_Attunity">
+      <DTS:PropertyExpression
+        DTS:Name="Password">@[$Project::p_PRIME_PWD]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_PRIME_SERVER]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="UserName">@[$Project::p_PRIME_USER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <OracleXMLPackage>
+          <OraConnectionString>SERVER=10.180.2.215:1522/prime;USERNAME=AMBERCONNECT;ORACLEHOME=;ORACLEHOME64=;WINAUTH=0</OraConnectionString>
+          <OraRetain>False</OraRetain>
+          <OraInitialCatalog></OraInitialCatalog>
+          <OraServerName>10.180.2.215:1522/prime</OraServerName>
+          <OraUserName>AMBERCONNECT</OraUserName>
+          <OraOracleHome></OraOracleHome>
+          <OraOracleHome64></OraOracleHome64>
+          <OraWinAuthentication>False</OraWinAuthentication>
+          <OraEnableDetailedTracing>False</OraEnableDetailedTracing>
+          <OraPassword
+            Sensitive="1"></OraPassword>
+        </OracleXMLPackage>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:LogProviders>
+    <DTS:LogProvider
+      DTS:ConfigString="CM_AUDIT_FRAMEWORK"
+      DTS:CreationName="Microsoft.LogProviderSQLServer"
+      DTS:Description="Writes log entries for events to a SQL Server database"
+      DTS:DTSID="{AC606DEB-7BC8-4986-AE60-53BC8829B499}"
+      DTS:ObjectName="SSIS log provider for SQL Server">
+      <DTS:ObjectData>
+        <InnerObject />
+      </DTS:ObjectData>
+    </DTS:LogProvider>
+  </DTS:LogProviders>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{FE49C681-E010-4848-A71A-12FEEF24D86E}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Batch_Id">
+      <DTS:VariableValue
+        DTS:DataType="20">-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{CAA1A932-5EF0-4F0D-ABBC-0D4A83DF0296}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT COUNT(1) FROM &quot; +  @[User::v_Dest_Table]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Dest_Count_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT COUNT(1) FROM DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_CACCOUNTRELATIONS (NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{E3DA5F21-446B-449A-8512-22521E9E1CBE}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="@[$Project::p_LANDING_DATABASE]  +&quot;.&quot;+ @[$Project::p_LANDING_SCHEMA] +&quot;.&quot;+&quot;SRC_PRIME17_CACCOUNTRELATIONS (NOLOCK)&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Dest_Table">
+      <DTS:VariableValue
+        DTS:DataType="8">DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_CACCOUNTRELATIONS (NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{C40DC489-A6E7-456C-A51D-B3DE8E54DADA}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Package_Id">
+      <DTS:VariableValue
+        DTS:DataType="3">-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{F8C6B24C-5EF5-4DAB-A63A-07BD6F0DC3B2}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Rows_Inserted">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{6DB5188C-8044-4C9E-AD95-BB4EF19E7597}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Rows_Read">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{89CC18E2-AC86-428C-82DB-DF0F886E6983}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT  INSTITUTION_ID&#x9;&#xA;,FROMACCOUNT&#x9;&#xA;,TOACCOUNT&#x9;&#xA;,RELATIONSHIP&#x9;&#xA;,STMTCONTROLFLAG&#x9;&#xA;,TRXNTYPESERNO&#x9;&#xA;,POSTONACCOUNT&#x9;&#xA;,CONVERTED  FROM &quot; +  @[User::v_Source_Table]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Source_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT  INSTITUTION_ID	
+,FROMACCOUNT	
+,TOACCOUNT	
+,RELATIONSHIP	
+,STMTCONTROLFLAG	
+,TRXNTYPESERNO	
+,POSTONACCOUNT	
+,CONVERTED  FROM TCTDBS.CACCOUNTRELATIONS</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{B032718A-1AFE-47FA-A276-11DF1FF089B2}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Source_Table">
+      <DTS:VariableValue
+        DTS:DataType="8">TCTDBS.CACCOUNTRELATIONS</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{7313EBFC-4705-4F66-A1A2-F0740DB78A2E}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Task_Name">
+      <DTS:VariableValue
+        DTS:DataType="8">CACCOUNTRELATIONS</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{072972BE-7E41-4D43-9167-8089090F9AD4}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;TRUNCATE TABLE &quot;  + REPLACE(@[User::v_Dest_Table],&quot;(NOLOCK)&quot;,&quot; &quot;)"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Trunc_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">TRUNCATE TABLE DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_CACCOUNTRELATIONS  </DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:LoggingOptions
+    DTS:FilterKind="0"
+    DTS:LoggingMode="1">
+    <DTS:Property
+      DTS:DataType="8"
+      DTS:Name="EventFilter">3,7,OnError,13,OnPostExecute,12,OnTaskFailed</DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnError"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnPostExecute"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnTaskFailed"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:SelectedLogProviders>
+      <DTS:SelectedLogProvider
+        DTS:InstanceID="{AC606DEB-7BC8-4986-AE60-53BC8829B499}" />
+    </DTS:SelectedLogProviders>
+  </DTS:LoggingOptions>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\DFT_CACCOUNTRELATIONS_LOAD"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{0A8BABD7-1A8D-4BFA-B32C-BBF27000C6C4}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="DFT_CACCOUNTRELATIONS_LOAD"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"DFT_"+@[User::v_Task_Name]+"_LOAD"</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="[SRC_CACCOUNTRELATIONS].[SqlCommand]">@[User::v_Source_Query]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <pipeline
+          defaultBufferMaxRows="100000"
+          defaultBufferSize="20485760"
+          version="1">
+          <components>
+            <component
+              refId="Package\DFT_CACCOUNTRELATIONS_LOAD\BDD_CACCOUNTRELATIONS"
+              componentClassID="Microsoft.BDD"
+              contactInfo="Balanced Data Distributor;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Evaluates and directs rows in a dataset to multiple destinations."
+              name="BDD_CACCOUNTRELATIONS">
+              <inputs>
+                <input
+                  refId="Package\DFT_CACCOUNTRELATIONS_LOAD\BDD_CACCOUNTRELATIONS.Inputs[Balanced Data Distributor Input]"
+                  description="Input to the Balanced Data      Distributor Transformation"
+                  name="Balanced Data Distributor Input">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_CACCOUNTRELATIONS_LOAD\BDD_CACCOUNTRELATIONS.Outputs[Balanced Data Distributor Output 1]"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 1"
+                  synchronousInputId="Package\DFT_CACCOUNTRELATIONS_LOAD\BDD_CACCOUNTRELATIONS.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_CACCOUNTRELATIONS_LOAD\BDD_CACCOUNTRELATIONS.Outputs[Balanced Data Distributor Output 2]"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 2"
+                  synchronousInputId="Package\DFT_CACCOUNTRELATIONS_LOAD\BDD_CACCOUNTRELATIONS.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_CACCOUNTRELATIONS_LOAD\BDD_CACCOUNTRELATIONS.Outputs[Balanced Data Distributor Output 3]"
+                  dangling="true"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 3"
+                  synchronousInputId="Package\DFT_CACCOUNTRELATIONS_LOAD\BDD_CACCOUNTRELATIONS.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DC_BATCH"
+              componentClassID="Microsoft.DerivedColumn"
+              contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+              name="DC_BATCH"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DC_BATCH.Inputs[Derived Column Input]"
+                  description="Input to the Derived Column Transformation"
+                  name="Derived Column Input">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DC_BATCH.Outputs[Derived Column Output]"
+                  description="Default Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  name="Derived Column Output"
+                  synchronousInputId="Package\DFT_CACCOUNTRELATIONS_LOAD\DC_BATCH.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]"
+                      dataType="i8"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]"
+                      name="BATCH_ID"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">@[User::v_Batch_Id]</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">@[User::v_Batch_Id]</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DC_BATCH.Outputs[Derived Column Error Output]"
+                  description="Error Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Derived Column Error Output"
+                  synchronousInputId="Package\DFT_CACCOUNTRELATIONS_LOAD\DC_BATCH.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="DST_CACCOUNTRELATIONS"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[LZOWN].[SRC_PRIME17_CACCOUNTRELATIONS]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS,ROWS_PER_BATCH = 1000000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Inputs[OLE DB Destination Input].Columns[INSTITUTION_ID]"
+                      cachedDataType="i4"
+                      cachedName="INSTITUTION_ID"
+                      externalMetadataColumnId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Inputs[OLE DB Destination Input].Columns[FROMACCOUNT]"
+                      cachedDataType="numeric"
+                      cachedName="FROMACCOUNT"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Inputs[OLE DB Destination Input].ExternalColumns[FROMACCOUNT]"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].Columns[FROMACCOUNT]" />
+                    <inputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Inputs[OLE DB Destination Input].Columns[TOACCOUNT]"
+                      cachedDataType="numeric"
+                      cachedName="TOACCOUNT"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Inputs[OLE DB Destination Input].ExternalColumns[TOACCOUNT]"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].Columns[TOACCOUNT]" />
+                    <inputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Inputs[OLE DB Destination Input].Columns[RELATIONSHIP]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="RELATIONSHIP"
+                      externalMetadataColumnId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Inputs[OLE DB Destination Input].ExternalColumns[RELATIONSHIP]"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].Columns[RELATIONSHIP]" />
+                    <inputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Inputs[OLE DB Destination Input].Columns[STMTCONTROLFLAG]"
+                      cachedDataType="i1"
+                      cachedName="STMTCONTROLFLAG"
+                      externalMetadataColumnId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Inputs[OLE DB Destination Input].ExternalColumns[STMTCONTROLFLAG]"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].Columns[STMTCONTROLFLAG]" />
+                    <inputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Inputs[OLE DB Destination Input].Columns[TRXNTYPESERNO]"
+                      cachedDataType="numeric"
+                      cachedName="TRXNTYPESERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Inputs[OLE DB Destination Input].ExternalColumns[TRXNTYPESERNO]"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].Columns[TRXNTYPESERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Inputs[OLE DB Destination Input].Columns[POSTONACCOUNT]"
+                      cachedDataType="i1"
+                      cachedName="POSTONACCOUNT"
+                      externalMetadataColumnId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Inputs[OLE DB Destination Input].ExternalColumns[POSTONACCOUNT]"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].Columns[POSTONACCOUNT]" />
+                    <inputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Inputs[OLE DB Destination Input].Columns[CONVERTED]"
+                      cachedDataType="i1"
+                      cachedName="CONVERTED"
+                      externalMetadataColumnId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Inputs[OLE DB Destination Input].ExternalColumns[CONVERTED]"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].Columns[CONVERTED]" />
+                    <inputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Inputs[OLE DB Destination Input].Columns[BATCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="BATCH_ID"
+                      externalMetadataColumnId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Inputs[OLE DB Destination Input].ExternalColumns[LD_SEQ_ID]"
+                      dataType="i4"
+                      name="LD_SEQ_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      dataType="i8"
+                      name="BATCH_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Inputs[OLE DB Destination Input].ExternalColumns[FROMACCOUNT]"
+                      dataType="numeric"
+                      name="FROMACCOUNT"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Inputs[OLE DB Destination Input].ExternalColumns[TOACCOUNT]"
+                      dataType="numeric"
+                      name="TOACCOUNT"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Inputs[OLE DB Destination Input].ExternalColumns[RELATIONSHIP]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="RELATIONSHIP" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Inputs[OLE DB Destination Input].ExternalColumns[STMTCONTROLFLAG]"
+                      dataType="i2"
+                      name="STMTCONTROLFLAG" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Inputs[OLE DB Destination Input].ExternalColumns[TRXNTYPESERNO]"
+                      dataType="numeric"
+                      name="TRXNTYPESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Inputs[OLE DB Destination Input].ExternalColumns[POSTONACCOUNT]"
+                      dataType="i2"
+                      name="POSTONACCOUNT" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Inputs[OLE DB Destination Input].ExternalColumns[CONVERTED]"
+                      dataType="i2"
+                      name="CONVERTED" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="DST_CACCOUNTRELATIONS 1"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[LZOWN].[SRC_PRIME17_CACCOUNTRELATIONS]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS,ROWS_PER_BATCH = 1000000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Inputs[OLE DB Destination Input].Columns[INSTITUTION_ID]"
+                      cachedDataType="i4"
+                      cachedName="INSTITUTION_ID"
+                      externalMetadataColumnId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Inputs[OLE DB Destination Input].Columns[FROMACCOUNT]"
+                      cachedDataType="numeric"
+                      cachedName="FROMACCOUNT"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[FROMACCOUNT]"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].Columns[FROMACCOUNT]" />
+                    <inputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Inputs[OLE DB Destination Input].Columns[TOACCOUNT]"
+                      cachedDataType="numeric"
+                      cachedName="TOACCOUNT"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[TOACCOUNT]"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].Columns[TOACCOUNT]" />
+                    <inputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Inputs[OLE DB Destination Input].Columns[RELATIONSHIP]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="RELATIONSHIP"
+                      externalMetadataColumnId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[RELATIONSHIP]"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].Columns[RELATIONSHIP]" />
+                    <inputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Inputs[OLE DB Destination Input].Columns[STMTCONTROLFLAG]"
+                      cachedDataType="i1"
+                      cachedName="STMTCONTROLFLAG"
+                      externalMetadataColumnId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[STMTCONTROLFLAG]"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].Columns[STMTCONTROLFLAG]" />
+                    <inputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Inputs[OLE DB Destination Input].Columns[TRXNTYPESERNO]"
+                      cachedDataType="numeric"
+                      cachedName="TRXNTYPESERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[TRXNTYPESERNO]"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].Columns[TRXNTYPESERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Inputs[OLE DB Destination Input].Columns[POSTONACCOUNT]"
+                      cachedDataType="i1"
+                      cachedName="POSTONACCOUNT"
+                      externalMetadataColumnId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[POSTONACCOUNT]"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].Columns[POSTONACCOUNT]" />
+                    <inputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Inputs[OLE DB Destination Input].Columns[CONVERTED]"
+                      cachedDataType="i1"
+                      cachedName="CONVERTED"
+                      externalMetadataColumnId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[CONVERTED]"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].Columns[CONVERTED]" />
+                    <inputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Inputs[OLE DB Destination Input].Columns[BATCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="BATCH_ID"
+                      externalMetadataColumnId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[LD_SEQ_ID]"
+                      dataType="i4"
+                      name="LD_SEQ_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      dataType="i8"
+                      name="BATCH_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[FROMACCOUNT]"
+                      dataType="numeric"
+                      name="FROMACCOUNT"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[TOACCOUNT]"
+                      dataType="numeric"
+                      name="TOACCOUNT"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[RELATIONSHIP]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="RELATIONSHIP" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[STMTCONTROLFLAG]"
+                      dataType="i2"
+                      name="STMTCONTROLFLAG" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[TRXNTYPESERNO]"
+                      dataType="numeric"
+                      name="TRXNTYPESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[POSTONACCOUNT]"
+                      dataType="i2"
+                      name="POSTONACCOUNT" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Inputs[OLE DB Destination Input].ExternalColumns[CONVERTED]"
+                      dataType="i2"
+                      name="CONVERTED" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_CACCOUNTRELATIONS_LOAD\RC_CACCOUNTRELATIONS"
+              componentClassID="Microsoft.RowCount"
+              contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Counts rows as they pass through a data flow. For example, use the number of rows processed to determine whether or not to perform cleanup operations, or update text in an e-mail message to communicate processing status."
+              name="RC_CACCOUNTRELATIONS">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable to hold the row count."
+                  name="VariableName">User::v_Rows_Read</property>
+              </properties>
+              <inputs>
+                <input
+                  refId="Package\DFT_CACCOUNTRELATIONS_LOAD\RC_CACCOUNTRELATIONS.Inputs[Row Count Input 1]"
+                  hasSideEffects="true"
+                  name="Row Count Input 1">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_CACCOUNTRELATIONS_LOAD\RC_CACCOUNTRELATIONS.Outputs[Row Count Output 1]"
+                  name="Row Count Output 1"
+                  synchronousInputId="Package\DFT_CACCOUNTRELATIONS_LOAD\RC_CACCOUNTRELATIONS.Inputs[Row Count Input 1]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS"
+              componentClassID="Attunity.SSISOraSrc"
+              contactInfo="Oracle Source;Microsoft Connector for Oracle by Attunity; Attunity Ltd.; All Rights Reserved; http://www.attunity.com;7"
+              description="Microsoft Oracle Source Component by Attunity"
+              name="SRC_CACCOUNTRELATIONS"
+              usesDispositions="true"
+              version="6">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="The name of the table to be fetched."
+                  expressionType="Notify"
+                  name="TableName"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  expressionType="Notify"
+                  name="SqlCommand">SELECT  INSTITUTION_ID	
+,FROMACCOUNT	
+,TOACCOUNT	
+,RELATIONSHIP	
+,STMTCONTROLFLAG	
+,TRXNTYPESERNO	
+,POSTONACCOUNT	
+,CONVERTED  FROM TCTDBS.CACCOUNTRELATIONS</property>
+                <property
+                  dataType="System.Int32"
+                  description="The number of rows fetched in a batch."
+                  expressionType="Notify"
+                  name="BatchSize">100</property>
+                <property
+                  dataType="System.Int32"
+                  description="Number of pre-fetched rows."
+                  expressionType="Notify"
+                  name="PrefetchCount">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Determines the chunk size allocation for LOB columns"
+                  expressionType="Notify"
+                  name="LobChunkSize">32768</property>
+                <property
+                  dataType="System.Int32"
+                  description="The code page to use when code page information is unavailable from the data source."
+                  expressionType="Notify"
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Int32"
+                  description="The mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">1</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Connections[MSOraConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_Prime_Attunity]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_Prime_Attunity]"
+                  description="The Oracle runtime connection"
+                  name="MSOraConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output]"
+                  errorRowDisposition="FailComponent"
+                  name="Oracle Source Output"
+                  truncationRowDisposition="FailComponent">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]"
+                      name="INSTITUTION_ID" />
+                    <outputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].Columns[FROMACCOUNT]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].ExternalColumns[FROMACCOUNT]"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].Columns[FROMACCOUNT]"
+                      name="FROMACCOUNT"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].Columns[TOACCOUNT]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].ExternalColumns[TOACCOUNT]"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].Columns[TOACCOUNT]"
+                      name="TOACCOUNT"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].Columns[RELATIONSHIP]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].ExternalColumns[RELATIONSHIP]"
+                      length="1"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].Columns[RELATIONSHIP]"
+                      name="RELATIONSHIP" />
+                    <outputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].Columns[STMTCONTROLFLAG]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].ExternalColumns[STMTCONTROLFLAG]"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].Columns[STMTCONTROLFLAG]"
+                      name="STMTCONTROLFLAG" />
+                    <outputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].Columns[TRXNTYPESERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].ExternalColumns[TRXNTYPESERNO]"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].Columns[TRXNTYPESERNO]"
+                      name="TRXNTYPESERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].Columns[POSTONACCOUNT]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].ExternalColumns[POSTONACCOUNT]"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].Columns[POSTONACCOUNT]"
+                      name="POSTONACCOUNT" />
+                    <outputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].Columns[CONVERTED]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].ExternalColumns[CONVERTED]"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].Columns[CONVERTED]"
+                      name="CONVERTED" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].ExternalColumns[FROMACCOUNT]"
+                      dataType="numeric"
+                      name="FROMACCOUNT"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].ExternalColumns[TOACCOUNT]"
+                      dataType="numeric"
+                      name="TOACCOUNT"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].ExternalColumns[RELATIONSHIP]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="RELATIONSHIP" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].ExternalColumns[STMTCONTROLFLAG]"
+                      dataType="i1"
+                      name="STMTCONTROLFLAG" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].ExternalColumns[TRXNTYPESERNO]"
+                      dataType="numeric"
+                      name="TRXNTYPESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].ExternalColumns[POSTONACCOUNT]"
+                      dataType="i1"
+                      name="POSTONACCOUNT" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].ExternalColumns[CONVERTED]"
+                      dataType="i1"
+                      name="CONVERTED" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Error Output]"
+                  isErrorOut="true"
+                  name="Oracle Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Error Output].Columns[INSTITUTION_ID]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Error Output].Columns[INSTITUTION_ID]"
+                      name="INSTITUTION_ID" />
+                    <outputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Error Output].Columns[FROMACCOUNT]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].ExternalColumns[FROMACCOUNT]"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Error Output].Columns[FROMACCOUNT]"
+                      name="FROMACCOUNT"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Error Output].Columns[TOACCOUNT]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].ExternalColumns[TOACCOUNT]"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Error Output].Columns[TOACCOUNT]"
+                      name="TOACCOUNT"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Error Output].Columns[RELATIONSHIP]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].ExternalColumns[RELATIONSHIP]"
+                      length="1"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Error Output].Columns[RELATIONSHIP]"
+                      name="RELATIONSHIP" />
+                    <outputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Error Output].Columns[STMTCONTROLFLAG]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].ExternalColumns[STMTCONTROLFLAG]"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Error Output].Columns[STMTCONTROLFLAG]"
+                      name="STMTCONTROLFLAG" />
+                    <outputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Error Output].Columns[TRXNTYPESERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].ExternalColumns[TRXNTYPESERNO]"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Error Output].Columns[TRXNTYPESERNO]"
+                      name="TRXNTYPESERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Error Output].Columns[POSTONACCOUNT]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].ExternalColumns[POSTONACCOUNT]"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Error Output].Columns[POSTONACCOUNT]"
+                      name="POSTONACCOUNT" />
+                    <outputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Error Output].Columns[CONVERTED]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output].ExternalColumns[CONVERTED]"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Error Output].Columns[CONVERTED]"
+                      name="CONVERTED" />
+                    <outputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\DFT_CACCOUNTRELATIONS_LOAD.Paths[Balanced Data Distributor Output 1]"
+              endId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS.Inputs[OLE DB Destination Input]"
+              name="Balanced Data Distributor Output 1"
+              startId="Package\DFT_CACCOUNTRELATIONS_LOAD\BDD_CACCOUNTRELATIONS.Outputs[Balanced Data Distributor Output 1]" />
+            <path
+              refId="Package\DFT_CACCOUNTRELATIONS_LOAD.Paths[Balanced Data Distributor Output 2]"
+              endId="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1.Inputs[OLE DB Destination Input]"
+              name="Balanced Data Distributor Output 2"
+              startId="Package\DFT_CACCOUNTRELATIONS_LOAD\BDD_CACCOUNTRELATIONS.Outputs[Balanced Data Distributor Output 2]" />
+            <path
+              refId="Package\DFT_CACCOUNTRELATIONS_LOAD.Paths[Derived Column Output]"
+              endId="Package\DFT_CACCOUNTRELATIONS_LOAD\BDD_CACCOUNTRELATIONS.Inputs[Balanced Data Distributor Input]"
+              name="Derived Column Output"
+              startId="Package\DFT_CACCOUNTRELATIONS_LOAD\DC_BATCH.Outputs[Derived Column Output]" />
+            <path
+              refId="Package\DFT_CACCOUNTRELATIONS_LOAD.Paths[Oracle Source Output]"
+              endId="Package\DFT_CACCOUNTRELATIONS_LOAD\RC_CACCOUNTRELATIONS.Inputs[Row Count Input 1]"
+              name="Oracle Source Output"
+              startId="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS.Outputs[Oracle Source Output]" />
+            <path
+              refId="Package\DFT_CACCOUNTRELATIONS_LOAD.Paths[Row Count Output 1]"
+              endId="Package\DFT_CACCOUNTRELATIONS_LOAD\DC_BATCH.Inputs[Derived Column Input]"
+              name="Row Count Output 1"
+              startId="Package\DFT_CACCOUNTRELATIONS_LOAD\RC_CACCOUNTRELATIONS.Outputs[Row Count Output 1]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_CACCOUNTRELATIONS_GET_DEST_COUNT_LOAD"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{8F964744-EB42-44DD-87D0-203220A9F34B}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_CACCOUNTRELATIONS_GET_DEST_COUNT_LOAD"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_GET_DEST_COUNT_LOAD"</DTS:PropertyExpression>
+      <DTS:EventHandlers>
+        <DTS:EventHandler
+          DTS:refId="Package\SQL_CACCOUNTRELATIONS_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]"
+          DTS:CreationName="OnPreExecute"
+          DTS:DTSID="{CF944502-6D7F-40B5-BC3F-AC032A10980A}"
+          DTS:EventID="1076330902"
+          DTS:EventName="OnPreExecute"
+          DTS:LocaleID="-1">
+          <DTS:Variables>
+            <DTS:Variable
+              DTS:CreationName=""
+              DTS:Description="The propagate property of the event"
+              DTS:DTSID="{2DB6A124-0D51-4B89-92EC-B59895C9AD68}"
+              DTS:IncludeInDebugDump="6789"
+              DTS:Namespace="System"
+              DTS:ObjectName="Propagate">
+              <DTS:VariableValue
+                DTS:DataType="11">-1</DTS:VariableValue>
+            </DTS:Variable>
+          </DTS:Variables>
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\SQL_CACCOUNTRELATIONS_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]\SQL_CACCOUNTRELATIONS_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{BD4F00B2-6152-4707-A7D8-4053D121FC25}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="SQL_CACCOUNTRELATIONS_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+              <DTS:Variables />
+              <DTS:PropertyExpression
+                DTS:Name="Name">"SQL_"+ @[User::v_Task_Name]+"_UPDATE_DFT_LOAD_COMPLETED"</DTS:PropertyExpression>
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{1AF5DA4E-F222-4BEA-9E22-D8578D381D67}"
+                  SQLTask:SqlStatementSource="UPDATE DBO.BATCH_EXECUTION_STATUS&#xA; SET  &#xA;STATUS_FLAG = 'DFT LOAD COMPLETED'   WHERE&#xA; EXECUTION_ID = (&#xA;       SELECT MAX(EXECUTION_ID) EXECUTION_ID&#xA;       FROM DBO.BATCH_EXECUTION_STATUS&#xA;       WHERE PACKAGE_ID =?&#xA;       AND  BATCH_ID = ?&#xA;    )"
+                  SQLTask:TypeConversionMode="None" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="0"
+                    SQLTask:DtsVariableName="User::v_Package_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="1"
+                    SQLTask:DtsVariableName="User::v_Batch_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                </SQLTask:SqlTaskData>
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+        </DTS:EventHandler>
+      </DTS:EventHandlers>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{148C22F8-DD3A-4ED7-B32E-3FEA2601A396}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::v_Dest_Count_Query"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="0"
+            SQLTask:DtsVariableName="User::v_Rows_Inserted" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_CACCOUNTRELATIONS_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{2CEC783C-F881-42FC-8D1C-89F20FF02D49}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_CACCOUNTRELATIONS_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_CHECK_PACKAGE_EXISTENCE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{1AF5DA4E-F222-4BEA-9E22-D8578D381D67}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_NAME VARCHAR(500) = ?&#xA;&#xA;EXEC [DBO].[SP_CHECK_PACKAGE_EXISTENCE]  @PACKAGE_NAME" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_CACCOUNTRELATIONS_SP_GET_PACKAGE_BATCH_ID"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{6A3CA704-398C-4F15-A193-155FE5D9F165}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_CACCOUNTRELATIONS_SP_GET_PACKAGE_BATCH_ID"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_GET_PACKAGE_BATCH_ID"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{1AF5DA4E-F222-4BEA-9E22-D8578D381D67}"
+          SQLTask:SqlStatementSource="&#xA;DECLARE @PACKAGE_NAME VARCHAR(500) = ?&#xA;DECLARE @PACKAGE_ID  INT &#xA;DECLARE @BATCH_ID BIGINT&#xA;&#xA;&#xA; EXEC [DBO].[SP_GET_PACKAGE_BATCH_ID] @PACKAGE_NAME,@PACKAGE_ID OUT,@BATCH_ID OUT&#xA; SELECT ? = @PACKAGE_ID &#xA; SELECT ? = @BATCH_ID" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_CACCOUNTRELATIONS_SP_INSERT_EXECUTION_STATUS"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{DC90A5D3-B00A-4E40-9032-E3AE094717B2}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_CACCOUNTRELATIONS_SP_INSERT_EXECUTION_STATUS"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_INSERT_EXECUTION_STATUS"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{1AF5DA4E-F222-4BEA-9E22-D8578D381D67}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @PACKAGE_START_TIME DATETIME = ?&#xA;DECLARE @JOB_ID INT  =?&#xA;&#xA;EXEC [DBO].[SP_INSERT_EXECUTION_STATUS]           @PACKAGE_ID&#xA;,@BATCH_ID&#xA;,@PACKAGE_START_TIME&#xA;,@JOB_ID" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="System::StartTime"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="7"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="$Project::p_JOB_ID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_CACCOUNTRELATIONS_SP_UPDATE_EXECUTION_STATUS_LOAD"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{D428BB57-72E3-4E06-9CF8-AFF0C1691A82}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_CACCOUNTRELATIONS_SP_UPDATE_EXECUTION_STATUS_LOAD"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_UPDATE_EXECUTION_STATUS_LOAD"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{1AF5DA4E-F222-4BEA-9E22-D8578D381D67}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @ROWS_READ BIGINT = ?&#xA;DECLARE @ROWS_INSERTED BIGINT = ?&#xA;DECLARE @ROWS_UPDATED BIGINT =0&#xA;DECLARE @ROWS_ERRORED  BIGINT=0&#xA;&#xA;&#xA;EXEC DBO.SP_UPDATE_EXECUTION_STATUS @PACKAGE_ID&#xA; , @BATCH_ID&#xA; , @ROWS_READ&#xA; , @ROWS_INSERTED&#xA; , @ROWS_UPDATED&#xA; , @ROWS_ERRORED" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::v_Rows_Read"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="User::v_Rows_Inserted"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_CACCOUNTRELATIONS_TRUNCATE_STG_TABLE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{33A4BFE8-4E59-4897-98BD-E6131474EBB7}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_CACCOUNTRELATIONS_TRUNCATE_STG_TABLE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_TRUNCATE_STG_TABLE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{148C22F8-DD3A-4ED7-B32E-3FEA2601A396}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::v_Trunc_Query" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{6ED05F8C-911B-46EB-84DA-75434A968DDE}"
+      DTS:From="Package\SQL_CACCOUNTRELATIONS_SP_GET_PACKAGE_BATCH_ID"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\SQL_CACCOUNTRELATIONS_SP_INSERT_EXECUTION_STATUS" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 10]"
+      DTS:CreationName=""
+      DTS:DTSID="{B463295C-31E3-4B03-A5F2-1D358364484C}"
+      DTS:From="Package\SQL_CACCOUNTRELATIONS_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 10"
+      DTS:To="Package\SQL_CACCOUNTRELATIONS_SP_GET_PACKAGE_BATCH_ID" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 12]"
+      DTS:CreationName=""
+      DTS:DTSID="{B2676E73-B3FF-4EBC-849A-35539AABF59C}"
+      DTS:From="Package\DFT_CACCOUNTRELATIONS_LOAD"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 12"
+      DTS:To="Package\SQL_CACCOUNTRELATIONS_GET_DEST_COUNT_LOAD" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{6DE7A6A3-E41E-47C7-A43C-50F624121C25}"
+      DTS:From="Package\SQL_CACCOUNTRELATIONS_SP_INSERT_EXECUTION_STATUS"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\SQL_CACCOUNTRELATIONS_TRUNCATE_STG_TABLE" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 5]"
+      DTS:CreationName=""
+      DTS:DTSID="{86895AAA-5DAE-488D-AADE-13491AB05072}"
+      DTS:Expression="@[User::v_Inc_Date] == (DT_DBTIMESTAMP) &quot;1753-01-01&quot;"
+      DTS:From="Package\SQL_CACCOUNTRELATIONS_TRUNCATE_STG_TABLE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 5"
+      DTS:To="Package\DFT_CACCOUNTRELATIONS_LOAD" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 7]"
+      DTS:CreationName=""
+      DTS:DTSID="{40557BF8-B162-49EA-BD7D-953D72FFEFD2}"
+      DTS:Expression="@[User::v_Rows_Inserted] ==0"
+      DTS:From="Package\SQL_CACCOUNTRELATIONS_GET_DEST_COUNT_LOAD"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 7"
+      DTS:To="Package\SQL_CACCOUNTRELATIONS_SP_UPDATE_EXECUTION_STATUS_LOAD" />
+  </DTS:PrecedenceConstraints>
+  <DTS:EventHandlers>
+    <DTS:EventHandler
+      DTS:refId="Package.EventHandlers[OnError]"
+      DTS:CreationName="OnError"
+      DTS:DTSID="{E9B70926-616E-4B1D-AEFE-CD0D7278E1ED}"
+      DTS:EventID="2"
+      DTS:EventName="OnError"
+      DTS:LocaleID="-1">
+      <DTS:Variables>
+        <DTS:Variable
+          DTS:CreationName=""
+          DTS:Description="The propagate property of the event"
+          DTS:DTSID="{5E895FBF-9270-476F-B2E3-B4875924F195}"
+          DTS:IncludeInDebugDump="6789"
+          DTS:Namespace="System"
+          DTS:ObjectName="Propagate">
+          <DTS:VariableValue
+            DTS:DataType="11">-1</DTS:VariableValue>
+        </DTS:Variable>
+      </DTS:Variables>
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package.EventHandlers[OnError]\SQL_CACCOUNTRELATIONS_SP_SSIS_ERRORLOG"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{FC06E6A0-29CA-411D-9918-53A0BA3002A4}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="SQL_CACCOUNTRELATIONS_SP_SSIS_ERRORLOG"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:PropertyExpression
+            DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_SSIS_ERRORLOG"</DTS:PropertyExpression>
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{1AF5DA4E-F222-4BEA-9E22-D8578D381D67}"
+              SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @PKG_GUID SYSNAME = ?&#xA;DECLARE @PACKAGE_NAME SYSNAME = ?&#xA;DECLARE @SOURCE_NAME VARCHAR(100) = ?&#xA;DECLARE @TASK_NAME VARCHAR(100) = ?&#xA;DECLARE @MACHINE_NAME VARCHAR(50) = ?&#xA;DECLARE @USER_NAME VARCHAR(50) = ?&#xA;DECLARE @ERROR_NUMBER INT = ?&#xA;DECLARE @ERROR_DESCRIPTION VARCHAR(MAX) = ?&#xA;DECLARE @PACKAGE_START_TIME DATETIME  = NULL&#xA;DECLARE @ROWS_READ BIGINT = ?&#xA;DECLARE @ROWS_INSERTED BIGINT = ?&#xA;DECLARE @ROWS_UPDATED BIGINT = NULL&#xA;DECLARE @ROWS_ERRORED BIGINT = NULL&#xA;&#xA;EXEC DBO.[SP_SSIS_ERRORLOG] @PACKAGE_ID&#xA;&#x9;,@BATCH_ID&#xA;&#x9;,@PKG_GUID&#xA;&#x9;,@PACKAGE_NAME&#xA;&#x9;,@SOURCE_NAME&#xA;&#x9;,@TASK_NAME&#xA;&#x9;,@MACHINE_NAME&#xA;&#x9;,@USER_NAME&#xA;&#x9;,@ERROR_NUMBER&#xA;&#x9;,@ERROR_DESCRIPTION&#xA;&#x9;,@PACKAGE_START_TIME&#xA;&#x9;,@ROWS_READ&#xA;&#x9;,@ROWS_INSERTED&#xA;&#x9;,@ROWS_UPDATED &#xA;&#x9;,@ROWS_ERRORED" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::v_Package_Id"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="1"
+                SQLTask:DtsVariableName="User::v_Batch_Id"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="2"
+                SQLTask:DtsVariableName="System::PackageID"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="3"
+                SQLTask:DtsVariableName="System::PackageName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="4"
+                SQLTask:DtsVariableName="System::SourceName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="5"
+                SQLTask:DtsVariableName="System::TaskName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="6"
+                SQLTask:DtsVariableName="System::MachineName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="7"
+                SQLTask:DtsVariableName="System::UserName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="8"
+                SQLTask:DtsVariableName="System::ErrorCode"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="9"
+                SQLTask:DtsVariableName="System::ErrorDescription"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="10"
+                SQLTask:DtsVariableName="User::v_Rows_Read"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="11"
+                SQLTask:DtsVariableName="User::v_Rows_Inserted"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+    </DTS:EventHandler>
+  </DTS:EventHandlers>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="417,43"
+          Id="Package\DFT_CACCOUNTRELATIONS_LOAD"
+          TopLeft="603.592687733783,412.182348771409" />
+        <NodeLayout
+          Size="417,43"
+          Id="Package\SQL_CACCOUNTRELATIONS_GET_DEST_COUNT_LOAD"
+          TopLeft="603.592687733783,513.852935964261" />
+        <NodeLayout
+          Size="417,43"
+          Id="Package\SQL_CACCOUNTRELATIONS_SP_CHECK_PACKAGE_EXISTENCE"
+          TopLeft="603.592687733783,5.5" />
+        <NodeLayout
+          Size="417,43"
+          Id="Package\SQL_CACCOUNTRELATIONS_SP_GET_PACKAGE_BATCH_ID"
+          TopLeft="603.592687733783,107.170587192852" />
+        <NodeLayout
+          Size="417,43"
+          Id="Package\SQL_CACCOUNTRELATIONS_SP_INSERT_EXECUTION_STATUS"
+          TopLeft="603.592687733783,208.841174385704" />
+        <NodeLayout
+          Size="417,43"
+          Id="Package\SQL_CACCOUNTRELATIONS_SP_UPDATE_EXECUTION_STATUS_LOAD"
+          TopLeft="603.592687733783,615.523523157113" />
+        <NodeLayout
+          Size="417,43"
+          Id="Package\SQL_CACCOUNTRELATIONS_TRUNCATE_STG_TABLE"
+          TopLeft="603.592687733783,310.511761578557" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="812.092687733783,150.170587192852">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 10]"
+          TopLeft="812.092687733783,48.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 12]"
+          TopLeft="812.092687733783,455.182348771409">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="812.092687733783,251.841174385704">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 5]"
+          TopLeft="812.092687733783,353.511761578557">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 7]"
+          TopLeft="812.092687733783,556.852935964261">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <DtsEventHandler
+    design-time-name="Package.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="317,42"
+          Id="Package.EventHandlers[OnError]\SQL_CACCOUNTRELATIONS_SP_SSIS_ERRORLOG"
+          TopLeft="523.785720659762,173.041178469675" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <TaskHost
+    design-time-name="Package\DFT_CACCOUNTRELATIONS_LOAD">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="222,45"
+          Id="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS"
+          TopLeft="74.071428376801,425.213725427278" />
+        <NodeLayout
+          Size="222,45"
+          Id="Package\DFT_CACCOUNTRELATIONS_LOAD\SRC_CACCOUNTRELATIONS"
+          TopLeft="211.583138437088,49" />
+        <NodeLayout
+          Size="222,45"
+          Id="Package\DFT_CACCOUNTRELATIONS_LOAD\DC_BATCH"
+          TopLeft="213.583138437088,227.674509809641" />
+        <NodeLayout
+          Size="222,45"
+          Id="Package\DFT_CACCOUNTRELATIONS_LOAD\RC_CACCOUNTRELATIONS"
+          TopLeft="211.583138437088,136.837254904821" />
+        <NodeLayout
+          Size="222,45"
+          Id="Package\DFT_CACCOUNTRELATIONS_LOAD\BDD_CACCOUNTRELATIONS"
+          TopLeft="211.583138437088,312.511764714462" />
+        <NodeLayout
+          Size="222,45"
+          Id="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1"
+          TopLeft="316.071428376801,425.213725427278" />
+        <EdgeLayout
+          Id="Package\DFT_CACCOUNTRELATIONS_LOAD.Paths[Row Count Output 1]"
+          TopLeft="323.583138437088,181.837254904821">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,45.83725490482"
+              Start="0,0"
+              End="0,38.33725490482">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,38.33725490482" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_CACCOUNTRELATIONS_LOAD.Paths[Oracle Source Output]"
+          TopLeft="322.583138437088,94">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,42.8372549048207"
+              Start="0,0"
+              End="0,35.3372549048207">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,35.3372549048207" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_CACCOUNTRELATIONS_LOAD.Paths[Derived Column Output]"
+          TopLeft="323.583138437088,272.674509809641">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,39.837254904821"
+              Start="0,0"
+              End="0,32.337254904821">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,32.337254904821" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_CACCOUNTRELATIONS_LOAD.Paths[Balanced Data Distributor Output 2]"
+          TopLeft="358.249805103755,357.511764714462">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="68.8216232730464,67.701960712816"
+              Start="0,0"
+              End="68.8216232730464,60.201960712816">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,23.3714545994569" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,23.3714545994569"
+                    Point2="0,27.3714545994569"
+                    Point3="4,27.3714545994569" />
+                  <mssgle:LineSegment
+                    End="64.8216232730464,27.3714545994569" />
+                  <mssgle:CubicBezierSegment
+                    Point1="64.8216232730464,27.3714545994569"
+                    Point2="68.8216232730464,27.3714545994569"
+                    Point3="68.8216232730464,31.3714545994569" />
+                  <mssgle:LineSegment
+                    End="68.8216232730464,60.201960712816" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-43.4753016447268,32.3714545994569,155.7722265625,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_CACCOUNTRELATIONS_LOAD.Paths[Balanced Data Distributor Output 1]"
+          TopLeft="286.916471770421,357.511764714462">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-101.84504339362,67.701960712816"
+              Start="0,0"
+              End="-101.84504339362,60.201960712816">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,23.3714545994569" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,23.3714545994569"
+                    Point2="0,27.3714545994569"
+                    Point3="-4,27.3714545994569" />
+                  <mssgle:LineSegment
+                    End="-97.8450433936203,27.3714545994569" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-97.8450433936203,27.3714545994569"
+                    Point2="-101.84504339362,27.3714545994569"
+                    Point3="-101.84504339362,31.3714545994569" />
+                  <mssgle:LineSegment
+                    End="-101.84504339362,60.201960712816" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-128.62308810306,32.3714545994569,155.4011328125,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_CACCOUNTRELATIONS_LOAD\DST_CACCOUNTRELATIONS 1">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <DtsEventHandler
+    design-time-name="Package\SQL_CACCOUNTRELATIONS_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="313,42"
+          Id="Package\SQL_CACCOUNTRELATIONS_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]\SQL_CACCOUNTRELATIONS_UPDATE_DFT_LOAD_COMPLETED"
+          TopLeft="570.3,184.7" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

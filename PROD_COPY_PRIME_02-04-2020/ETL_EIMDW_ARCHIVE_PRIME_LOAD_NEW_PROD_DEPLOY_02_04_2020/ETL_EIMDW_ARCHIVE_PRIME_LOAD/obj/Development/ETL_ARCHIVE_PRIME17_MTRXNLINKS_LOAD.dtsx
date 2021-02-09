@@ -1,0 +1,2717 @@
+<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="11/28/2018 8:48:53 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="LAPTOP-SBSNQ3DE"
+  DTS:CreatorName="LAPTOP-SBSNQ3DE\HP"
+  DTS:DTSID="{F9F257E6-562C-4C41-BF8E-8C752766688E}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="14.0.0600.250"
+  DTS:LocaleID="16393"
+  DTS:ObjectName="ETL_ARCHIVE_PRIME17_MTRXNLINKS_LOAD"
+  DTS:PackageType="5"
+  DTS:ProtectionLevel="0"
+  DTS:VersionBuild="747"
+  DTS:VersionGUID="{55BF93F8-DD28-4748-9D95-3908CA69E355}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_AUDIT_FRAMEWORK]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{3115809E-25AB-434A-9B65-AEECBBA8CD73}"
+      DTS:ObjectName="CM_AUDIT_FRAMEWORK">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_AUDIT_FRAMEWORK_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_AUDIT_FRAMEWORK_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=AUDIT_FRAMEWORK_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_EIMDW_ARCHIVE_PRIME]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{F9B62AC8-9EA4-4BE6-90E3-F361FC410C7C}"
+      DTS:ObjectName="CM_EIMDW_ARCHIVE_PRIME">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_ARCHIVE_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_ARCHIVE_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=DEV_EIMDW_Archive_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{E85A9C71-9359-4733-97EB-F09FB3548F9F}"
+      DTS:ObjectName="CM_EIMDW_LANDING_PRIME">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_LANDING_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_ARCHIVE_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=DEV_EIMDW_Landing_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:LogProviders>
+    <DTS:LogProvider
+      DTS:ConfigString="CM_AUDIT_FRAMEWORK"
+      DTS:CreationName="Microsoft.LogProviderSQLServer"
+      DTS:Description="Writes log entries for events to a SQL Server database"
+      DTS:DTSID="{99408AA5-B454-432D-B17E-EB1B5C969421}"
+      DTS:ObjectName="SSIS log provider for SQL Server">
+      <DTS:ObjectData>
+        <InnerObject />
+      </DTS:ObjectData>
+    </DTS:LogProvider>
+  </DTS:LogProviders>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{E34D47E8-83FE-41E9-9856-881CDE641FBE}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Batch_Id">
+      <DTS:VariableValue
+        DTS:DataType="20">-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{2FD58276-AECB-4809-9649-60E1472AC456}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT COUNT(1) FROM  &quot; +  @[User::v_Dest_Table] +&quot;(NOLOCK) WHERE CRTE_BTCH_ID =&quot; + (DT_STR, 12, 1252)  @[User::v_Batch_Id]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Dest_Count_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT COUNT(1) FROM  DEV_EIMDW_Archive_FIN10.[ARCHOWN].PRIME17_MTRXNLINKS(NOLOCK) WHERE CRTE_BTCH_ID =-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{BE55F7F5-A4A3-4B8A-A6D1-D182F5968CA4}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="@[$Project::p_ARCHIVE_DATABASE]  +&quot;.&quot;+ @[$Project::p_ARCHIVE_SCHEMA] +&quot;.&quot;+&quot;PRIME17_MTRXNLINKS&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Dest_Table">
+      <DTS:VariableValue
+        DTS:DataType="8">DEV_EIMDW_Archive_FIN10.[ARCHOWN].PRIME17_MTRXNLINKS</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{E094BB2E-66DE-4B7C-8A91-58EE5902011D}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT DW_INC_NUMBER FROM &quot;+ @[$Project::p_AUDIT_FRAMEWORK_DATABASE]+&quot;.dbo.INCREMENTAL_CONTROL (NOLOCK) WHERE PACKAGE_ID = (SELECT DEPENDENT_PACKAGE_ID FROM &quot;+ @[$Project::p_AUDIT_FRAMEWORK_DATABASE]+&quot;.dbo.PACKAGE_DEPENDENCY_MAPPING (NOLOCK) WHERE PACKAGE_ID =&quot;+ (DT_STR, 10, 1252) @[User::v_Package_Id] +&quot;)&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Get_Inc_Date">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT DW_INC_NUMBER FROM AUDIT_FRAMEWORK_FIN10.dbo.INCREMENTAL_CONTROL (NOLOCK) WHERE PACKAGE_ID = (SELECT DEPENDENT_PACKAGE_ID FROM AUDIT_FRAMEWORK_FIN10.dbo.PACKAGE_DEPENDENCY_MAPPING (NOLOCK) WHERE PACKAGE_ID =-1)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{C36C6C94-1E15-4733-A329-C6184C9C18C5}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Inc_Number">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{921F3E53-2625-48A8-B6DA-214E5BF5CDF7}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Package_Id">
+      <DTS:VariableValue
+        DTS:DataType="3">-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{41002386-9682-4A4E-A12E-27D13DFA9BC5}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Rows_Inserted">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{F80045DE-C678-4BD1-8E1D-B814B3D760CF}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Rows_Read">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{CF27A453-5727-4BD6-9835-A6771AF865E4}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Rows_Updated">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{D184E1DF-329C-41F0-8F24-04D99A9C6CE2}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT&#xA;       INSTITUTION_ID&#xA;,FROMTRXNSERNO&#xA;,PARTITIONKEY&#xA;,SUBPARTITIONKEY&#xA;,TOTRXNSERNO&#xA;,TOTRXNPARTITIONKEY&#xA;,TOTRXNSUBPARTITIONKEY&#xA;,LINKTYPE&#xA;,CONVERTED&#xA;     &#xA;&#xA; FROM &quot; +  @[User::v_Source_Table]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Source_Query_Full">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT
+       INSTITUTION_ID
+,FROMTRXNSERNO
+,PARTITIONKEY
+,SUBPARTITIONKEY
+,TOTRXNSERNO
+,TOTRXNPARTITIONKEY
+,TOTRXNSUBPARTITIONKEY
+,LINKTYPE
+,CONVERTED
+     
+
+ FROM DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_MTRXNLINKS (NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{2657E97F-CD6E-4133-88CD-0D8100F7B11A}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT&#xA;       SRC.INSTITUTION_ID&#xA;      ,SRC.SERNO&#xA;      ,SRC.PARTITIONKEY&#xA;      ,SRC.CACCSERNO&#xA;      ,SRC.BATCHSERNO&#xA;      ,SRC.CYCLEDATE&#xA;      ,SRC.BILLINGDATE&#xA;      ,SRC.GENERATEDATETIME&#xA;      ,SRC.LASTPRINTDATE&#xA;      ,SRC.PRINTCOUNT&#xA;      ,SRC.CLOSINGBALANCE&#xA;      ,SRC.OPENINGBALANCE&#xA;      ,SRC.AVERAGEDAILYBALANCE&#xA;      ,SRC.MINDUEAMOUNT&#xA;      ,SRC.OVERDUEAMOUNT&#xA;      ,SRC.WISHTOPAY&#xA;      ,SRC.CYCLEACTIVITY&#xA;      ,SRC.TOTALCREDITS&#xA;      ,SRC.TOTALDEBITS&#xA;      ,SRC.TOTALPAYMENTS&#xA;      ,SRC.TOTALINTEREST&#xA;      ,SRC.EXCESSINTEREST&#xA;      ,SRC.RETURNEDPAYMENTS&#xA;      ,SRC.BACKDATEDCREDITS&#xA;      ,SRC.BACKDATEDDEBITS&#xA;      ,SRC.BACKDATEDPAYMENTS&#xA;      ,SRC.BACKDATEDRETURNEDPAYMENTS&#xA;      ,SRC.EXCESSPAYMENTAMOUNT&#xA;      ,SRC.LATEPAYMENTFEE&#xA;      ,SRC.INSTALMENTCLOSINGBALANCE&#xA;      ,SRC.INSTALMENTOPENINGBALANCE&#xA;      ,SRC.CREDITLIMIT&#xA;      ,SRC.OVERDUECYCLES&#xA;      ,SRC.PAYMENTINDICATOR&#xA;      ,SRC.CURRENCY&#xA;      ,SRC.DUEDATE&#xA;      ,SRC.PRINTDUEDATE&#xA;      ,SRC.CUREOVERDUEDATE&#xA;      ,SRC.COLLECTORCASE&#xA;      ,SRC.REPAYMENTPLANSERNO&#xA;      ,SRC.REPAYMENTPLANPARTITIONKEY&#xA;      ,SRC.REPAYMENTPLANCYCLE&#xA;      ,SRC.APRBALANCE&#xA;      ,SRC.APRPASTDUE&#xA;      ,SRC.APRCASH&#xA;      ,SRC.APRINSTALMENTS&#xA;      ,SRC.REASON&#xA;      ,SRC.SEQUENCE&#xA;      ,SRC.PUSHCOUNTER&#xA;      ,SRC.PUSHEDBILLINGDATE&#xA;      ,SRC.PUSHEDPRINTDUEDATE&#xA;      ,SRC.PREVSTMTSERNO&#xA;      ,SRC.PREVSTMTPARTITIONKEY&#xA;      ,SRC.RECALCALLOWED&#xA;      ,SRC.RECALCMINDUEAMOUNT&#xA;      ,SRC.RECALCOVERDUEAMOUNT&#xA;      ,SRC.RECALCCYCLEACTIVITY&#xA;      ,SRC.RECALCOVERDUECYCLES&#xA;      ,SRC.RECALCPAYMENTINDICATOR&#xA;      ,SRC.RECALCCLOSINGBALANCE&#xA;      ,SRC.RECALCAVERAGEDAILYBALANCE&#xA;      ,SRC.RECALCTOTALPAYMENTS&#xA;      ,SRC.RECALCTOTALINTEREST&#xA;      ,SRC.RECALCEXCESSINTEREST&#xA;      ,SRC.RECALCEXCESSPAYMENTAMOUNT&#xA;      ,SRC.RECALCCUREOVERDUEDATE&#xA;      ,SRC.CONVERTED&#xA;      ,SRC.OVERDUEDATE&#xA;      ,SRC.RECALCOVERDUEDATE&#xA;      ,SRC.PMNTAMTTOPAYOFFIN12MONTHS&#xA;      ,SRC.NUMOFMONTHSTOPAYOFFWITHMINAMT&#xA;      ,SRC.MINDUEAMOUNTWAIVED&#xA;      ,SRC.PAIDINFULLBALANCE&#xA;      ,SRC.PENDINGINTEREST&#xA;      ,SRC.CYCLEDAYS&#xA;      ,SRC.OVERDUEAGE&#xA;      ,SRC.RECALCOVERDUEAGE&#xA;      ,SRC.INSTALMENTCLOSINGBALPRINCIPAL&#xA;      ,SRC.MBHAGREEMENTSERNO&#xA;      ,SRC.MBHAGREEMENTEXPIRYDATE&#xA;      ,SRC.TOTALCREDITSBYDUEDATE&#xA;      ,SRC.RECALCTOTALCREDITS&#xA;      ,SRC.RECALCTOTALCREDITSBYDUEDATE&#xA;      ,SRC.RECALCPAIDINFULLBALANCE&#xA;      ,SRC.STGENERAL&#xA;      ,SRC.COLTYPESERNO&#xA;FROM &quot;+ @[User::v_Source_Table] + &quot; AS SRC &#xA;LEFT JOIN &quot;+ @[User::v_Dest_Table] +&quot; (NOLOCK)  AS DEST  &#xA;ON SRC.SERNO = DEST.SERNO &#xA;WHERE DEST.SERNO IS NULL &#xA;AND SRC.GENERATEDATETIME &gt;= '&quot;+ (DT_WSTR, 25)(DT_DBTIMESTAMP)@[User::v_Inc_Date] +&quot;'&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Source_Query_Inc">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT
+       SRC.INSTITUTION_ID
+      ,SRC.SERNO
+      ,SRC.PARTITIONKEY
+      ,SRC.CACCSERNO
+      ,SRC.BATCHSERNO
+      ,SRC.CYCLEDATE
+      ,SRC.BILLINGDATE
+      ,SRC.GENERATEDATETIME
+      ,SRC.LASTPRINTDATE
+      ,SRC.PRINTCOUNT
+      ,SRC.CLOSINGBALANCE
+      ,SRC.OPENINGBALANCE
+      ,SRC.AVERAGEDAILYBALANCE
+      ,SRC.MINDUEAMOUNT
+      ,SRC.OVERDUEAMOUNT
+      ,SRC.WISHTOPAY
+      ,SRC.CYCLEACTIVITY
+      ,SRC.TOTALCREDITS
+      ,SRC.TOTALDEBITS
+      ,SRC.TOTALPAYMENTS
+      ,SRC.TOTALINTEREST
+      ,SRC.EXCESSINTEREST
+      ,SRC.RETURNEDPAYMENTS
+      ,SRC.BACKDATEDCREDITS
+      ,SRC.BACKDATEDDEBITS
+      ,SRC.BACKDATEDPAYMENTS
+      ,SRC.BACKDATEDRETURNEDPAYMENTS
+      ,SRC.EXCESSPAYMENTAMOUNT
+      ,SRC.LATEPAYMENTFEE
+      ,SRC.INSTALMENTCLOSINGBALANCE
+      ,SRC.INSTALMENTOPENINGBALANCE
+      ,SRC.CREDITLIMIT
+      ,SRC.OVERDUECYCLES
+      ,SRC.PAYMENTINDICATOR
+      ,SRC.CURRENCY
+      ,SRC.DUEDATE
+      ,SRC.PRINTDUEDATE
+      ,SRC.CUREOVERDUEDATE
+      ,SRC.COLLECTORCASE
+      ,SRC.REPAYMENTPLANSERNO
+      ,SRC.REPAYMENTPLANPARTITIONKEY
+      ,SRC.REPAYMENTPLANCYCLE
+      ,SRC.APRBALANCE
+      ,SRC.APRPASTDUE
+      ,SRC.APRCASH
+      ,SRC.APRINSTALMENTS
+      ,SRC.REASON
+      ,SRC.SEQUENCE
+      ,SRC.PUSHCOUNTER
+      ,SRC.PUSHEDBILLINGDATE
+      ,SRC.PUSHEDPRINTDUEDATE
+      ,SRC.PREVSTMTSERNO
+      ,SRC.PREVSTMTPARTITIONKEY
+      ,SRC.RECALCALLOWED
+      ,SRC.RECALCMINDUEAMOUNT
+      ,SRC.RECALCOVERDUEAMOUNT
+      ,SRC.RECALCCYCLEACTIVITY
+      ,SRC.RECALCOVERDUECYCLES
+      ,SRC.RECALCPAYMENTINDICATOR
+      ,SRC.RECALCCLOSINGBALANCE
+      ,SRC.RECALCAVERAGEDAILYBALANCE
+      ,SRC.RECALCTOTALPAYMENTS
+      ,SRC.RECALCTOTALINTEREST
+      ,SRC.RECALCEXCESSINTEREST
+      ,SRC.RECALCEXCESSPAYMENTAMOUNT
+      ,SRC.RECALCCUREOVERDUEDATE
+      ,SRC.CONVERTED
+      ,SRC.OVERDUEDATE
+      ,SRC.RECALCOVERDUEDATE
+      ,SRC.PMNTAMTTOPAYOFFIN12MONTHS
+      ,SRC.NUMOFMONTHSTOPAYOFFWITHMINAMT
+      ,SRC.MINDUEAMOUNTWAIVED
+      ,SRC.PAIDINFULLBALANCE
+      ,SRC.PENDINGINTEREST
+      ,SRC.CYCLEDAYS
+      ,SRC.OVERDUEAGE
+      ,SRC.RECALCOVERDUEAGE
+      ,SRC.INSTALMENTCLOSINGBALPRINCIPAL
+      ,SRC.MBHAGREEMENTSERNO
+      ,SRC.MBHAGREEMENTEXPIRYDATE
+      ,SRC.TOTALCREDITSBYDUEDATE
+      ,SRC.RECALCTOTALCREDITS
+      ,SRC.RECALCTOTALCREDITSBYDUEDATE
+      ,SRC.RECALCPAIDINFULLBALANCE
+      ,SRC.STGENERAL
+      ,SRC.COLTYPESERNO
+FROM DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_MTRXNLINKS (NOLOCK) AS SRC 
+LEFT JOIN DEV_EIMDW_Archive_FIN10.[ARCHOWN].PRIME17_MTRXNLINKS (NOLOCK)  AS DEST  
+ON SRC.SERNO = DEST.SERNO 
+WHERE DEST.SERNO IS NULL 
+AND SRC.GENERATEDATETIME &gt;= '1753-01-01 00:00:00'</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{2FB5BA8A-3816-43AD-89A9-BE401F71FC97}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="@[$Project::p_LANDING_DATABASE] +&quot;.&quot;+ @[$Project::p_LANDING_SCHEMA]+&quot;.SRC_PRIME17_MTRXNLINKS (NOLOCK)&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Source_Table">
+      <DTS:VariableValue
+        DTS:DataType="8">DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_MTRXNLINKS (NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{373673DA-BB6E-4670-B1BC-72AB5136268B}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Task_Name">
+      <DTS:VariableValue
+        DTS:DataType="8">MTRXNLINKS</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{7688C758-1464-4B2D-9BAB-EB94F7C1E667}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;TRUNCATE TABLE &quot; + @[User::v_Dest_Table]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Truncate_Dest">
+      <DTS:VariableValue
+        DTS:DataType="8">TRUNCATE TABLE DEV_EIMDW_Archive_FIN10.[ARCHOWN].PRIME17_MTRXNLINKS</DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:LoggingOptions
+    DTS:FilterKind="0"
+    DTS:LoggingMode="1">
+    <DTS:Property
+      DTS:DataType="8"
+      DTS:Name="EventFilter">3,7,OnError,13,OnPostExecute,12,OnTaskFailed</DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnError"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnPostExecute"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnTaskFailed"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:SelectedLogProviders>
+      <DTS:SelectedLogProvider
+        DTS:InstanceID="{99408AA5-B454-432D-B17E-EB1B5C969421}" />
+    </DTS:SelectedLogProviders>
+  </DTS:LoggingOptions>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{C8D763AF-023E-4503-93CF-4F4A6EC26F5B}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="DFT_MTRXNLINKS_INITIAL_LOAD"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"DFT_"+ @[User::v_Task_Name]+"_INITIAL_LOAD"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\BDD_MTRXNLINKS"
+              componentClassID="Microsoft.BDD"
+              contactInfo="Balanced Data Distributor;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Evaluates and directs rows in a dataset to multiple destinations."
+              name="BDD_MTRXNLINKS">
+              <inputs>
+                <input
+                  refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\BDD_MTRXNLINKS.Inputs[Balanced Data Distributor Input]"
+                  description="Input to the Balanced Data      Distributor Transformation"
+                  name="Balanced Data Distributor Input">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\BDD_MTRXNLINKS.Outputs[Balanced Data Distributor Output 1]"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 1"
+                  synchronousInputId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\BDD_MTRXNLINKS.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\BDD_MTRXNLINKS.Outputs[Balanced Data Distributor Output 2]"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 2"
+                  synchronousInputId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\BDD_MTRXNLINKS.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\BDD_MTRXNLINKS.Outputs[Balanced Data Distributor Output 3]"
+                  dangling="true"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 3"
+                  synchronousInputId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\BDD_MTRXNLINKS.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH"
+              componentClassID="Microsoft.DerivedColumn"
+              contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+              name="DC_BATCH"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Inputs[Derived Column Input]"
+                  description="Input to the Derived Column Transformation"
+                  name="Derived Column Input">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output]"
+                  description="Default Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  name="Derived Column Output"
+                  synchronousInputId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[CRTE_BTCH_ID]"
+                      dataType="i8"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[CRTE_BTCH_ID]"
+                      name="CRTE_BTCH_ID"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">@[User::v_Batch_Id]</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">@[User::v_Batch_Id]</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[START_DATE]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[START_DATE]"
+                      name="START_DATE"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">[GETDATE]()</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">GETDATE()</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[ACTIVE_FLAG]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      length="1"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[ACTIVE_FLAG]"
+                      name="ACTIVE_FLAG"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">(DT_STR,1,1252)"Y"</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">(DT_STR,1,1252)"Y"</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[DELETE_FLAG]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      length="1"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[DELETE_FLAG]"
+                      name="DELETE_FLAG"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">(DT_STR,1,1252)"N"</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">(DT_STR,1,1252)"N"</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[END_DATE]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[END_DATE]"
+                      name="END_DATE"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">(DT_DBTIMESTAMP)"9999-12-31"</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">(DT_DBTIMESTAMP)"9999-12-31"</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[UPDT_BTCH_ID]"
+                      dataType="i8"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[UPDT_BTCH_ID]"
+                      name="UPDT_BTCH_ID"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">(DT_I8)0</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">(DT_I8)0</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Error Output]"
+                  description="Error Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Derived Column Error Output"
+                  synchronousInputId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="DST_MTRXNLINKS"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[ARCHOWN].[PRIME17_MTRXNLINKS]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS,ROWS_PER_BATCH = 1000000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_ARCHIVE_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_ARCHIVE_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].Columns[INSTITUTION_ID]"
+                      cachedDataType="i4"
+                      cachedName="INSTITUTION_ID"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[INSTITUTION_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].Columns[PARTITIONKEY]"
+                      cachedDataType="numeric"
+                      cachedName="PARTITIONKEY"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].ExternalColumns[PARTITIONKEY]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[PARTITIONKEY]" />
+                    <inputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].Columns[CONVERTED]"
+                      cachedDataType="i2"
+                      cachedName="CONVERTED"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].ExternalColumns[CONVERTED]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[CONVERTED]" />
+                    <inputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].Columns[FROMTRXNSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="FROMTRXNSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].ExternalColumns[FROMTRXNSERNO]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[FROMTRXNSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].Columns[SUBPARTITIONKEY]"
+                      cachedDataType="i4"
+                      cachedName="SUBPARTITIONKEY"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].ExternalColumns[SUBPARTITIONKEY]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[SUBPARTITIONKEY]" />
+                    <inputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].Columns[TOTRXNSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="TOTRXNSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].ExternalColumns[TOTRXNSERNO]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[TOTRXNSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].Columns[TOTRXNPARTITIONKEY]"
+                      cachedDataType="numeric"
+                      cachedName="TOTRXNPARTITIONKEY"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].ExternalColumns[TOTRXNPARTITIONKEY]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[TOTRXNPARTITIONKEY]" />
+                    <inputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].Columns[TOTRXNSUBPARTITIONKEY]"
+                      cachedDataType="i4"
+                      cachedName="TOTRXNSUBPARTITIONKEY"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].ExternalColumns[TOTRXNSUBPARTITIONKEY]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[TOTRXNSUBPARTITIONKEY]" />
+                    <inputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].Columns[LINKTYPE]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="LINKTYPE"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].ExternalColumns[LINKTYPE]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[LINKTYPE]" />
+                    <inputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].Columns[CRTE_BTCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="CRTE_BTCH_ID"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].ExternalColumns[CRTE_BTCH_ID]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[CRTE_BTCH_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].Columns[START_DATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="START_DATE"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].ExternalColumns[START_DATE]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[START_DATE]" />
+                    <inputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].Columns[ACTIVE_FLAG]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="ACTIVE_FLAG"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].ExternalColumns[ACTIVE_FLAG]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[ACTIVE_FLAG]" />
+                    <inputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].Columns[DELETE_FLAG]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="DELETE_FLAG"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].ExternalColumns[DELETE_FLAG]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[DELETE_FLAG]" />
+                    <inputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].Columns[END_DATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="END_DATE"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].ExternalColumns[END_DATE]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[END_DATE]" />
+                    <inputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].Columns[UPDT_BTCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="UPDT_BTCH_ID"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].ExternalColumns[UPDT_BTCH_ID]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[UPDT_BTCH_ID]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].ExternalColumns[CRTE_BTCH_ID]"
+                      dataType="i8"
+                      name="CRTE_BTCH_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].ExternalColumns[UPDT_BTCH_ID]"
+                      dataType="i8"
+                      name="UPDT_BTCH_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].ExternalColumns[START_DATE]"
+                      dataType="dbTimeStamp"
+                      name="START_DATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].ExternalColumns[END_DATE]"
+                      dataType="dbTimeStamp"
+                      name="END_DATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].ExternalColumns[ACTIVE_FLAG]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="ACTIVE_FLAG" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].ExternalColumns[DELETE_FLAG]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="DELETE_FLAG" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].ExternalColumns[PARTITIONKEY]"
+                      dataType="numeric"
+                      name="PARTITIONKEY"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].ExternalColumns[CONVERTED]"
+                      dataType="i2"
+                      name="CONVERTED" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID_SEQ_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID_SEQ_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].ExternalColumns[FROMTRXNSERNO]"
+                      dataType="numeric"
+                      name="FROMTRXNSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].ExternalColumns[SUBPARTITIONKEY]"
+                      dataType="i4"
+                      name="SUBPARTITIONKEY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].ExternalColumns[TOTRXNSERNO]"
+                      dataType="numeric"
+                      name="TOTRXNSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].ExternalColumns[TOTRXNPARTITIONKEY]"
+                      dataType="numeric"
+                      name="TOTRXNPARTITIONKEY"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].ExternalColumns[TOTRXNSUBPARTITIONKEY]"
+                      dataType="i4"
+                      name="TOTRXNSUBPARTITIONKEY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input].ExternalColumns[LINKTYPE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="LINKTYPE" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="DST_MTRXNLINKS 1"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[ARCHOWN].[PRIME17_MTRXNLINKS]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS,ROWS_PER_BATCH = 1000000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_ARCHIVE_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_ARCHIVE_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].Columns[INSTITUTION_ID]"
+                      cachedDataType="i4"
+                      cachedName="INSTITUTION_ID"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[INSTITUTION_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].Columns[PARTITIONKEY]"
+                      cachedDataType="numeric"
+                      cachedName="PARTITIONKEY"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[PARTITIONKEY]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[PARTITIONKEY]" />
+                    <inputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].Columns[CONVERTED]"
+                      cachedDataType="i2"
+                      cachedName="CONVERTED"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[CONVERTED]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[CONVERTED]" />
+                    <inputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].Columns[FROMTRXNSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="FROMTRXNSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[FROMTRXNSERNO]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[FROMTRXNSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].Columns[SUBPARTITIONKEY]"
+                      cachedDataType="i4"
+                      cachedName="SUBPARTITIONKEY"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[SUBPARTITIONKEY]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[SUBPARTITIONKEY]" />
+                    <inputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].Columns[TOTRXNSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="TOTRXNSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[TOTRXNSERNO]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[TOTRXNSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].Columns[TOTRXNPARTITIONKEY]"
+                      cachedDataType="numeric"
+                      cachedName="TOTRXNPARTITIONKEY"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[TOTRXNPARTITIONKEY]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[TOTRXNPARTITIONKEY]" />
+                    <inputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].Columns[TOTRXNSUBPARTITIONKEY]"
+                      cachedDataType="i4"
+                      cachedName="TOTRXNSUBPARTITIONKEY"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[TOTRXNSUBPARTITIONKEY]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[TOTRXNSUBPARTITIONKEY]" />
+                    <inputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].Columns[LINKTYPE]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="LINKTYPE"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[LINKTYPE]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[LINKTYPE]" />
+                    <inputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].Columns[CRTE_BTCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="CRTE_BTCH_ID"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[CRTE_BTCH_ID]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[CRTE_BTCH_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].Columns[START_DATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="START_DATE"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[START_DATE]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[START_DATE]" />
+                    <inputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].Columns[ACTIVE_FLAG]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="ACTIVE_FLAG"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[ACTIVE_FLAG]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[ACTIVE_FLAG]" />
+                    <inputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].Columns[DELETE_FLAG]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="DELETE_FLAG"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[DELETE_FLAG]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[DELETE_FLAG]" />
+                    <inputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].Columns[END_DATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="END_DATE"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[END_DATE]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[END_DATE]" />
+                    <inputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].Columns[UPDT_BTCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="UPDT_BTCH_ID"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[UPDT_BTCH_ID]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[UPDT_BTCH_ID]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[CRTE_BTCH_ID]"
+                      dataType="i8"
+                      name="CRTE_BTCH_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[UPDT_BTCH_ID]"
+                      dataType="i8"
+                      name="UPDT_BTCH_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[START_DATE]"
+                      dataType="dbTimeStamp"
+                      name="START_DATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[END_DATE]"
+                      dataType="dbTimeStamp"
+                      name="END_DATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[ACTIVE_FLAG]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="ACTIVE_FLAG" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[DELETE_FLAG]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="DELETE_FLAG" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[PARTITIONKEY]"
+                      dataType="numeric"
+                      name="PARTITIONKEY"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[CONVERTED]"
+                      dataType="i2"
+                      name="CONVERTED" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID_SEQ_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID_SEQ_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[FROMTRXNSERNO]"
+                      dataType="numeric"
+                      name="FROMTRXNSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[SUBPARTITIONKEY]"
+                      dataType="i4"
+                      name="SUBPARTITIONKEY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[TOTRXNSERNO]"
+                      dataType="numeric"
+                      name="TOTRXNSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[TOTRXNPARTITIONKEY]"
+                      dataType="numeric"
+                      name="TOTRXNPARTITIONKEY"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[TOTRXNSUBPARTITIONKEY]"
+                      dataType="i4"
+                      name="TOTRXNSUBPARTITIONKEY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input].ExternalColumns[LINKTYPE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="LINKTYPE" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\RC_MTRXNLINKS"
+              componentClassID="Microsoft.RowCount"
+              contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Counts rows as they pass through a data flow. For example, use the number of rows processed to determine whether or not to perform cleanup operations, or update text in an e-mail message to communicate processing status."
+              name="RC_MTRXNLINKS">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable to hold the row count."
+                  name="VariableName">User::v_Rows_Read</property>
+              </properties>
+              <inputs>
+                <input
+                  refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\RC_MTRXNLINKS.Inputs[Row Count Input 1]"
+                  hasSideEffects="true"
+                  name="Row Count Input 1">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\RC_MTRXNLINKS.Outputs[Row Count Output 1]"
+                  name="Row Count Output 1"
+                  synchronousInputId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\RC_MTRXNLINKS.Inputs[Row Count Input 1]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="SRC_MTRXNLINKS"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[LZOWN].[SRC_FINCL10_GAC]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable">User::v_Source_Query_Full</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[INSTITUTION_ID]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[INSTITUTION_ID]"
+                      name="INSTITUTION_ID"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[PARTITIONKEY]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].ExternalColumns[PARTITIONKEY]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[PARTITIONKEY]"
+                      name="PARTITIONKEY"
+                      precision="10"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[CONVERTED]"
+                      dataType="i2"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].ExternalColumns[CONVERTED]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[CONVERTED]"
+                      name="CONVERTED"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[FROMTRXNSERNO]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].ExternalColumns[FROMTRXNSERNO]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[FROMTRXNSERNO]"
+                      name="FROMTRXNSERNO"
+                      precision="10"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[SUBPARTITIONKEY]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].ExternalColumns[SUBPARTITIONKEY]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[SUBPARTITIONKEY]"
+                      name="SUBPARTITIONKEY"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[TOTRXNSERNO]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].ExternalColumns[TOTRXNSERNO]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[TOTRXNSERNO]"
+                      name="TOTRXNSERNO"
+                      precision="10"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[TOTRXNPARTITIONKEY]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].ExternalColumns[TOTRXNPARTITIONKEY]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[TOTRXNPARTITIONKEY]"
+                      name="TOTRXNPARTITIONKEY"
+                      precision="10"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[TOTRXNSUBPARTITIONKEY]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].ExternalColumns[TOTRXNSUBPARTITIONKEY]"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[TOTRXNSUBPARTITIONKEY]"
+                      name="TOTRXNSUBPARTITIONKEY"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[LINKTYPE]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].ExternalColumns[LINKTYPE]"
+                      length="1"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].Columns[LINKTYPE]"
+                      name="LINKTYPE"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].ExternalColumns[PARTITIONKEY]"
+                      dataType="numeric"
+                      name="PARTITIONKEY"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].ExternalColumns[CONVERTED]"
+                      dataType="i2"
+                      name="CONVERTED" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].ExternalColumns[FROMTRXNSERNO]"
+                      dataType="numeric"
+                      name="FROMTRXNSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].ExternalColumns[SUBPARTITIONKEY]"
+                      dataType="i4"
+                      name="SUBPARTITIONKEY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].ExternalColumns[TOTRXNSERNO]"
+                      dataType="numeric"
+                      name="TOTRXNSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].ExternalColumns[TOTRXNPARTITIONKEY]"
+                      dataType="numeric"
+                      name="TOTRXNPARTITIONKEY"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].ExternalColumns[TOTRXNSUBPARTITIONKEY]"
+                      dataType="i4"
+                      name="TOTRXNSUBPARTITIONKEY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output].ExternalColumns[LINKTYPE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="LINKTYPE" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                    <outputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Error Output].Columns[INSTITUTION_ID]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Error Output].Columns[INSTITUTION_ID]"
+                      name="INSTITUTION_ID" />
+                    <outputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Error Output].Columns[PARTITIONKEY]"
+                      dataType="numeric"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Error Output].Columns[PARTITIONKEY]"
+                      name="PARTITIONKEY"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Error Output].Columns[CONVERTED]"
+                      dataType="i2"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Error Output].Columns[CONVERTED]"
+                      name="CONVERTED" />
+                    <outputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Error Output].Columns[FROMTRXNSERNO]"
+                      dataType="numeric"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Error Output].Columns[FROMTRXNSERNO]"
+                      name="FROMTRXNSERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Error Output].Columns[SUBPARTITIONKEY]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Error Output].Columns[SUBPARTITIONKEY]"
+                      name="SUBPARTITIONKEY" />
+                    <outputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Error Output].Columns[TOTRXNSERNO]"
+                      dataType="numeric"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Error Output].Columns[TOTRXNSERNO]"
+                      name="TOTRXNSERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Error Output].Columns[TOTRXNPARTITIONKEY]"
+                      dataType="numeric"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Error Output].Columns[TOTRXNPARTITIONKEY]"
+                      name="TOTRXNPARTITIONKEY"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Error Output].Columns[TOTRXNSUBPARTITIONKEY]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Error Output].Columns[TOTRXNSUBPARTITIONKEY]"
+                      name="TOTRXNSUBPARTITIONKEY" />
+                    <outputColumn
+                      refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Error Output].Columns[LINKTYPE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      lineageId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Error Output].Columns[LINKTYPE]"
+                      name="LINKTYPE" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD.Paths[Balanced Data Distributor Output 1]"
+              endId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS.Inputs[OLE DB Destination Input]"
+              name="Balanced Data Distributor Output 1"
+              startId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\BDD_MTRXNLINKS.Outputs[Balanced Data Distributor Output 1]" />
+            <path
+              refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD.Paths[Balanced Data Distributor Output 2]"
+              endId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1.Inputs[OLE DB Destination Input]"
+              name="Balanced Data Distributor Output 2"
+              startId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\BDD_MTRXNLINKS.Outputs[Balanced Data Distributor Output 2]" />
+            <path
+              refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD.Paths[Derived Column Output]"
+              endId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\BDD_MTRXNLINKS.Inputs[Balanced Data Distributor Input]"
+              name="Derived Column Output"
+              startId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Outputs[Derived Column Output]" />
+            <path
+              refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD.Paths[OLE DB Source Output]"
+              endId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\RC_MTRXNLINKS.Inputs[Row Count Input 1]"
+              name="OLE DB Source Output"
+              startId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS.Outputs[OLE DB Source Output]" />
+            <path
+              refId="Package\DFT_MTRXNLINKS_INITIAL_LOAD.Paths[Row Count Output 1]"
+              endId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH.Inputs[Derived Column Input]"
+              name="Row Count Output 1"
+              startId="Package\DFT_MTRXNLINKS_INITIAL_LOAD\RC_MTRXNLINKS.Outputs[Row Count Output 1]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_MTRXNLINKS_GET_DEST_COUNT_LOAD"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{7C87C4B1-1FB2-4725-AFA5-20516F38273F}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_MTRXNLINKS_GET_DEST_COUNT_LOAD"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_GET_DEST_COUNT_LOAD"</DTS:PropertyExpression>
+      <DTS:EventHandlers>
+        <DTS:EventHandler
+          DTS:refId="Package\SQL_MTRXNLINKS_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]"
+          DTS:CreationName="OnPreExecute"
+          DTS:DTSID="{790972E5-41CB-4162-8D32-CFC909966D07}"
+          DTS:EventID="1076330902"
+          DTS:EventName="OnPreExecute"
+          DTS:LocaleID="-1">
+          <DTS:Variables>
+            <DTS:Variable
+              DTS:CreationName=""
+              DTS:Description="The propagate property of the event"
+              DTS:DTSID="{5DB6A040-B240-4D6A-A624-1C64F0F863C9}"
+              DTS:IncludeInDebugDump="6789"
+              DTS:Namespace="System"
+              DTS:ObjectName="Propagate">
+              <DTS:VariableValue
+                DTS:DataType="11">-1</DTS:VariableValue>
+            </DTS:Variable>
+          </DTS:Variables>
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\SQL_MTRXNLINKS_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]\SQL_MTRXNLINKS_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{046C8277-5D81-4AB9-80BF-49B8411178EF}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="SQL_MTRXNLINKS_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+              <DTS:Variables />
+              <DTS:PropertyExpression
+                DTS:Name="Name">"SQL_"+ @[User::v_Task_Name]+"_UPDATE_DFT_LOAD_COMPLETED"</DTS:PropertyExpression>
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{3115809E-25AB-434A-9B65-AEECBBA8CD73}"
+                  SQLTask:SqlStatementSource="UPDATE DBO.BATCH_EXECUTION_STATUS&#xA; SET  &#xA;STATUS_FLAG = 'DFT LOAD COMPLETED'   WHERE&#xA; EXECUTION_ID = (&#xA;       SELECT MAX(EXECUTION_ID) EXECUTION_ID&#xA;       FROM DBO.BATCH_EXECUTION_STATUS&#xA;       WHERE PACKAGE_ID =?&#xA;       AND  BATCH_ID = ?&#xA;    )"
+                  SQLTask:TypeConversionMode="None" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="0"
+                    SQLTask:DtsVariableName="User::v_Package_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="1"
+                    SQLTask:DtsVariableName="User::v_Batch_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                </SQLTask:SqlTaskData>
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+        </DTS:EventHandler>
+      </DTS:EventHandlers>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{F9B62AC8-9EA4-4BE6-90E3-F361FC410C7C}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::v_Dest_Count_Query"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="0"
+            SQLTask:DtsVariableName="User::v_Rows_Inserted" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_MTRXNLINKS_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{5667F6DE-5341-48E2-8AA3-E4B3872AB835}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_MTRXNLINKS_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_CHECK_PACKAGE_EXISTENCE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{3115809E-25AB-434A-9B65-AEECBBA8CD73}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_NAME VARCHAR(500) = ?&#xA;&#xA;EXEC [DBO].[SP_CHECK_PACKAGE_EXISTENCE]  @PACKAGE_NAME " xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_MTRXNLINKS_SP_GET_INC_VALUE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{08D29780-630E-4704-A66E-A2CE413FE3B0}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_MTRXNLINKS_SP_GET_INC_VALUE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_GET_INC_VALUE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{3115809E-25AB-434A-9B65-AEECBBA8CD73}"
+          SQLTask:BypassPrepare="False"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::v_Get_Inc_Date"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="0"
+            SQLTask:DtsVariableName="User::v_Inc_Number" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_MTRXNLINKS_SP_GET_PACKAGE_BATCH_ID"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{46C98429-21BB-4835-A96C-522515C71B43}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_MTRXNLINKS_SP_GET_PACKAGE_BATCH_ID"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_GET_PACKAGE_BATCH_ID"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{3115809E-25AB-434A-9B65-AEECBBA8CD73}"
+          SQLTask:SqlStatementSource="&#xA;DECLARE @PACKAGE_NAME VARCHAR(500) = ?&#xA;DECLARE @PACKAGE_ID  INT &#xA;DECLARE @BATCH_ID BIGINT&#xA;&#xA;&#xA; EXEC [DBO].[SP_GET_PACKAGE_BATCH_ID]  @PACKAGE_NAME,@PACKAGE_ID OUT,@BATCH_ID OUT&#xA; SELECT ? = @PACKAGE_ID &#xA; SELECT ? = @BATCH_ID" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_MTRXNLINKS_SP_INSERT_EXECUTION_STATUS"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{63E94384-555F-45CD-9ACF-DCFF880D0FD4}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_MTRXNLINKS_SP_INSERT_EXECUTION_STATUS"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_INSERT_EXECUTION_STATUS"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{3115809E-25AB-434A-9B65-AEECBBA8CD73}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @PACKAGE_START_TIME DATETIME = ?&#xA;DECLARE @JOB_ID INT  =?&#xA;&#xA;EXEC [DBO].[SP_INSERT_EXECUTION_STATUS]               @PACKAGE_ID&#xA;,@BATCH_ID&#xA;,@PACKAGE_START_TIME&#xA;,@JOB_ID" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="System::StartTime"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="7"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="$Project::p_JOB_ID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_MTRXNLINKS_SP_MERGE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{59BEAAD1-95B9-4D0C-9158-6D2D7DEC334A}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_MTRXNLINKS_SP_MERGE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="1">
+      <DTS:Variables />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name]+"_SP_MERGE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{F9B62AC8-9EA4-4BE6-90E3-F361FC410C7C}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @INSERT_CNT BIGINT = 0&#xA;DECLARE @UPDATE_CNT BIGINT = 0&#xA;DECLARE @ROWSREAD_CNT BIGINT = 0&#xA;&#xA;EXEC [dbo].[SP_SCD_PRIME17_MTRXNLINKS]         &#xA;     @PACKAGE_ID&#xA; ,@BATCH_ID&#xA; ,@INSERT_CNT OUTPUT&#xA; ,@UPDATE_CNT OUTPUT&#xA; ,@ROWSREAD_CNT OUTPUT&#xA;&#xA;SELECT   ? = @INSERT_CNT&#xA; ,? = @UPDATE_CNT&#xA; ,? = @ROWSREAD_CNT" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::v_Rows_Inserted"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="User::v_Rows_Updated"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="4"
+            SQLTask:DtsVariableName="User::v_Rows_Read"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_MTRXNLINKS_SP_UPDATE_DW_INC_VALUES"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{07976227-281F-47EA-9F40-26AED5289F01}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_MTRXNLINKS_SP_UPDATE_DW_INC_VALUES"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="2">
+      <DTS:Variables />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_UPDATE_DW_INC_VALUES"</DTS:PropertyExpression>
+      <DTS:EventHandlers>
+        <DTS:EventHandler
+          DTS:refId="Package\SQL_MTRXNLINKS_SP_UPDATE_DW_INC_VALUES.EventHandlers[OnPreExecute]"
+          DTS:CreationName="OnPreExecute"
+          DTS:DTSID="{C98713E6-1BC2-4DE8-9AEE-3F73948BF024}"
+          DTS:EventID="0"
+          DTS:EventName="OnPreExecute"
+          DTS:LocaleID="-1">
+          <DTS:Variables>
+            <DTS:Variable
+              DTS:CreationName=""
+              DTS:Description="The propagate property of the event"
+              DTS:DTSID="{64AA8722-14BB-4C26-9ABD-D4C346AECD32}"
+              DTS:IncludeInDebugDump="6789"
+              DTS:Namespace="System"
+              DTS:ObjectName="Propagate">
+              <DTS:VariableValue
+                DTS:DataType="11">-1</DTS:VariableValue>
+            </DTS:Variable>
+          </DTS:Variables>
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\SQL_MTRXNLINKS_SP_UPDATE_DW_INC_VALUES.EventHandlers[OnPreExecute]\SQL_MTRXNLINKS_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{5B209CA8-55B9-48A0-8281-9F6C5DE7F282}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="SQL_MTRXNLINKS_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+              <DTS:Variables />
+              <DTS:PropertyExpression
+                DTS:Name="Name">"SQL_"+ @[User::v_Task_Name]+"_UPDATE_DFT_LOAD_COMPLETED"</DTS:PropertyExpression>
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{3115809E-25AB-434A-9B65-AEECBBA8CD73}"
+                  SQLTask:SqlStatementSource="UPDATE DBO.BATCH_EXECUTION_STATUS&#xA; SET  &#xA;STATUS_FLAG = 'DFT LOAD COMPLETED'   WHERE&#xA; EXECUTION_ID = (&#xA;       SELECT MAX(EXECUTION_ID) EXECUTION_ID&#xA;       FROM DBO.BATCH_EXECUTION_STATUS&#xA;       WHERE PACKAGE_ID =?&#xA;       AND  BATCH_ID = ?&#xA;    )" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="0"
+                    SQLTask:DtsVariableName="User::v_Package_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="1"
+                    SQLTask:DtsVariableName="User::v_Batch_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                </SQLTask:SqlTaskData>
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+        </DTS:EventHandler>
+      </DTS:EventHandlers>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{3115809E-25AB-434A-9B65-AEECBBA8CD73}"
+          SQLTask:SqlStatementSource="&#xA; DECLARE @PACKAGE_ID INT = ?&#xA;&#xA;EXEC [DBO].[SP_UPDATE_DW_INC_VALUE] @PACKAGE_ID" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_MTRXNLINKS_SP_UPDATE_EXECUTION_STATUS"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{39DAC3EF-2100-4725-AA80-D0284A24E0F7}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_MTRXNLINKS_SP_UPDATE_EXECUTION_STATUS"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="2">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_UPDATE_EXECUTION_STATUS"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{3115809E-25AB-434A-9B65-AEECBBA8CD73}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @ROWS_READ BIGINT = ?&#xA;DECLARE @ROWS_INSERTED BIGINT = ?&#xA;DECLARE @ROWS_UPDATED BIGINT = ?&#xA;DECLARE @ROWS_ERRORED BIGINT = 0&#xA;&#xA;&#xA;EXEC DBO.SP_UPDATE_EXECUTION_STATUS @PACKAGE_ID&#xA; , @BATCH_ID&#xA; , @ROWS_READ&#xA; , @ROWS_INSERTED&#xA; ,@ROWS_UPDATED &#xA; ,@ROWS_ERRORED" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::v_Rows_Read"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="User::v_Rows_Inserted"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="4"
+            SQLTask:DtsVariableName="User::v_Rows_Updated"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_MTRXNLINKS_TRUNCATE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{55373ECE-FBDF-4F61-9473-0DEC9F9496FE}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_MTRXNLINKS_TRUNCATE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_TRUNCATE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{F9B62AC8-9EA4-4BE6-90E3-F361FC410C7C}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::v_Truncate_Dest" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{A5AEE72E-6A48-475A-8E1E-0F5766716664}"
+      DTS:From="Package\SQL_MTRXNLINKS_SP_GET_PACKAGE_BATCH_ID"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\SQL_MTRXNLINKS_SP_INSERT_EXECUTION_STATUS" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{1B1FF678-7103-4ACD-87C2-C74B6D60C18B}"
+      DTS:From="Package\SQL_MTRXNLINKS_SP_INSERT_EXECUTION_STATUS"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\SQL_MTRXNLINKS_SP_GET_INC_VALUE" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 10]"
+      DTS:CreationName=""
+      DTS:DTSID="{B328B36E-3C01-4A0E-8474-FEEFF95341FA}"
+      DTS:From="Package\SQL_MTRXNLINKS_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 10"
+      DTS:To="Package\SQL_MTRXNLINKS_SP_GET_PACKAGE_BATCH_ID" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{5658A622-3FDD-4FFE-A7EB-C8FB80E9257B}"
+      DTS:EvalOp="3"
+      DTS:Expression="@[User::v_Inc_Number] == 0"
+      DTS:From="Package\SQL_MTRXNLINKS_SP_GET_INC_VALUE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\SQL_MTRXNLINKS_TRUNCATE" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 3]"
+      DTS:CreationName=""
+      DTS:DTSID="{010C649D-3EEA-4EF6-BD42-9C3FF700FC32}"
+      DTS:EvalOp="3"
+      DTS:Expression="@[User::v_Inc_Number] &gt; 0"
+      DTS:From="Package\SQL_MTRXNLINKS_SP_GET_INC_VALUE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 3"
+      DTS:To="Package\SQL_MTRXNLINKS_SP_MERGE" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 4]"
+      DTS:CreationName=""
+      DTS:DTSID="{CF2D3629-A3E8-4523-B87C-B485505DD20B}"
+      DTS:Expression="@[User::v_Inc_Date] == (DT_DBTIMESTAMP) &quot;1753-01-01&quot;"
+      DTS:From="Package\SQL_MTRXNLINKS_TRUNCATE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 4"
+      DTS:To="Package\DFT_MTRXNLINKS_INITIAL_LOAD" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 5]"
+      DTS:CreationName=""
+      DTS:DTSID="{FAE6A09F-DFBD-4027-9194-9188F4F1130D}"
+      DTS:From="Package\SQL_MTRXNLINKS_SP_UPDATE_DW_INC_VALUES"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 5"
+      DTS:To="Package\SQL_MTRXNLINKS_SP_UPDATE_EXECUTION_STATUS" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 6]"
+      DTS:CreationName=""
+      DTS:DTSID="{D3A92A7D-D04B-4742-A752-457F3443665D}"
+      DTS:From="Package\DFT_MTRXNLINKS_INITIAL_LOAD"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 6"
+      DTS:To="Package\SQL_MTRXNLINKS_GET_DEST_COUNT_LOAD" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 7]"
+      DTS:CreationName=""
+      DTS:DTSID="{D49A96A8-03AB-48C7-A930-485F27F0ECA5}"
+      DTS:From="Package\SQL_MTRXNLINKS_GET_DEST_COUNT_LOAD"
+      DTS:ObjectName="Constraint 7"
+      DTS:To="Package\SQL_MTRXNLINKS_SP_UPDATE_DW_INC_VALUES" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 8]"
+      DTS:CreationName=""
+      DTS:DTSID="{B27754C3-33D1-433D-9BB9-8EE7F06C7F96}"
+      DTS:From="Package\SQL_MTRXNLINKS_SP_MERGE"
+      DTS:ObjectName="Constraint 8"
+      DTS:To="Package\SQL_MTRXNLINKS_SP_UPDATE_DW_INC_VALUES" />
+  </DTS:PrecedenceConstraints>
+  <DTS:EventHandlers>
+    <DTS:EventHandler
+      DTS:refId="Package.EventHandlers[OnError]"
+      DTS:CreationName="OnError"
+      DTS:DTSID="{7424CDCC-0532-472A-8AF2-6895A8DD2805}"
+      DTS:EventID="2"
+      DTS:EventName="OnError"
+      DTS:LocaleID="-1">
+      <DTS:Variables>
+        <DTS:Variable
+          DTS:CreationName=""
+          DTS:Description="The propagate property of the event"
+          DTS:DTSID="{5E4F881B-F7D5-4D39-9EB3-D3934A5D6EF7}"
+          DTS:IncludeInDebugDump="6789"
+          DTS:Namespace="System"
+          DTS:ObjectName="Propagate">
+          <DTS:VariableValue
+            DTS:DataType="11">-1</DTS:VariableValue>
+        </DTS:Variable>
+      </DTS:Variables>
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package.EventHandlers[OnError]\SQL_MTRXNLINKS_SP_SSIS_ERRORLOG"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{04C4C6A1-8E9C-4DCF-A4D4-5DA995CC56B9}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="SQL_MTRXNLINKS_SP_SSIS_ERRORLOG"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:PropertyExpression
+            DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_SSIS_ERRORLOG"</DTS:PropertyExpression>
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{3115809E-25AB-434A-9B65-AEECBBA8CD73}"
+              SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @PKG_GUID SYSNAME = ?&#xA;DECLARE @PACKAGE_NAME SYSNAME = ?&#xA;DECLARE @SOURCE_NAME VARCHAR(100) = ?&#xA;DECLARE @TASK_NAME VARCHAR(100) = ?&#xA;DECLARE @MACHINE_NAME VARCHAR(50) = ?&#xA;DECLARE @USER_NAME VARCHAR(50) = ?&#xA;DECLARE @ERROR_NUMBER INT = ?&#xA;DECLARE @ERROR_DESCRIPTION VARCHAR(MAX) = ?&#xA;DECLARE @PACKAGE_START_TIME DATETIME  = NULL&#xA;DECLARE @ROWS_READ BIGINT = ?&#xA;DECLARE @ROWS_INSERTED BIGINT = ?&#xA;DECLARE @ROWS_UPDATED BIGINT = NULL&#xA;DECLARE @ROWS_ERRORED BIGINT = NULL&#xA;&#xA;EXEC DBO.[SP_SSIS_ERRORLOG] @PACKAGE_ID&#xA;&#x9;,@BATCH_ID&#xA;&#x9;,@PKG_GUID&#xA;&#x9;,@PACKAGE_NAME&#xA;&#x9;,@SOURCE_NAME&#xA;&#x9;,@TASK_NAME&#xA;&#x9;,@MACHINE_NAME&#xA;&#x9;,@USER_NAME&#xA;&#x9;,@ERROR_NUMBER&#xA;&#x9;,@ERROR_DESCRIPTION&#xA;&#x9;,@PACKAGE_START_TIME&#xA;&#x9;,@ROWS_READ&#xA;&#x9;,@ROWS_INSERTED&#xA;&#x9;,@ROWS_UPDATED &#xA;&#x9;,@ROWS_ERRORED" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::v_Package_Id"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="1"
+                SQLTask:DtsVariableName="User::v_Batch_Id"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="2"
+                SQLTask:DtsVariableName="System::PackageID"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="3"
+                SQLTask:DtsVariableName="System::PackageName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="4"
+                SQLTask:DtsVariableName="System::SourceName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="5"
+                SQLTask:DtsVariableName="System::TaskName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="6"
+                SQLTask:DtsVariableName="System::MachineName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="7"
+                SQLTask:DtsVariableName="System::UserName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="8"
+                SQLTask:DtsVariableName="System::ErrorCode"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="9"
+                SQLTask:DtsVariableName="System::ErrorDescription"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="10"
+                SQLTask:DtsVariableName="User::v_Rows_Read"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="11"
+                SQLTask:DtsVariableName="User::v_Rows_Inserted"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+    </DTS:EventHandler>
+  </DTS:EventHandlers>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="342.4,41.6"
+          Id="Package\DFT_MTRXNLINKS_INITIAL_LOAD"
+          TopLeft="89.7142872421109,411.38823966122" />
+        <NodeLayout
+          Size="342.4,41.6"
+          Id="Package\SQL_MTRXNLINKS_GET_DEST_COUNT_LOAD"
+          TopLeft="84.704016696677,492.969266348608" />
+        <NodeLayout
+          Size="342.4,41.6"
+          Id="Package\SQL_MTRXNLINKS_SP_CHECK_PACKAGE_EXISTENCE"
+          TopLeft="253.266516696677,6.72352942892425" />
+        <NodeLayout
+          Size="342.4,41.6"
+          Id="Package\SQL_MTRXNLINKS_SP_GET_INC_VALUE"
+          TopLeft="250.704016696677,248.133971330085" />
+        <NodeLayout
+          Size="342.4,41.6"
+          Id="Package\SQL_MTRXNLINKS_SP_GET_PACKAGE_BATCH_ID"
+          TopLeft="253.266516696677,88.0832650121201" />
+        <NodeLayout
+          Size="342.4,41.6"
+          Id="Package\SQL_MTRXNLINKS_SP_INSERT_EXECUTION_STATUS"
+          TopLeft="253.266516696677,169.443000595316" />
+        <NodeLayout
+          Size="289.6,41.6"
+          Id="Package\SQL_MTRXNLINKS_SP_MERGE"
+          TopLeft="515.714287242111,368.23985726079" />
+        <NodeLayout
+          Size="342.4,41.6"
+          Id="Package\SQL_MTRXNLINKS_SP_UPDATE_DW_INC_VALUES"
+          TopLeft="250.704016696677,576.177860585538" />
+        <NodeLayout
+          Size="342.4,41.6"
+          Id="Package\SQL_MTRXNLINKS_SP_UPDATE_EXECUTION_STATUS"
+          TopLeft="250.704016696677,666.23985726079" />
+        <NodeLayout
+          Size="342.4,41.6"
+          Id="Package\SQL_MTRXNLINKS_TRUNCATE"
+          TopLeft="91.4569954315768,331.175146182985" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="424.266516696677,130.08326501212">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,39.3597355831959"
+              Start="0,0"
+              End="0,31.8597355831959">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,31.8597355831959" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="422.985266696677,211.443000595316">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,36.690970734769"
+              Start="0,0"
+              End="0,29.190970734769">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,29.190970734769" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 10]"
+          TopLeft="424.266516696677,48.7235294289243">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,39.3597355831958"
+              Start="0,0"
+              End="0,31.8597355831958">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,31.8597355831958" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="366.03735003001,290.133971330085">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-103.580354598434,41.0411748529"
+              Start="0,0"
+              End="-103.580354598434,33.5411748529">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,12.5311367859178" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,12.5311367859178"
+                    Point2="0,16.5311367859178"
+                    Point3="-4,16.5311367859178" />
+                  <mssgle:LineSegment
+                    End="-99.5803545984335,16.5311367859178" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-99.5803545984335,16.5311367859178"
+                    Point2="-103.580354598434,16.5311367859178"
+                    Point3="-103.580354598434,20.5311367859178" />
+                  <mssgle:LineSegment
+                    End="-103.580354598434,33.5411748529" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-59.7901772992168,21.5311367859178,16,16"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 3]"
+          TopLeft="477.370683363344,290.133971330085">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="183.343603878767,78.105885930705"
+              Start="0,0"
+              End="183.343603878767,70.605885930705">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,27.4605780349522" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,27.4605780349522"
+                    Point2="0,31.4605780349522"
+                    Point3="4,31.4605780349522" />
+                  <mssgle:LineSegment
+                    End="179.343603878767,31.4605780349522" />
+                  <mssgle:CubicBezierSegment
+                    Point1="179.343603878767,31.4605780349522"
+                    Point2="183.343603878767,31.4605780349522"
+                    Point3="183.343603878767,35.4605780349522" />
+                  <mssgle:LineSegment
+                    End="183.343603878767,70.605885930705" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="83.6718019393836,36.4605780349522,16,16"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 4]"
+          TopLeft="261.585641336844,373.175146182985">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,38.213093478235"
+              Start="0,0"
+              End="0,30.713093478235">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,30.713093478235" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 5]"
+          TopLeft="421.704016696677,618.177860585538">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,48.061996675252"
+              Start="0,0"
+              End="0,40.561996675252">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,40.561996675252" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 6]"
+          TopLeft="258.209151969394,453.38823966122">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,39.581026687388"
+              Start="0,0"
+              End="0,32.081026687388">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,32.081026687388" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 7]"
+          TopLeft="255.704016696677,534.969266348608">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="166,41.20859423693"
+              Start="0,0"
+              End="166,33.70859423693">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,16.604297118465" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,16.604297118465"
+                    Point2="0,20.604297118465"
+                    Point3="4,20.604297118465" />
+                  <mssgle:LineSegment
+                    End="162,20.604297118465" />
+                  <mssgle:CubicBezierSegment
+                    Point1="162,20.604297118465"
+                    Point2="166,20.604297118465"
+                    Point3="166,24.604297118465" />
+                  <mssgle:LineSegment
+                    End="166,33.70859423693" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 8]"
+          TopLeft="660.714287242111,410.23985726079">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-183.343603878767,165.938003324748"
+              Start="0,0"
+              End="-183.343603878767,158.438003324748">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,95.0991800996458" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,95.0991800996458"
+                    Point2="0,99.0991800996458"
+                    Point3="-4,99.0991800996458" />
+                  <mssgle:LineSegment
+                    End="-179.343603878767,99.0991800996458" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-179.343603878767,99.0991800996458"
+                    Point2="-183.343603878767,99.0991800996458"
+                    Point3="-183.343603878767,103.099180099646" />
+                  <mssgle:LineSegment
+                    End="-183.343603878767,158.438003324748" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <DtsEventHandler
+    design-time-name="Package.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="279.2,41.6"
+          Id="Package.EventHandlers[OnError]\SQL_MTRXNLINKS_SP_SSIS_ERRORLOG"
+          TopLeft="381.500003542219,91.7588240098794" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <TaskHost
+    design-time-name="Package\DFT_MTRXNLINKS_INITIAL_LOAD">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="184,41.6"
+          Id="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS"
+          TopLeft="84.2857167088256,377.529411664608" />
+        <NodeLayout
+          Size="184,41.6"
+          Id="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS"
+          TopLeft="215.723201432639,15.294117861553" />
+        <NodeLayout
+          Size="184,41.6"
+          Id="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1"
+          TopLeft="326.285716708826,377.529411664608" />
+        <NodeLayout
+          Size="184,41.6"
+          Id="Package\DFT_MTRXNLINKS_INITIAL_LOAD\RC_MTRXNLINKS"
+          TopLeft="215.723201432639,98.4718955582993" />
+        <NodeLayout
+          Size="184,41.6"
+          Id="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DC_BATCH"
+          TopLeft="215.723201432639,181.649673255046" />
+        <NodeLayout
+          Size="184,41.6"
+          Id="Package\DFT_MTRXNLINKS_INITIAL_LOAD\BDD_MTRXNLINKS"
+          TopLeft="215.723201432639,264.827450951792" />
+        <EdgeLayout
+          Id="Package\DFT_MTRXNLINKS_INITIAL_LOAD.Paths[Row Count Output 1]"
+          TopLeft="307.723201432639,140.071895558299">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,41.5777776967467"
+              Start="0,0"
+              End="0,34.0777776967467">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,34.0777776967467" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_MTRXNLINKS_INITIAL_LOAD.Paths[OLE DB Source Output]"
+          TopLeft="307.723201432639,56.894117861553">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,41.5777776967463"
+              Start="0,0"
+              End="0,34.0777776967463">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,34.0777776967463" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_MTRXNLINKS_INITIAL_LOAD.Paths[Derived Column Output]"
+          TopLeft="307.723201432639,223.249673255046">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,41.577777696746"
+              Start="0,0"
+              End="0,34.077777696746">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,34.077777696746" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_MTRXNLINKS_INITIAL_LOAD.Paths[Balanced Data Distributor Output 2]"
+          TopLeft="337.056534765972,306.427450951792">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="81.2291819428536,71.101960712816"
+              Start="0,0"
+              End="81.2291819428536,63.601960712816">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.8085530474341" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,24.8085530474341"
+                    Point2="0,28.8085530474341"
+                    Point3="4,28.8085530474341" />
+                  <mssgle:LineSegment
+                    End="77.2291819428536,28.8085530474341" />
+                  <mssgle:CubicBezierSegment
+                    Point1="77.2291819428536,28.8085530474341"
+                    Point2="81.2291819428536,28.8085530474341"
+                    Point3="81.2291819428536,32.8085530474341" />
+                  <mssgle:LineSegment
+                    End="81.2291819428536,63.601960712816" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-37.2715223098232,33.8085530474341,155.7722265625,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_MTRXNLINKS_INITIAL_LOAD.Paths[Balanced Data Distributor Output 1]"
+          TopLeft="278.389868099306,306.427450951792">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-102.10415139048,71.101960712816"
+              Start="0,0"
+              End="-102.10415139048,63.601960712816">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.8085530474341" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,24.8085530474341"
+                    Point2="0,28.8085530474341"
+                    Point3="-4,28.8085530474341" />
+                  <mssgle:LineSegment
+                    End="-98.1041513904801,28.8085530474341" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-98.1041513904801,28.8085530474341"
+                    Point2="-102.10415139048,28.8085530474341"
+                    Point3="-102.10415139048,32.8085530474341" />
+                  <mssgle:LineSegment
+                    End="-102.10415139048,63.601960712816" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-128.75264210149,33.8085530474341,155.4011328125,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_MTRXNLINKS_INITIAL_LOAD\SRC_MTRXNLINKS">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_MTRXNLINKS_INITIAL_LOAD\DST_MTRXNLINKS 1">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <DtsEventHandler
+    design-time-name="Package\SQL_MTRXNLINKS_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="312.666666666667,41.3333333333334"
+          Id="Package\SQL_MTRXNLINKS_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]\SQL_MTRXNLINKS_UPDATE_DFT_LOAD_COMPLETED"
+          TopLeft="570.3,184.7" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <DtsEventHandler
+    design-time-name="Package\SQL_MTRXNLINKS_SP_UPDATE_DW_INC_VALUES.EventHandlers[OnPreExecute]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="348,41.6"
+          Id="Package\SQL_MTRXNLINKS_SP_UPDATE_DW_INC_VALUES.EventHandlers[OnPreExecute]\SQL_MTRXNLINKS_UPDATE_DFT_LOAD_COMPLETED"
+          TopLeft="477.4,153" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

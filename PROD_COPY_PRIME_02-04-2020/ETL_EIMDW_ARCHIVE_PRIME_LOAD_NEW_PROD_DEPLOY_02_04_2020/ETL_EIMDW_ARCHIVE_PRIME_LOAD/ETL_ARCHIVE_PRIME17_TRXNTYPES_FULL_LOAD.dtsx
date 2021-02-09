@@ -1,0 +1,2921 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="11/28/2018 8:48:53 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="LAPTOP-SBSNQ3DE"
+  DTS:CreatorName="LAPTOP-SBSNQ3DE\HP"
+  DTS:DTSID="{FD69148B-03C9-4BE0-9A1D-798923C77AF8}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="14.0.0600.250"
+  DTS:LocaleID="16393"
+  DTS:ObjectName="ETL_ARCHIVE_PRIME17_TRXNTYPES_FULL_LOAD"
+  DTS:PackageType="5"
+  DTS:ProtectionLevel="0"
+  DTS:VersionBuild="722"
+  DTS:VersionGUID="{DC062DCA-3B3F-4C3A-AE4E-22F86A388469}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_AUDIT_FRAMEWORK]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{DCA614A2-AFD2-4529-9408-606878410BC3}"
+      DTS:ObjectName="CM_AUDIT_FRAMEWORK">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_AUDIT_FRAMEWORK_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_AUDIT_FRAMEWORK_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=AUDIT_FRAMEWORK_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_EIMDW_ARCHIVE_PRIME]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{EDD6C627-C50B-421B-BC76-3E08357B27CD}"
+      DTS:ObjectName="CM_EIMDW_ARCHIVE_PRIME">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_ARCHIVE_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_ARCHIVE_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=DEV_EIMDW_Archive_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{EF4A7F42-246D-4D58-B46D-5EBBD0C9DD22}"
+      DTS:ObjectName="CM_EIMDW_LANDING_PRIME">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_LANDING_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_ARCHIVE_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=DEV_EIMDW_Landing_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:LogProviders>
+    <DTS:LogProvider
+      DTS:ConfigString="CM_AUDIT_FRAMEWORK"
+      DTS:CreationName="Microsoft.LogProviderSQLServer"
+      DTS:Description="Writes log entries for events to a SQL Server database"
+      DTS:DTSID="{DBACBD23-6913-4107-A2C9-57C1C28DEC6F}"
+      DTS:ObjectName="SSIS log provider for SQL Server">
+      <DTS:ObjectData>
+        <InnerObject />
+      </DTS:ObjectData>
+    </DTS:LogProvider>
+  </DTS:LogProviders>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{F9BD098D-8D93-4637-8A0D-99ABBE6BFCA2}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Batch_Id">
+      <DTS:VariableValue
+        DTS:DataType="20">-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{ED580C58-A3C5-4F8B-99B6-77C129B8C35B}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT COUNT(1) FROM &quot; +  @[User::v_Dest_Table]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Dest_Count_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT COUNT(1) FROM DEV_EIMDW_Archive_FIN10.[ARCHOWN].PRIME17_TRXNTYPES(NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{EB78271F-94E7-4A72-A549-18C5BFF25B8F}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="@[$Project::p_ARCHIVE_DATABASE]  +&quot;.&quot;+ @[$Project::p_ARCHIVE_SCHEMA] +&quot;.&quot;+&quot;PRIME17_TRXNTYPES(NOLOCK)&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Dest_Table">
+      <DTS:VariableValue
+        DTS:DataType="8">DEV_EIMDW_Archive_FIN10.[ARCHOWN].PRIME17_TRXNTYPES(NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{05BF8163-FE35-443A-A0E8-FFBFAF4042A8}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Package_Id">
+      <DTS:VariableValue
+        DTS:DataType="3">-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{46198C52-07A7-433C-9216-DBD5B2064F28}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Rows_Inserted">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{4DF832BC-F4CE-47CD-BD03-1EFD24EFD23D}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Rows_Read">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{6D2C1288-E3D4-4EB7-A76D-AF7DFFEB87D0}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT INSTITUTION_ID&#xA;      ,SERNO&#xA;      ,USEDFOR&#xA;      ,RECTYPE&#xA;      ,PRIORITY&#xA;      ,CONDITION&#xA;      ,CHANNELSERNO&#xA;      ,TRXNSTATUS&#xA;      ,TRXNGROUP&#xA;      ,SIGN&#xA;      ,CASHFLAG&#xA;      ,OPTIONS&#xA;      ,IGNOREVALUEDATE&#xA;      ,LOGVERSION&#xA;      ,INSTINTPROFSERNO&#xA;      ,INSTFEEPROFSERNO&#xA;      ,DESTINATION_INSTITUTION_ID&#xA;      ,MINPAYPERCENTAGE&#xA;      ,GLTRXNTYPESERNO&#xA;      ,TEXTDATARULE&#xA;      ,DESCRIPTIONRULE&#xA;      ,DESCRIPTIONSTRINGID&#xA;      ,AUTHMODE&#xA;      ,SENDTOONLINE&#xA;      ,DEFAULTINTERESTTRXNTYPE FROM &quot;+  @[User::v_Source_Table]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Source_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT INSTITUTION_ID
+      ,SERNO
+      ,USEDFOR
+      ,RECTYPE
+      ,PRIORITY
+      ,CONDITION
+      ,CHANNELSERNO
+      ,TRXNSTATUS
+      ,TRXNGROUP
+      ,SIGN
+      ,CASHFLAG
+      ,OPTIONS
+      ,IGNOREVALUEDATE
+      ,LOGVERSION
+      ,INSTINTPROFSERNO
+      ,INSTFEEPROFSERNO
+      ,DESTINATION_INSTITUTION_ID
+      ,MINPAYPERCENTAGE
+      ,GLTRXNTYPESERNO
+      ,TEXTDATARULE
+      ,DESCRIPTIONRULE
+      ,DESCRIPTIONSTRINGID
+      ,AUTHMODE
+      ,SENDTOONLINE
+      ,DEFAULTINTERESTTRXNTYPE FROM DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_TRXNTYPES(NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{01B96605-3BC3-47ED-8104-2E8BD5761547}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="@[$Project::p_LANDING_DATABASE]   +&quot;.&quot;+  @[$Project::p_LANDING_SCHEMA] +&quot;.&quot;+&quot;SRC_PRIME17_TRXNTYPES(NOLOCK)&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Source_Table">
+      <DTS:VariableValue
+        DTS:DataType="8">DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_TRXNTYPES(NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{5BEFCA87-12B7-4E23-BC84-32ACE3BADB18}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Task_Name">
+      <DTS:VariableValue
+        DTS:DataType="8">TRXNTYPES</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{380BC2B2-275C-456B-8B95-F89FDAD84B1C}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;TRUNCATE TABLE &quot;  + REPLACE(@[User::v_Dest_Table],&quot;(NOLOCK)&quot;,&quot; &quot;)"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Trunc_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">TRUNCATE TABLE DEV_EIMDW_Archive_FIN10.[ARCHOWN].PRIME17_TRXNTYPES </DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:LoggingOptions
+    DTS:FilterKind="0"
+    DTS:LoggingMode="1">
+    <DTS:Property
+      DTS:DataType="8"
+      DTS:Name="EventFilter">3,7,OnError,13,OnPostExecute,12,OnTaskFailed</DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnError"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnPostExecute"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnTaskFailed"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:SelectedLogProviders>
+      <DTS:SelectedLogProvider
+        DTS:InstanceID="{DBACBD23-6913-4107-A2C9-57C1C28DEC6F}" />
+    </DTS:SelectedLogProviders>
+  </DTS:LoggingOptions>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\DFT_TRXNTYPES_LOAD"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{B508F57E-3983-442E-B65C-D1A662B386FF}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="DFT_TRXNTYPES_LOAD"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"DFT_"+@[User::v_Task_Name]+"_LOAD"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <pipeline
+          defaultBufferMaxRows="100000"
+          defaultBufferSize="20485760"
+          version="1">
+          <components>
+            <component
+              refId="Package\DFT_TRXNTYPES_LOAD\BDD_TRXNTYPES"
+              componentClassID="Microsoft.BDD"
+              contactInfo="Balanced Data Distributor;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Evaluates and directs rows in a dataset to multiple destinations."
+              name="BDD_TRXNTYPES">
+              <inputs>
+                <input
+                  refId="Package\DFT_TRXNTYPES_LOAD\BDD_TRXNTYPES.Inputs[Balanced Data Distributor Input]"
+                  description="Input to the Balanced Data      Distributor Transformation"
+                  name="Balanced Data Distributor Input">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_TRXNTYPES_LOAD\BDD_TRXNTYPES.Outputs[Balanced Data Distributor Output 1]"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 1"
+                  synchronousInputId="Package\DFT_TRXNTYPES_LOAD\BDD_TRXNTYPES.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_TRXNTYPES_LOAD\BDD_TRXNTYPES.Outputs[Balanced Data Distributor Output 2]"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 2"
+                  synchronousInputId="Package\DFT_TRXNTYPES_LOAD\BDD_TRXNTYPES.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_TRXNTYPES_LOAD\BDD_TRXNTYPES.Outputs[Balanced Data Distributor Output 3]"
+                  dangling="true"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 3"
+                  synchronousInputId="Package\DFT_TRXNTYPES_LOAD\BDD_TRXNTYPES.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_TRXNTYPES_LOAD\DC_BATCH"
+              componentClassID="Microsoft.DerivedColumn"
+              contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+              name="DC_BATCH"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\DFT_TRXNTYPES_LOAD\DC_BATCH.Inputs[Derived Column Input]"
+                  description="Input to the Derived Column Transformation"
+                  name="Derived Column Input">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_TRXNTYPES_LOAD\DC_BATCH.Outputs[Derived Column Output]"
+                  description="Default Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  name="Derived Column Output"
+                  synchronousInputId="Package\DFT_TRXNTYPES_LOAD\DC_BATCH.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[CRTE_BTCH_ID]"
+                      dataType="i8"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[CRTE_BTCH_ID]"
+                      name="CRTE_BTCH_ID"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">@[User::v_Batch_Id]</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">@[User::v_Batch_Id]</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[START_DATE]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[START_DATE]"
+                      name="START_DATE"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">[GETDATE]()</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">GETDATE()</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[ACTIVE_FLAG]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      length="1"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[ACTIVE_FLAG]"
+                      name="ACTIVE_FLAG"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">(DT_STR,1,1252)"Y"</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">(DT_STR,1,1252)"Y"</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[DELETE_FLAG]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      length="1"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[DELETE_FLAG]"
+                      name="DELETE_FLAG"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">(DT_STR,1,1252)"N"</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">(DT_STR,1,1252)"N"</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[END_DATE]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[END_DATE]"
+                      name="END_DATE"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">(DT_DBTIMESTAMP)"9999-12-31"</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">(DT_DBTIMESTAMP)"9999-12-31"</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_TRXNTYPES_LOAD\DC_BATCH.Outputs[Derived Column Error Output]"
+                  description="Error Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Derived Column Error Output"
+                  synchronousInputId="Package\DFT_TRXNTYPES_LOAD\DC_BATCH.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="DST_TRXNTYPES"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[ARCHOWN].[PRIME17_TRXNTYPES]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS,ROWS_PER_BATCH = 1000000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_ARCHIVE_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_ARCHIVE_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].Columns[INSTITUTION_ID]"
+                      cachedDataType="i4"
+                      cachedName="INSTITUTION_ID"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[INSTITUTION_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].Columns[SERNO]"
+                      cachedDataType="numeric"
+                      cachedName="SERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[SERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].Columns[USEDFOR]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="USEDFOR"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[USEDFOR]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[USEDFOR]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].Columns[RECTYPE]"
+                      cachedDataType="wstr"
+                      cachedLength="40"
+                      cachedName="RECTYPE"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[RECTYPE]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[RECTYPE]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].Columns[PRIORITY]"
+                      cachedDataType="i4"
+                      cachedName="PRIORITY"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[PRIORITY]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[PRIORITY]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].Columns[CONDITION]"
+                      cachedDataType="wstr"
+                      cachedLength="512"
+                      cachedName="CONDITION"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[CONDITION]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[CONDITION]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].Columns[CHANNELSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="CHANNELSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[CHANNELSERNO]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[CHANNELSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].Columns[TRXNSTATUS]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="TRXNSTATUS"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[TRXNSTATUS]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[TRXNSTATUS]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].Columns[TRXNGROUP]"
+                      cachedDataType="wstr"
+                      cachedLength="20"
+                      cachedName="TRXNGROUP"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[TRXNGROUP]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[TRXNGROUP]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].Columns[SIGN]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="SIGN"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[SIGN]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[SIGN]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].Columns[CASHFLAG]"
+                      cachedDataType="i4"
+                      cachedName="CASHFLAG"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[CASHFLAG]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[CASHFLAG]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].Columns[OPTIONS]"
+                      cachedDataType="numeric"
+                      cachedName="OPTIONS"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[OPTIONS]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[OPTIONS]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].Columns[IGNOREVALUEDATE]"
+                      cachedDataType="i4"
+                      cachedName="IGNOREVALUEDATE"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[IGNOREVALUEDATE]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[IGNOREVALUEDATE]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].Columns[LOGVERSION]"
+                      cachedDataType="i4"
+                      cachedName="LOGVERSION"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[LOGVERSION]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[LOGVERSION]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].Columns[INSTINTPROFSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="INSTINTPROFSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[INSTINTPROFSERNO]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[INSTINTPROFSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].Columns[INSTFEEPROFSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="INSTFEEPROFSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[INSTFEEPROFSERNO]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[INSTFEEPROFSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].Columns[DESTINATION_INSTITUTION_ID]"
+                      cachedDataType="i4"
+                      cachedName="DESTINATION_INSTITUTION_ID"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[DESTINATION_INSTITUTION_ID]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[DESTINATION_INSTITUTION_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].Columns[MINPAYPERCENTAGE]"
+                      cachedDataType="numeric"
+                      cachedName="MINPAYPERCENTAGE"
+                      cachedPrecision="5"
+                      cachedScale="2"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[MINPAYPERCENTAGE]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[MINPAYPERCENTAGE]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].Columns[GLTRXNTYPESERNO]"
+                      cachedDataType="numeric"
+                      cachedName="GLTRXNTYPESERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[GLTRXNTYPESERNO]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[GLTRXNTYPESERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].Columns[TEXTDATARULE]"
+                      cachedDataType="wstr"
+                      cachedLength="512"
+                      cachedName="TEXTDATARULE"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[TEXTDATARULE]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[TEXTDATARULE]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].Columns[DESCRIPTIONRULE]"
+                      cachedDataType="wstr"
+                      cachedLength="512"
+                      cachedName="DESCRIPTIONRULE"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTIONRULE]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[DESCRIPTIONRULE]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].Columns[DESCRIPTIONSTRINGID]"
+                      cachedDataType="numeric"
+                      cachedName="DESCRIPTIONSTRINGID"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTIONSTRINGID]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[DESCRIPTIONSTRINGID]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].Columns[AUTHMODE]"
+                      cachedDataType="i4"
+                      cachedName="AUTHMODE"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[AUTHMODE]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[AUTHMODE]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].Columns[SENDTOONLINE]"
+                      cachedDataType="i4"
+                      cachedName="SENDTOONLINE"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[SENDTOONLINE]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[SENDTOONLINE]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].Columns[DEFAULTINTERESTTRXNTYPE]"
+                      cachedDataType="numeric"
+                      cachedName="DEFAULTINTERESTTRXNTYPE"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[DEFAULTINTERESTTRXNTYPE]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[DEFAULTINTERESTTRXNTYPE]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].Columns[CRTE_BTCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="CRTE_BTCH_ID"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[CRTE_BTCH_ID]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[CRTE_BTCH_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].Columns[START_DATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="START_DATE"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[START_DATE]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[START_DATE]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].Columns[ACTIVE_FLAG]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="ACTIVE_FLAG"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[ACTIVE_FLAG]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[ACTIVE_FLAG]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].Columns[DELETE_FLAG]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="DELETE_FLAG"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[DELETE_FLAG]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[DELETE_FLAG]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].Columns[END_DATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="END_DATE"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[END_DATE]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[END_DATE]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[CRTE_BTCH_ID]"
+                      dataType="i4"
+                      name="CRTE_BTCH_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[UPDT_BTCH_ID]"
+                      dataType="i4"
+                      name="UPDT_BTCH_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[START_DATE]"
+                      dataType="dbTimeStamp"
+                      name="START_DATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[END_DATE]"
+                      dataType="dbTimeStamp"
+                      name="END_DATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[ACTIVE_FLAG]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="ACTIVE_FLAG" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[DELETE_FLAG]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="DELETE_FLAG" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[SERNO_SEQ_ID]"
+                      dataType="i4"
+                      name="SERNO_SEQ_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[USEDFOR]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="USEDFOR" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[RECTYPE]"
+                      dataType="wstr"
+                      length="40"
+                      name="RECTYPE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[PRIORITY]"
+                      dataType="i4"
+                      name="PRIORITY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[CONDITION]"
+                      dataType="wstr"
+                      length="512"
+                      name="CONDITION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[CHANNELSERNO]"
+                      dataType="numeric"
+                      name="CHANNELSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[TRXNSTATUS]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="TRXNSTATUS" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[TRXNGROUP]"
+                      dataType="wstr"
+                      length="20"
+                      name="TRXNGROUP" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[SIGN]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="SIGN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[CASHFLAG]"
+                      dataType="i4"
+                      name="CASHFLAG" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[OPTIONS]"
+                      dataType="numeric"
+                      name="OPTIONS"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[IGNOREVALUEDATE]"
+                      dataType="i4"
+                      name="IGNOREVALUEDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[LOGVERSION]"
+                      dataType="i4"
+                      name="LOGVERSION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[INSTINTPROFSERNO]"
+                      dataType="numeric"
+                      name="INSTINTPROFSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[INSTFEEPROFSERNO]"
+                      dataType="numeric"
+                      name="INSTFEEPROFSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[DESTINATION_INSTITUTION_ID]"
+                      dataType="i4"
+                      name="DESTINATION_INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[MINPAYPERCENTAGE]"
+                      dataType="numeric"
+                      name="MINPAYPERCENTAGE"
+                      precision="5"
+                      scale="2" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[GLTRXNTYPESERNO]"
+                      dataType="numeric"
+                      name="GLTRXNTYPESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[TEXTDATARULE]"
+                      dataType="wstr"
+                      length="512"
+                      name="TEXTDATARULE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTIONRULE]"
+                      dataType="wstr"
+                      length="512"
+                      name="DESCRIPTIONRULE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTIONSTRINGID]"
+                      dataType="numeric"
+                      name="DESCRIPTIONSTRINGID"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[AUTHMODE]"
+                      dataType="i4"
+                      name="AUTHMODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[SENDTOONLINE]"
+                      dataType="i4"
+                      name="SENDTOONLINE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input].ExternalColumns[DEFAULTINTERESTTRXNTYPE]"
+                      dataType="numeric"
+                      name="DEFAULTINTERESTTRXNTYPE"
+                      precision="10" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="DST_TRXNTYPES 1"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[ARCHOWN].[PRIME17_TRXNTYPES]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS,ROWS_PER_BATCH = 1000000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_ARCHIVE_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_ARCHIVE_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].Columns[INSTITUTION_ID]"
+                      cachedDataType="i4"
+                      cachedName="INSTITUTION_ID"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[INSTITUTION_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].Columns[SERNO]"
+                      cachedDataType="numeric"
+                      cachedName="SERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[SERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].Columns[USEDFOR]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="USEDFOR"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[USEDFOR]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[USEDFOR]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].Columns[RECTYPE]"
+                      cachedDataType="wstr"
+                      cachedLength="40"
+                      cachedName="RECTYPE"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[RECTYPE]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[RECTYPE]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].Columns[PRIORITY]"
+                      cachedDataType="i4"
+                      cachedName="PRIORITY"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[PRIORITY]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[PRIORITY]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].Columns[CONDITION]"
+                      cachedDataType="wstr"
+                      cachedLength="512"
+                      cachedName="CONDITION"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[CONDITION]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[CONDITION]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].Columns[CHANNELSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="CHANNELSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[CHANNELSERNO]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[CHANNELSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].Columns[TRXNSTATUS]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="TRXNSTATUS"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[TRXNSTATUS]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[TRXNSTATUS]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].Columns[TRXNGROUP]"
+                      cachedDataType="wstr"
+                      cachedLength="20"
+                      cachedName="TRXNGROUP"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[TRXNGROUP]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[TRXNGROUP]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].Columns[SIGN]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="SIGN"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[SIGN]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[SIGN]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].Columns[CASHFLAG]"
+                      cachedDataType="i4"
+                      cachedName="CASHFLAG"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[CASHFLAG]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[CASHFLAG]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].Columns[OPTIONS]"
+                      cachedDataType="numeric"
+                      cachedName="OPTIONS"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[OPTIONS]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[OPTIONS]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].Columns[IGNOREVALUEDATE]"
+                      cachedDataType="i4"
+                      cachedName="IGNOREVALUEDATE"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[IGNOREVALUEDATE]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[IGNOREVALUEDATE]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].Columns[LOGVERSION]"
+                      cachedDataType="i4"
+                      cachedName="LOGVERSION"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[LOGVERSION]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[LOGVERSION]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].Columns[INSTINTPROFSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="INSTINTPROFSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTINTPROFSERNO]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[INSTINTPROFSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].Columns[INSTFEEPROFSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="INSTFEEPROFSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTFEEPROFSERNO]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[INSTFEEPROFSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].Columns[DESTINATION_INSTITUTION_ID]"
+                      cachedDataType="i4"
+                      cachedName="DESTINATION_INSTITUTION_ID"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[DESTINATION_INSTITUTION_ID]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[DESTINATION_INSTITUTION_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].Columns[MINPAYPERCENTAGE]"
+                      cachedDataType="numeric"
+                      cachedName="MINPAYPERCENTAGE"
+                      cachedPrecision="5"
+                      cachedScale="2"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[MINPAYPERCENTAGE]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[MINPAYPERCENTAGE]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].Columns[GLTRXNTYPESERNO]"
+                      cachedDataType="numeric"
+                      cachedName="GLTRXNTYPESERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[GLTRXNTYPESERNO]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[GLTRXNTYPESERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].Columns[TEXTDATARULE]"
+                      cachedDataType="wstr"
+                      cachedLength="512"
+                      cachedName="TEXTDATARULE"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[TEXTDATARULE]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[TEXTDATARULE]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].Columns[DESCRIPTIONRULE]"
+                      cachedDataType="wstr"
+                      cachedLength="512"
+                      cachedName="DESCRIPTIONRULE"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTIONRULE]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[DESCRIPTIONRULE]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].Columns[DESCRIPTIONSTRINGID]"
+                      cachedDataType="numeric"
+                      cachedName="DESCRIPTIONSTRINGID"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTIONSTRINGID]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[DESCRIPTIONSTRINGID]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].Columns[AUTHMODE]"
+                      cachedDataType="i4"
+                      cachedName="AUTHMODE"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[AUTHMODE]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[AUTHMODE]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].Columns[SENDTOONLINE]"
+                      cachedDataType="i4"
+                      cachedName="SENDTOONLINE"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[SENDTOONLINE]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[SENDTOONLINE]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].Columns[DEFAULTINTERESTTRXNTYPE]"
+                      cachedDataType="numeric"
+                      cachedName="DEFAULTINTERESTTRXNTYPE"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[DEFAULTINTERESTTRXNTYPE]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[DEFAULTINTERESTTRXNTYPE]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].Columns[CRTE_BTCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="CRTE_BTCH_ID"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[CRTE_BTCH_ID]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[CRTE_BTCH_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].Columns[START_DATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="START_DATE"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[START_DATE]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[START_DATE]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].Columns[ACTIVE_FLAG]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="ACTIVE_FLAG"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[ACTIVE_FLAG]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[ACTIVE_FLAG]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].Columns[DELETE_FLAG]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="DELETE_FLAG"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[DELETE_FLAG]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[DELETE_FLAG]" />
+                    <inputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].Columns[END_DATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="END_DATE"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[END_DATE]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[END_DATE]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[CRTE_BTCH_ID]"
+                      dataType="i4"
+                      name="CRTE_BTCH_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[UPDT_BTCH_ID]"
+                      dataType="i4"
+                      name="UPDT_BTCH_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[START_DATE]"
+                      dataType="dbTimeStamp"
+                      name="START_DATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[END_DATE]"
+                      dataType="dbTimeStamp"
+                      name="END_DATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[ACTIVE_FLAG]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="ACTIVE_FLAG" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[DELETE_FLAG]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="DELETE_FLAG" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[SERNO_SEQ_ID]"
+                      dataType="i4"
+                      name="SERNO_SEQ_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[USEDFOR]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="USEDFOR" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[RECTYPE]"
+                      dataType="wstr"
+                      length="40"
+                      name="RECTYPE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[PRIORITY]"
+                      dataType="i4"
+                      name="PRIORITY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[CONDITION]"
+                      dataType="wstr"
+                      length="512"
+                      name="CONDITION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[CHANNELSERNO]"
+                      dataType="numeric"
+                      name="CHANNELSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[TRXNSTATUS]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="TRXNSTATUS" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[TRXNGROUP]"
+                      dataType="wstr"
+                      length="20"
+                      name="TRXNGROUP" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[SIGN]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="SIGN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[CASHFLAG]"
+                      dataType="i4"
+                      name="CASHFLAG" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[OPTIONS]"
+                      dataType="numeric"
+                      name="OPTIONS"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[IGNOREVALUEDATE]"
+                      dataType="i4"
+                      name="IGNOREVALUEDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[LOGVERSION]"
+                      dataType="i4"
+                      name="LOGVERSION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTINTPROFSERNO]"
+                      dataType="numeric"
+                      name="INSTINTPROFSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTFEEPROFSERNO]"
+                      dataType="numeric"
+                      name="INSTFEEPROFSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[DESTINATION_INSTITUTION_ID]"
+                      dataType="i4"
+                      name="DESTINATION_INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[MINPAYPERCENTAGE]"
+                      dataType="numeric"
+                      name="MINPAYPERCENTAGE"
+                      precision="5"
+                      scale="2" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[GLTRXNTYPESERNO]"
+                      dataType="numeric"
+                      name="GLTRXNTYPESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[TEXTDATARULE]"
+                      dataType="wstr"
+                      length="512"
+                      name="TEXTDATARULE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTIONRULE]"
+                      dataType="wstr"
+                      length="512"
+                      name="DESCRIPTIONRULE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTIONSTRINGID]"
+                      dataType="numeric"
+                      name="DESCRIPTIONSTRINGID"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[AUTHMODE]"
+                      dataType="i4"
+                      name="AUTHMODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[SENDTOONLINE]"
+                      dataType="i4"
+                      name="SENDTOONLINE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input].ExternalColumns[DEFAULTINTERESTTRXNTYPE]"
+                      dataType="numeric"
+                      name="DEFAULTINTERESTTRXNTYPE"
+                      precision="10" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_TRXNTYPES_LOAD\RC_TRXNTYPES"
+              componentClassID="Microsoft.RowCount"
+              contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Counts rows as they pass through a data flow. For example, use the number of rows processed to determine whether or not to perform cleanup operations, or update text in an e-mail message to communicate processing status."
+              name="RC_TRXNTYPES">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable to hold the row count."
+                  name="VariableName">User::v_Rows_Read</property>
+              </properties>
+              <inputs>
+                <input
+                  refId="Package\DFT_TRXNTYPES_LOAD\RC_TRXNTYPES.Inputs[Row Count Input 1]"
+                  hasSideEffects="true"
+                  name="Row Count Input 1">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_TRXNTYPES_LOAD\RC_TRXNTYPES.Outputs[Row Count Output 1]"
+                  name="Row Count Output 1"
+                  synchronousInputId="Package\DFT_TRXNTYPES_LOAD\RC_TRXNTYPES.Inputs[Row Count Input 1]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="SRC_TRXNTYPES"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset"></property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable">User::v_Source_Query</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[INSTITUTION_ID]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[INSTITUTION_ID]"
+                      name="INSTITUTION_ID"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[SERNO]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[SERNO]"
+                      name="SERNO"
+                      precision="10"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[USEDFOR]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[USEDFOR]"
+                      length="1"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[USEDFOR]"
+                      name="USEDFOR"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[RECTYPE]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[RECTYPE]"
+                      length="40"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[RECTYPE]"
+                      name="RECTYPE"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[PRIORITY]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[PRIORITY]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[PRIORITY]"
+                      name="PRIORITY"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[CONDITION]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[CONDITION]"
+                      length="512"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[CONDITION]"
+                      name="CONDITION"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[CHANNELSERNO]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[CHANNELSERNO]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[CHANNELSERNO]"
+                      name="CHANNELSERNO"
+                      precision="10"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[TRXNSTATUS]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[TRXNSTATUS]"
+                      length="4"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[TRXNSTATUS]"
+                      name="TRXNSTATUS"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[TRXNGROUP]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[TRXNGROUP]"
+                      length="20"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[TRXNGROUP]"
+                      name="TRXNGROUP"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[SIGN]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[SIGN]"
+                      length="1"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[SIGN]"
+                      name="SIGN"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[CASHFLAG]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[CASHFLAG]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[CASHFLAG]"
+                      name="CASHFLAG"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[OPTIONS]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[OPTIONS]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[OPTIONS]"
+                      name="OPTIONS"
+                      precision="10"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[IGNOREVALUEDATE]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[IGNOREVALUEDATE]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[IGNOREVALUEDATE]"
+                      name="IGNOREVALUEDATE"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[LOGVERSION]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[LOGVERSION]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[LOGVERSION]"
+                      name="LOGVERSION"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[INSTINTPROFSERNO]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[INSTINTPROFSERNO]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[INSTINTPROFSERNO]"
+                      name="INSTINTPROFSERNO"
+                      precision="10"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[INSTFEEPROFSERNO]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[INSTFEEPROFSERNO]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[INSTFEEPROFSERNO]"
+                      name="INSTFEEPROFSERNO"
+                      precision="10"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[DESTINATION_INSTITUTION_ID]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[DESTINATION_INSTITUTION_ID]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[DESTINATION_INSTITUTION_ID]"
+                      name="DESTINATION_INSTITUTION_ID"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[MINPAYPERCENTAGE]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[MINPAYPERCENTAGE]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[MINPAYPERCENTAGE]"
+                      name="MINPAYPERCENTAGE"
+                      precision="5"
+                      scale="2"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[GLTRXNTYPESERNO]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[GLTRXNTYPESERNO]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[GLTRXNTYPESERNO]"
+                      name="GLTRXNTYPESERNO"
+                      precision="10"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[TEXTDATARULE]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[TEXTDATARULE]"
+                      length="512"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[TEXTDATARULE]"
+                      name="TEXTDATARULE"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[DESCRIPTIONRULE]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[DESCRIPTIONRULE]"
+                      length="512"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[DESCRIPTIONRULE]"
+                      name="DESCRIPTIONRULE"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[DESCRIPTIONSTRINGID]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[DESCRIPTIONSTRINGID]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[DESCRIPTIONSTRINGID]"
+                      name="DESCRIPTIONSTRINGID"
+                      precision="10"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[AUTHMODE]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[AUTHMODE]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[AUTHMODE]"
+                      name="AUTHMODE"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[SENDTOONLINE]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[SENDTOONLINE]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[SENDTOONLINE]"
+                      name="SENDTOONLINE"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[DEFAULTINTERESTTRXNTYPE]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[DEFAULTINTERESTTRXNTYPE]"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].Columns[DEFAULTINTERESTTRXNTYPE]"
+                      name="DEFAULTINTERESTTRXNTYPE"
+                      precision="10"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[USEDFOR]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="USEDFOR" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[RECTYPE]"
+                      dataType="wstr"
+                      length="40"
+                      name="RECTYPE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[PRIORITY]"
+                      dataType="i4"
+                      name="PRIORITY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[CONDITION]"
+                      dataType="wstr"
+                      length="512"
+                      name="CONDITION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[CHANNELSERNO]"
+                      dataType="numeric"
+                      name="CHANNELSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[TRXNSTATUS]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="TRXNSTATUS" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[TRXNGROUP]"
+                      dataType="wstr"
+                      length="20"
+                      name="TRXNGROUP" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[SIGN]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="SIGN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[CASHFLAG]"
+                      dataType="i4"
+                      name="CASHFLAG" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[OPTIONS]"
+                      dataType="numeric"
+                      name="OPTIONS"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[IGNOREVALUEDATE]"
+                      dataType="i4"
+                      name="IGNOREVALUEDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[LOGVERSION]"
+                      dataType="i4"
+                      name="LOGVERSION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[INSTINTPROFSERNO]"
+                      dataType="numeric"
+                      name="INSTINTPROFSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[INSTFEEPROFSERNO]"
+                      dataType="numeric"
+                      name="INSTFEEPROFSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[DESTINATION_INSTITUTION_ID]"
+                      dataType="i4"
+                      name="DESTINATION_INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[MINPAYPERCENTAGE]"
+                      dataType="numeric"
+                      name="MINPAYPERCENTAGE"
+                      precision="5"
+                      scale="2" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[GLTRXNTYPESERNO]"
+                      dataType="numeric"
+                      name="GLTRXNTYPESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[TEXTDATARULE]"
+                      dataType="wstr"
+                      length="512"
+                      name="TEXTDATARULE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[DESCRIPTIONRULE]"
+                      dataType="wstr"
+                      length="512"
+                      name="DESCRIPTIONRULE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[DESCRIPTIONSTRINGID]"
+                      dataType="numeric"
+                      name="DESCRIPTIONSTRINGID"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[AUTHMODE]"
+                      dataType="i4"
+                      name="AUTHMODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[SENDTOONLINE]"
+                      dataType="i4"
+                      name="SENDTOONLINE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output].ExternalColumns[DEFAULTINTERESTTRXNTYPE]"
+                      dataType="numeric"
+                      name="DEFAULTINTERESTTRXNTYPE"
+                      precision="10" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[INSTITUTION_ID]"
+                      dataType="i4"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[INSTITUTION_ID]"
+                      name="INSTITUTION_ID" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[SERNO]"
+                      dataType="numeric"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[SERNO]"
+                      name="SERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[USEDFOR]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[USEDFOR]"
+                      name="USEDFOR" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[RECTYPE]"
+                      dataType="wstr"
+                      length="40"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[RECTYPE]"
+                      name="RECTYPE" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[PRIORITY]"
+                      dataType="i4"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[PRIORITY]"
+                      name="PRIORITY" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[CONDITION]"
+                      dataType="wstr"
+                      length="512"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[CONDITION]"
+                      name="CONDITION" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[CHANNELSERNO]"
+                      dataType="numeric"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[CHANNELSERNO]"
+                      name="CHANNELSERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[TRXNSTATUS]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[TRXNSTATUS]"
+                      name="TRXNSTATUS" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[TRXNGROUP]"
+                      dataType="wstr"
+                      length="20"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[TRXNGROUP]"
+                      name="TRXNGROUP" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[SIGN]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[SIGN]"
+                      name="SIGN" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[CASHFLAG]"
+                      dataType="i4"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[CASHFLAG]"
+                      name="CASHFLAG" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[OPTIONS]"
+                      dataType="numeric"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[OPTIONS]"
+                      name="OPTIONS"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[IGNOREVALUEDATE]"
+                      dataType="i4"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[IGNOREVALUEDATE]"
+                      name="IGNOREVALUEDATE" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[LOGVERSION]"
+                      dataType="i4"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[LOGVERSION]"
+                      name="LOGVERSION" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[INSTINTPROFSERNO]"
+                      dataType="numeric"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[INSTINTPROFSERNO]"
+                      name="INSTINTPROFSERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[INSTFEEPROFSERNO]"
+                      dataType="numeric"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[INSTFEEPROFSERNO]"
+                      name="INSTFEEPROFSERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[DESTINATION_INSTITUTION_ID]"
+                      dataType="i4"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[DESTINATION_INSTITUTION_ID]"
+                      name="DESTINATION_INSTITUTION_ID" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[MINPAYPERCENTAGE]"
+                      dataType="numeric"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[MINPAYPERCENTAGE]"
+                      name="MINPAYPERCENTAGE"
+                      precision="5"
+                      scale="2" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[GLTRXNTYPESERNO]"
+                      dataType="numeric"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[GLTRXNTYPESERNO]"
+                      name="GLTRXNTYPESERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[TEXTDATARULE]"
+                      dataType="wstr"
+                      length="512"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[TEXTDATARULE]"
+                      name="TEXTDATARULE" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[DESCRIPTIONRULE]"
+                      dataType="wstr"
+                      length="512"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[DESCRIPTIONRULE]"
+                      name="DESCRIPTIONRULE" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[DESCRIPTIONSTRINGID]"
+                      dataType="numeric"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[DESCRIPTIONSTRINGID]"
+                      name="DESCRIPTIONSTRINGID"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[AUTHMODE]"
+                      dataType="i4"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[AUTHMODE]"
+                      name="AUTHMODE" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[SENDTOONLINE]"
+                      dataType="i4"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[SENDTOONLINE]"
+                      name="SENDTOONLINE" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[DEFAULTINTERESTTRXNTYPE]"
+                      dataType="numeric"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[DEFAULTINTERESTTRXNTYPE]"
+                      name="DEFAULTINTERESTTRXNTYPE"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\DFT_TRXNTYPES_LOAD.Paths[Balanced Data Distributor Output 1]"
+              endId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES.Inputs[OLE DB Destination Input]"
+              name="Balanced Data Distributor Output 1"
+              startId="Package\DFT_TRXNTYPES_LOAD\BDD_TRXNTYPES.Outputs[Balanced Data Distributor Output 1]" />
+            <path
+              refId="Package\DFT_TRXNTYPES_LOAD.Paths[Balanced Data Distributor Output 2]"
+              endId="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1.Inputs[OLE DB Destination Input]"
+              name="Balanced Data Distributor Output 2"
+              startId="Package\DFT_TRXNTYPES_LOAD\BDD_TRXNTYPES.Outputs[Balanced Data Distributor Output 2]" />
+            <path
+              refId="Package\DFT_TRXNTYPES_LOAD.Paths[Derived Column Output]"
+              endId="Package\DFT_TRXNTYPES_LOAD\BDD_TRXNTYPES.Inputs[Balanced Data Distributor Input]"
+              name="Derived Column Output"
+              startId="Package\DFT_TRXNTYPES_LOAD\DC_BATCH.Outputs[Derived Column Output]" />
+            <path
+              refId="Package\DFT_TRXNTYPES_LOAD.Paths[OLE DB Source Output]"
+              endId="Package\DFT_TRXNTYPES_LOAD\RC_TRXNTYPES.Inputs[Row Count Input 1]"
+              name="OLE DB Source Output"
+              startId="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES.Outputs[OLE DB Source Output]" />
+            <path
+              refId="Package\DFT_TRXNTYPES_LOAD.Paths[Row Count Output 1]"
+              endId="Package\DFT_TRXNTYPES_LOAD\DC_BATCH.Inputs[Derived Column Input]"
+              name="Row Count Output 1"
+              startId="Package\DFT_TRXNTYPES_LOAD\RC_TRXNTYPES.Outputs[Row Count Output 1]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_TRXNTYPES_GET_DEST_COUNT_LOAD"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{66A8F8AC-AF62-4E39-B17A-C111D2303514}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_TRXNTYPES_GET_DEST_COUNT_LOAD"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_GET_DEST_COUNT_LOAD"</DTS:PropertyExpression>
+      <DTS:EventHandlers>
+        <DTS:EventHandler
+          DTS:refId="Package\SQL_TRXNTYPES_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]"
+          DTS:CreationName="OnPreExecute"
+          DTS:DTSID="{A37907DC-740E-4B38-82A1-5B3D0CBCC9D6}"
+          DTS:EventID="1076330902"
+          DTS:EventName="OnPreExecute"
+          DTS:LocaleID="-1">
+          <DTS:Variables>
+            <DTS:Variable
+              DTS:CreationName=""
+              DTS:Description="The propagate property of the event"
+              DTS:DTSID="{FD40C267-A8BD-4967-894F-0E2583E56CAD}"
+              DTS:IncludeInDebugDump="6789"
+              DTS:Namespace="System"
+              DTS:ObjectName="Propagate">
+              <DTS:VariableValue
+                DTS:DataType="11">-1</DTS:VariableValue>
+            </DTS:Variable>
+          </DTS:Variables>
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\SQL_TRXNTYPES_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]\SQL_TRXNTYPES_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{74AD94F1-76B1-4F79-9D82-02FA477E13BD}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="SQL_TRXNTYPES_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+              <DTS:Variables />
+              <DTS:PropertyExpression
+                DTS:Name="Name">"SQL_"+ @[User::v_Task_Name]+"_UPDATE_DFT_LOAD_COMPLETED"</DTS:PropertyExpression>
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{DCA614A2-AFD2-4529-9408-606878410BC3}"
+                  SQLTask:SqlStatementSource="UPDATE DBO.BATCH_EXECUTION_STATUS&#xA; SET  &#xA;STATUS_FLAG = 'DFT LOAD COMPLETED'   WHERE&#xA; EXECUTION_ID = (&#xA;       SELECT MAX(EXECUTION_ID) EXECUTION_ID&#xA;       FROM DBO.BATCH_EXECUTION_STATUS&#xA;       WHERE PACKAGE_ID =?&#xA;       AND  BATCH_ID = ?&#xA;    )"
+                  SQLTask:TypeConversionMode="None" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="0"
+                    SQLTask:DtsVariableName="User::v_Package_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="1"
+                    SQLTask:DtsVariableName="User::v_Batch_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                </SQLTask:SqlTaskData>
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+        </DTS:EventHandler>
+      </DTS:EventHandlers>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{EF4A7F42-246D-4D58-B46D-5EBBD0C9DD22}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::v_Dest_Count_Query"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="0"
+            SQLTask:DtsVariableName="User::v_Rows_Inserted" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_TRXNTYPES_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{E4EFEE88-3683-416D-BC62-F7B2CD2A7325}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_TRXNTYPES_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_CHECK_PACKAGE_EXISTENCE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{DCA614A2-AFD2-4529-9408-606878410BC3}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_NAME VARCHAR(500) = ?&#xA;&#xA;EXEC [DBO].[SP_CHECK_PACKAGE_EXISTENCE]  @PACKAGE_NAME " xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_TRXNTYPES_SP_GET_PACKAGE_BATCH_ID"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{2F911987-961D-40D5-A27B-E289412BCD56}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_TRXNTYPES_SP_GET_PACKAGE_BATCH_ID"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_GET_PACKAGE_BATCH_ID"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{DCA614A2-AFD2-4529-9408-606878410BC3}"
+          SQLTask:SqlStatementSource="&#xA;DECLARE @PACKAGE_NAME VARCHAR(500) = ?&#xA;DECLARE @PACKAGE_ID  INT &#xA;DECLARE @BATCH_ID BIGINT&#xA;&#xA;&#xA; EXEC [DBO].[SP_GET_PACKAGE_BATCH_ID]  @PACKAGE_NAME,@PACKAGE_ID OUT,@BATCH_ID OUT&#xA; SELECT ? = @PACKAGE_ID &#xA; SELECT ? = @BATCH_ID" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_TRXNTYPES_SP_INSERT_EXECUTION_STATUS"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{B31FB92D-1104-4435-B90B-B7A6D0152119}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_TRXNTYPES_SP_INSERT_EXECUTION_STATUS"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_INSERT_EXECUTION_STATUS"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{DCA614A2-AFD2-4529-9408-606878410BC3}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @PACKAGE_START_TIME DATETIME = ?&#xA;DECLARE @JOB_ID INT  =?&#xA;&#xA;EXEC [DBO].[SP_INSERT_EXECUTION_STATUS]               @PACKAGE_ID&#xA;,@BATCH_ID&#xA;,@PACKAGE_START_TIME&#xA;,@JOB_ID" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="System::StartTime"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="7"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="$Project::p_JOB_ID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_TRXNTYPES_SP_UPDATE_EXECUTION_STATUS_LOAD"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{1430127D-D2CF-45BB-BB15-6CE0F8D0887D}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_TRXNTYPES_SP_UPDATE_EXECUTION_STATUS_LOAD"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_UPDATE_EXECUTION_STATUS_LOAD"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{DCA614A2-AFD2-4529-9408-606878410BC3}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @ROWS_READ BIGINT = ?&#xA;DECLARE @ROWS_INSERTED BIGINT = ?&#xA;DECLARE @ROWS_UPDATED BIGINT =0&#xA;DECLARE @ROWS_ERRORED  BIGINT=0&#xA;&#xA;&#xA;EXEC DBO.SP_UPDATE_EXECUTION_STATUS @PACKAGE_ID&#xA; , @BATCH_ID&#xA; , @ROWS_READ&#xA; , @ROWS_INSERTED&#xA; , @ROWS_UPDATED&#xA; , @ROWS_ERRORED" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::v_Rows_Read"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="User::v_Rows_Inserted"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_TRXNTYPES_TRUNCATE_STG_TABLE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{017F4B77-DC71-47D0-B6A4-E22B1E74B864}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_TRXNTYPES_TRUNCATE_STG_TABLE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_TRUNCATE_STG_TABLE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{EF4A7F42-246D-4D58-B46D-5EBBD0C9DD22}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::v_Trunc_Query" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{9EFF1112-52C0-4BE3-B13A-51F93291855D}"
+      DTS:From="Package\SQL_TRXNTYPES_SP_GET_PACKAGE_BATCH_ID"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\SQL_TRXNTYPES_SP_INSERT_EXECUTION_STATUS" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 10]"
+      DTS:CreationName=""
+      DTS:DTSID="{84E0DC07-DF78-4A0E-807F-C14CDE4CA9F4}"
+      DTS:From="Package\SQL_TRXNTYPES_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 10"
+      DTS:To="Package\SQL_TRXNTYPES_SP_GET_PACKAGE_BATCH_ID" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 12]"
+      DTS:CreationName=""
+      DTS:DTSID="{02FA9111-4C35-49A9-9BB0-C78D03EE871B}"
+      DTS:From="Package\DFT_TRXNTYPES_LOAD"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 12"
+      DTS:To="Package\SQL_TRXNTYPES_GET_DEST_COUNT_LOAD" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{836F279D-2F2B-433F-B17B-6410804D463C}"
+      DTS:From="Package\SQL_TRXNTYPES_SP_INSERT_EXECUTION_STATUS"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\SQL_TRXNTYPES_TRUNCATE_STG_TABLE" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 5]"
+      DTS:CreationName=""
+      DTS:DTSID="{393C054C-F100-4B88-9152-6055744F4846}"
+      DTS:Expression="@[User::v_Inc_Date] == (DT_DBTIMESTAMP) &quot;1753-01-01&quot;"
+      DTS:From="Package\SQL_TRXNTYPES_TRUNCATE_STG_TABLE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 5"
+      DTS:To="Package\DFT_TRXNTYPES_LOAD" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 7]"
+      DTS:CreationName=""
+      DTS:DTSID="{557A042F-467F-4C17-9E94-AEC7FE2D1A2F}"
+      DTS:Expression="@[User::v_Rows_Inserted] ==0"
+      DTS:From="Package\SQL_TRXNTYPES_GET_DEST_COUNT_LOAD"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 7"
+      DTS:To="Package\SQL_TRXNTYPES_SP_UPDATE_EXECUTION_STATUS_LOAD" />
+  </DTS:PrecedenceConstraints>
+  <DTS:EventHandlers>
+    <DTS:EventHandler
+      DTS:refId="Package.EventHandlers[OnError]"
+      DTS:CreationName="OnError"
+      DTS:DTSID="{2F50EF3D-D64C-4887-98D9-ABF039CB5212}"
+      DTS:EventID="2"
+      DTS:EventName="OnError"
+      DTS:LocaleID="-1">
+      <DTS:Variables>
+        <DTS:Variable
+          DTS:CreationName=""
+          DTS:Description="The propagate property of the event"
+          DTS:DTSID="{2ABE2E66-72C4-4EB3-929F-52FAB00D8CC4}"
+          DTS:IncludeInDebugDump="6789"
+          DTS:Namespace="System"
+          DTS:ObjectName="Propagate">
+          <DTS:VariableValue
+            DTS:DataType="11">-1</DTS:VariableValue>
+        </DTS:Variable>
+      </DTS:Variables>
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package.EventHandlers[OnError]\SQL_TRXNTYPES_SP_SSIS_ERRORLOG"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{B6EE11BA-E27D-4C99-9E58-4D112B3623B0}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="SQL_TRXNTYPES_SP_SSIS_ERRORLOG"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:PropertyExpression
+            DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_SSIS_ERRORLOG"</DTS:PropertyExpression>
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{DCA614A2-AFD2-4529-9408-606878410BC3}"
+              SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @PKG_GUID SYSNAME = ?&#xA;DECLARE @PACKAGE_NAME SYSNAME = ?&#xA;DECLARE @SOURCE_NAME VARCHAR(100) = ?&#xA;DECLARE @TASK_NAME VARCHAR(100) = ?&#xA;DECLARE @MACHINE_NAME VARCHAR(50) = ?&#xA;DECLARE @USER_NAME VARCHAR(50) = ?&#xA;DECLARE @ERROR_NUMBER INT = ?&#xA;DECLARE @ERROR_DESCRIPTION VARCHAR(MAX) = ?&#xA;DECLARE @PACKAGE_START_TIME DATETIME  = NULL&#xA;DECLARE @ROWS_READ BIGINT = ?&#xA;DECLARE @ROWS_INSERTED BIGINT = ?&#xA;DECLARE @ROWS_UPDATED BIGINT = NULL&#xA;DECLARE @ROWS_ERRORED BIGINT = NULL&#xA;&#xA;EXEC DBO.[SP_SSIS_ERRORLOG] @PACKAGE_ID&#xA;&#x9;,@BATCH_ID&#xA;&#x9;,@PKG_GUID&#xA;&#x9;,@PACKAGE_NAME&#xA;&#x9;,@SOURCE_NAME&#xA;&#x9;,@TASK_NAME&#xA;&#x9;,@MACHINE_NAME&#xA;&#x9;,@USER_NAME&#xA;&#x9;,@ERROR_NUMBER&#xA;&#x9;,@ERROR_DESCRIPTION&#xA;&#x9;,@PACKAGE_START_TIME&#xA;&#x9;,@ROWS_READ&#xA;&#x9;,@ROWS_INSERTED&#xA;&#x9;,@ROWS_UPDATED &#xA;&#x9;,@ROWS_ERRORED" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::v_Package_Id"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="1"
+                SQLTask:DtsVariableName="User::v_Batch_Id"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="2"
+                SQLTask:DtsVariableName="System::PackageID"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="3"
+                SQLTask:DtsVariableName="System::PackageName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="4"
+                SQLTask:DtsVariableName="System::SourceName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="5"
+                SQLTask:DtsVariableName="System::TaskName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="6"
+                SQLTask:DtsVariableName="System::MachineName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="7"
+                SQLTask:DtsVariableName="System::UserName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="8"
+                SQLTask:DtsVariableName="System::ErrorCode"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="9"
+                SQLTask:DtsVariableName="System::ErrorDescription"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="10"
+                SQLTask:DtsVariableName="User::v_Rows_Read"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="11"
+                SQLTask:DtsVariableName="User::v_Rows_Inserted"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+    </DTS:EventHandler>
+  </DTS:EventHandlers>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="360,43.2"
+          Id="Package\DFT_TRXNTYPES_LOAD"
+          TopLeft="602.878402019497,412.182348771409" />
+        <NodeLayout
+          Size="360,43.2"
+          Id="Package\SQL_TRXNTYPES_GET_DEST_COUNT_LOAD"
+          TopLeft="602.878402019497,513.852935964261" />
+        <NodeLayout
+          Size="360,43.2"
+          Id="Package\SQL_TRXNTYPES_SP_CHECK_PACKAGE_EXISTENCE"
+          TopLeft="602.878402019497,5.5" />
+        <NodeLayout
+          Size="360,43.2"
+          Id="Package\SQL_TRXNTYPES_SP_GET_PACKAGE_BATCH_ID"
+          TopLeft="602.878402019497,107.170587192852" />
+        <NodeLayout
+          Size="360,43.2"
+          Id="Package\SQL_TRXNTYPES_SP_INSERT_EXECUTION_STATUS"
+          TopLeft="602.878402019497,208.841174385704" />
+        <NodeLayout
+          Size="360,43.2"
+          Id="Package\SQL_TRXNTYPES_SP_UPDATE_EXECUTION_STATUS_LOAD"
+          TopLeft="602.878402019497,615.523523157113" />
+        <NodeLayout
+          Size="360,43.2"
+          Id="Package\SQL_TRXNTYPES_TRUNCATE_STG_TABLE"
+          TopLeft="602.878402019497,310.511761578557" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="782.878402019497,150.170587192852">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 10]"
+          TopLeft="782.878402019497,48.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 12]"
+          TopLeft="782.878402019497,455.182348771409">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="782.878402019497,251.841174385704">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 5]"
+          TopLeft="782.878402019497,353.511761578557">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 7]"
+          TopLeft="782.878402019497,556.852935964261">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <DtsEventHandler
+    design-time-name="Package.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="264,41.6"
+          Id="Package.EventHandlers[OnError]\SQL_TRXNTYPES_SP_SSIS_ERRORLOG"
+          TopLeft="280.785715687031,148.13529589366" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <TaskHost
+    design-time-name="Package\DFT_TRXNTYPES_LOAD">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="204.8,41.6"
+          Id="Package\DFT_TRXNTYPES_LOAD\RC_TRXNTYPES"
+          TopLeft="203.488086125232,155.213725475896" />
+        <NodeLayout
+          Size="204.8,41.6"
+          Id="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES"
+          TopLeft="74.071428376801,425.213725427278" />
+        <NodeLayout
+          Size="204.8,41.6"
+          Id="Package\DFT_TRXNTYPES_LOAD\DC_BATCH"
+          TopLeft="203.488086125232,233.862745095179" />
+        <NodeLayout
+          Size="204.8,41.6"
+          Id="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1"
+          TopLeft="316.071428376801,425.213725427278" />
+        <NodeLayout
+          Size="204.8,41.6"
+          Id="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES"
+          TopLeft="203.488086125232,76.5647058566136" />
+        <NodeLayout
+          Size="204.8,41.6"
+          Id="Package\DFT_TRXNTYPES_LOAD\BDD_TRXNTYPES"
+          TopLeft="203.488086125232,312.511764714462" />
+        <EdgeLayout
+          Id="Package\DFT_TRXNTYPES_LOAD.Paths[Row Count Output 1]"
+          TopLeft="305.988086125232,197.213725475896">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,36.6490196192828"
+              Start="0,0"
+              End="0,29.1490196192828">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,29.1490196192828" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_TRXNTYPES_LOAD.Paths[OLE DB Source Output]"
+          TopLeft="305.988086125232,118.564705856614">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,36.6490196192828"
+              Start="0,0"
+              End="0,29.1490196192828">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,29.1490196192828" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_TRXNTYPES_LOAD.Paths[Derived Column Output]"
+          TopLeft="305.988086125232,275.862745095179">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,36.6490196192828"
+              Start="0,0"
+              End="0,29.1490196192828">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,29.1490196192828" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_TRXNTYPES_LOAD.Paths[Balanced Data Distributor Output 2]"
+          TopLeft="338.821419458566,354.511764714462">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="79.7500089182354,70.701960712816"
+              Start="0,0"
+              End="79.7500089182354,63.201960712816">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.6093122729498" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,24.6093122729498"
+                    Point2="0,28.6093122729498"
+                    Point3="4,28.6093122729498" />
+                  <mssgle:LineSegment
+                    End="75.7500089182354,28.6093122729498" />
+                  <mssgle:CubicBezierSegment
+                    Point1="75.7500089182354,28.6093122729498"
+                    Point2="79.7500089182354,28.6093122729498"
+                    Point3="79.7500089182354,32.6093122729498" />
+                  <mssgle:LineSegment
+                    End="79.7500089182354,63.201960712816" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-38.0111088221323,33.6093122729498,155.7722265625,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_TRXNTYPES_LOAD.Paths[Balanced Data Distributor Output 1]"
+          TopLeft="273.154752791899,354.511764714462">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-96.5833244150979,70.701960712816"
+              Start="0,0"
+              End="-96.5833244150979,63.201960712816">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.6093122729497" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,24.6093122729497"
+                    Point2="0,28.6093122729497"
+                    Point3="-4,28.6093122729497" />
+                  <mssgle:LineSegment
+                    End="-92.5833244150979,28.6093122729497" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-92.5833244150979,28.6093122729497"
+                    Point2="-96.5833244150979,28.6093122729497"
+                    Point3="-96.5833244150979,32.6093122729497" />
+                  <mssgle:LineSegment
+                    End="-96.5833244150979,63.201960712816" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-125.992228613799,33.6093122729497,155.4011328125,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_TRXNTYPES_LOAD\DST_TRXNTYPES 1">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_TRXNTYPES_LOAD\SRC_TRXNTYPES">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <DtsEventHandler
+    design-time-name="Package\SQL_TRXNTYPES_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="313,42"
+          Id="Package\SQL_TRXNTYPES_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]\SQL_TRXNTYPES_UPDATE_DFT_LOAD_COMPLETED"
+          TopLeft="570.3,184.7" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

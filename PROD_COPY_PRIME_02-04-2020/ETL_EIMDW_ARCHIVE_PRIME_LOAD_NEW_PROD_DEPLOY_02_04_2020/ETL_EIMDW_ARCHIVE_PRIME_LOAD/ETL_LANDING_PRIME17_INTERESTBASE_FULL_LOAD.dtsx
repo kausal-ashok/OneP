@@ -1,0 +1,2451 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="11/28/2018 8:48:53 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="LAPTOP-SBSNQ3DE"
+  DTS:CreatorName="LAPTOP-SBSNQ3DE\HP"
+  DTS:DTSID="{32730784-F6B6-4DA1-AFF1-159783D9D6F6}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="14.0.0600.250"
+  DTS:LocaleID="16393"
+  DTS:ObjectName="ETL_LANDING_PRIME17_INTERESTBASE_FULL_LOAD"
+  DTS:PackageType="5"
+  DTS:ProtectionLevel="0"
+  DTS:VersionBuild="747"
+  DTS:VersionGUID="{F0803DAF-22B2-4FC3-AED7-39354A367477}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_AUDIT_FRAMEWORK]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{494CDA55-58DD-435D-BEEB-44909787DC51}"
+      DTS:ObjectName="CM_AUDIT_FRAMEWORK">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_AUDIT_FRAMEWORK_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_AUDIT_FRAMEWORK_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=AUDIT_FRAMEWORK_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{5C280D22-9A23-4DC0-AD64-7C7A5B52D968}"
+      DTS:ObjectName="CM_EIMDW_LANDING_PRIME">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_LANDING_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_ARCHIVE_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=DEV_EIMDW_Landing_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_Prime_Attunity]"
+      DTS:CreationName="MSORA"
+      DTS:DTSID="{1E7FA8E5-E6F3-4126-A225-C27B14DCC24A}"
+      DTS:ObjectName="CM_Prime_Attunity">
+      <DTS:PropertyExpression
+        DTS:Name="Password">@[$Project::p_PRIME_PWD]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_PRIME_SERVER]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="UserName">@[$Project::p_PRIME_USER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <OracleXMLPackage>
+          <OraConnectionString>SERVER=10.180.2.215:1522/prime;USERNAME=AMBERCONNECT;ORACLEHOME=;ORACLEHOME64=;WINAUTH=0</OraConnectionString>
+          <OraRetain>False</OraRetain>
+          <OraInitialCatalog></OraInitialCatalog>
+          <OraServerName>10.180.2.215:1522/prime</OraServerName>
+          <OraUserName>AMBERCONNECT</OraUserName>
+          <OraOracleHome></OraOracleHome>
+          <OraOracleHome64></OraOracleHome64>
+          <OraWinAuthentication>False</OraWinAuthentication>
+          <OraEnableDetailedTracing>False</OraEnableDetailedTracing>
+          <OraPassword
+            Sensitive="1"></OraPassword>
+        </OracleXMLPackage>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:LogProviders>
+    <DTS:LogProvider
+      DTS:ConfigString="CM_AUDIT_FRAMEWORK"
+      DTS:CreationName="Microsoft.LogProviderSQLServer"
+      DTS:Description="Writes log entries for events to a SQL Server database"
+      DTS:DTSID="{C126511F-9079-4814-ABC1-2CEC396D60B5}"
+      DTS:ObjectName="SSIS log provider for SQL Server">
+      <DTS:ObjectData>
+        <InnerObject />
+      </DTS:ObjectData>
+    </DTS:LogProvider>
+  </DTS:LogProviders>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{321C455D-E4B3-4B16-9564-24C637355650}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Batch_Id">
+      <DTS:VariableValue
+        DTS:DataType="20">-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{1A0CE4A6-A07D-4312-BBC2-A640DE89FB4C}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT COUNT(1) FROM &quot; +  @[User::v_Dest_Table]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Dest_Count_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT COUNT(1) FROM DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_INTERESTBASE (NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{84D1FBDA-5455-4983-8CDF-903817E13478}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="@[$Project::p_LANDING_DATABASE]  +&quot;.&quot;+ @[$Project::p_LANDING_SCHEMA] +&quot;.&quot;+&quot;SRC_PRIME17_INTERESTBASE (NOLOCK)&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Dest_Table">
+      <DTS:VariableValue
+        DTS:DataType="8">DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_INTERESTBASE (NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{0E702FFE-3B6B-448E-AA32-0149FB5D0F30}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Package_Id">
+      <DTS:VariableValue
+        DTS:DataType="3">-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{B7176A0F-4942-4597-BA0D-C48D16672B8B}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Rows_Inserted">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{B8268B6F-82EA-40BD-8EAC-34ABF71B3F8A}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Rows_Read">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{DDEB1EEE-0F62-4FC3-B6E5-0FD8CF11E007}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT &#xA;INSTITUTION_ID&#x9;&#xA;,SERNO&#x9;&#xA;,RECTYPE&#x9;&#xA;,PROFILESERNO&#x9;&#xA;,TRXNTYPESERNO&#x9;&#xA;,DESCRIPTION&#x9;&#xA;,NUMOFNORMALRATES&#x9;&#xA;,NUMOFPENALTYRATES&#x9;&#xA;,NUMOFPERIODS&#x9;&#xA;,ANCHORCYCLE&#x9;&#xA;,CHARGEFLAG&#x9;&#xA;,INCLUSIVENESS&#x9;&#xA;,USENETAMOUNT&#x9;&#xA;,EXTENDTODUEDATE&#x9;&#xA;,REVEXCESSINTENABLE&#x9;&#xA;,REVEXCESSINTNEGATIVEGRACE&#x9;&#xA;,REVEXCESSINTSEPARATETRXN&#x9;&#xA;,CREDITINTSEPARATETRXN&#x9;&#xA;,MAXTRXNDAYS&#x9;&#xA;,IGNOREVALUEDATE&#x9;&#xA;,SUSPENDINTERESTCYCLES &#xA;&#xA;FROM &quot;+  @[User::v_Source_Table]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Source_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT 
+INSTITUTION_ID	
+,SERNO	
+,RECTYPE	
+,PROFILESERNO	
+,TRXNTYPESERNO	
+,DESCRIPTION	
+,NUMOFNORMALRATES	
+,NUMOFPENALTYRATES	
+,NUMOFPERIODS	
+,ANCHORCYCLE	
+,CHARGEFLAG	
+,INCLUSIVENESS	
+,USENETAMOUNT	
+,EXTENDTODUEDATE	
+,REVEXCESSINTENABLE	
+,REVEXCESSINTNEGATIVEGRACE	
+,REVEXCESSINTSEPARATETRXN	
+,CREDITINTSEPARATETRXN	
+,MAXTRXNDAYS	
+,IGNOREVALUEDATE	
+,SUSPENDINTERESTCYCLES 
+
+FROM TCTDBS.INTERESTBASE</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{E74F64EA-8717-4181-9377-180D2CC4A313}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Source_Table">
+      <DTS:VariableValue
+        DTS:DataType="8">TCTDBS.INTERESTBASE</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{2875C18A-4D58-489C-807F-D5442F05B5FD}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Task_Name">
+      <DTS:VariableValue
+        DTS:DataType="8">INTERESTBASE</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{45A1B877-88DF-4A5B-864E-C2C918F29CFB}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;TRUNCATE TABLE &quot;  + REPLACE(@[User::v_Dest_Table],&quot;(NOLOCK)&quot;,&quot; &quot;)"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Trunc_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">TRUNCATE TABLE DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_INTERESTBASE  </DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:LoggingOptions
+    DTS:FilterKind="0"
+    DTS:LoggingMode="1">
+    <DTS:Property
+      DTS:DataType="8"
+      DTS:Name="EventFilter">3,7,OnError,13,OnPostExecute,12,OnTaskFailed</DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnError"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnPostExecute"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnTaskFailed"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:SelectedLogProviders>
+      <DTS:SelectedLogProvider
+        DTS:InstanceID="{C126511F-9079-4814-ABC1-2CEC396D60B5}" />
+    </DTS:SelectedLogProviders>
+  </DTS:LoggingOptions>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\DFT_INTERESTBASE_LOAD"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{24DCF76A-F5B0-46BF-BDEF-860E8AF01C12}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="DFT_INTERESTBASE_LOAD"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"DFT_"+@[User::v_Task_Name]+"_LOAD"</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="[SRC_INTERESTBASE].[SqlCommand]">@[User::v_Source_Query]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <pipeline
+          defaultBufferMaxRows="100000"
+          defaultBufferSize="20485760"
+          version="1">
+          <components>
+            <component
+              refId="Package\DFT_INTERESTBASE_LOAD\BDD_INTERESTBASE"
+              componentClassID="Microsoft.BDD"
+              contactInfo="Balanced Data Distributor;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Evaluates and directs rows in a dataset to multiple destinations."
+              name="BDD_INTERESTBASE">
+              <inputs>
+                <input
+                  refId="Package\DFT_INTERESTBASE_LOAD\BDD_INTERESTBASE.Inputs[Balanced Data Distributor Input]"
+                  description="Input to the Balanced Data      Distributor Transformation"
+                  name="Balanced Data Distributor Input">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_INTERESTBASE_LOAD\BDD_INTERESTBASE.Outputs[Balanced Data Distributor Output 1]"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 1"
+                  synchronousInputId="Package\DFT_INTERESTBASE_LOAD\BDD_INTERESTBASE.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_INTERESTBASE_LOAD\BDD_INTERESTBASE.Outputs[Balanced Data Distributor Output 2]"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 2"
+                  synchronousInputId="Package\DFT_INTERESTBASE_LOAD\BDD_INTERESTBASE.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_INTERESTBASE_LOAD\BDD_INTERESTBASE.Outputs[Balanced Data Distributor Output 3]"
+                  dangling="true"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 3"
+                  synchronousInputId="Package\DFT_INTERESTBASE_LOAD\BDD_INTERESTBASE.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_INTERESTBASE_LOAD\DC_BATCH"
+              componentClassID="Microsoft.DerivedColumn"
+              contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+              name="DC_BATCH"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\DFT_INTERESTBASE_LOAD\DC_BATCH.Inputs[Derived Column Input]"
+                  description="Input to the Derived Column Transformation"
+                  name="Derived Column Input">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_INTERESTBASE_LOAD\DC_BATCH.Outputs[Derived Column Output]"
+                  description="Default Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  name="Derived Column Output"
+                  synchronousInputId="Package\DFT_INTERESTBASE_LOAD\DC_BATCH.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]"
+                      dataType="i8"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]"
+                      name="BATCH_ID"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">@[User::v_Batch_Id]</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">@[User::v_Batch_Id]</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_INTERESTBASE_LOAD\DC_BATCH.Outputs[Derived Column Error Output]"
+                  description="Error Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Derived Column Error Output"
+                  synchronousInputId="Package\DFT_INTERESTBASE_LOAD\DC_BATCH.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="DST_INTERESTBASE"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[LZOWN].[SRC_PRIME17_INTERESTBASE]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS,ROWS_PER_BATCH = 1000000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].Columns[INSTITUTION_ID]"
+                      cachedDataType="i4"
+                      cachedName="INSTITUTION_ID"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].Columns[SERNO]"
+                      cachedDataType="numeric"
+                      cachedName="SERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[SERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].Columns[RECTYPE]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="RECTYPE"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[RECTYPE]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[RECTYPE]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].Columns[PROFILESERNO]"
+                      cachedDataType="numeric"
+                      cachedName="PROFILESERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[PROFILESERNO]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[PROFILESERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].Columns[TRXNTYPESERNO]"
+                      cachedDataType="numeric"
+                      cachedName="TRXNTYPESERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[TRXNTYPESERNO]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[TRXNTYPESERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].Columns[DESCRIPTION]"
+                      cachedDataType="wstr"
+                      cachedLength="40"
+                      cachedName="DESCRIPTION"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTION]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[DESCRIPTION]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].Columns[NUMOFNORMALRATES]"
+                      cachedDataType="i4"
+                      cachedName="NUMOFNORMALRATES"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[NUMOFNORMALRATES]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[NUMOFNORMALRATES]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].Columns[NUMOFPENALTYRATES]"
+                      cachedDataType="i4"
+                      cachedName="NUMOFPENALTYRATES"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[NUMOFPENALTYRATES]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[NUMOFPENALTYRATES]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].Columns[NUMOFPERIODS]"
+                      cachedDataType="i4"
+                      cachedName="NUMOFPERIODS"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[NUMOFPERIODS]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[NUMOFPERIODS]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].Columns[ANCHORCYCLE]"
+                      cachedDataType="i4"
+                      cachedName="ANCHORCYCLE"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[ANCHORCYCLE]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[ANCHORCYCLE]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].Columns[CHARGEFLAG]"
+                      cachedDataType="i4"
+                      cachedName="CHARGEFLAG"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[CHARGEFLAG]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[CHARGEFLAG]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].Columns[INCLUSIVENESS]"
+                      cachedDataType="i4"
+                      cachedName="INCLUSIVENESS"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[INCLUSIVENESS]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[INCLUSIVENESS]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].Columns[USENETAMOUNT]"
+                      cachedDataType="i4"
+                      cachedName="USENETAMOUNT"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[USENETAMOUNT]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[USENETAMOUNT]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].Columns[EXTENDTODUEDATE]"
+                      cachedDataType="i4"
+                      cachedName="EXTENDTODUEDATE"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[EXTENDTODUEDATE]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[EXTENDTODUEDATE]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].Columns[REVEXCESSINTENABLE]"
+                      cachedDataType="i4"
+                      cachedName="REVEXCESSINTENABLE"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[REVEXCESSINTENABLE]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[REVEXCESSINTENABLE]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].Columns[REVEXCESSINTNEGATIVEGRACE]"
+                      cachedDataType="i4"
+                      cachedName="REVEXCESSINTNEGATIVEGRACE"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[REVEXCESSINTNEGATIVEGRACE]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[REVEXCESSINTNEGATIVEGRACE]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].Columns[REVEXCESSINTSEPARATETRXN]"
+                      cachedDataType="i4"
+                      cachedName="REVEXCESSINTSEPARATETRXN"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[REVEXCESSINTSEPARATETRXN]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[REVEXCESSINTSEPARATETRXN]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].Columns[CREDITINTSEPARATETRXN]"
+                      cachedDataType="i4"
+                      cachedName="CREDITINTSEPARATETRXN"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[CREDITINTSEPARATETRXN]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[CREDITINTSEPARATETRXN]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].Columns[MAXTRXNDAYS]"
+                      cachedDataType="i4"
+                      cachedName="MAXTRXNDAYS"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[MAXTRXNDAYS]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[MAXTRXNDAYS]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].Columns[IGNOREVALUEDATE]"
+                      cachedDataType="i4"
+                      cachedName="IGNOREVALUEDATE"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[IGNOREVALUEDATE]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[IGNOREVALUEDATE]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].Columns[SUSPENDINTERESTCYCLES]"
+                      cachedDataType="i4"
+                      cachedName="SUSPENDINTERESTCYCLES"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[SUSPENDINTERESTCYCLES]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[SUSPENDINTERESTCYCLES]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].Columns[BATCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="BATCH_ID"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[LD_SEQ_ID]"
+                      dataType="i4"
+                      name="LD_SEQ_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      dataType="i8"
+                      name="BATCH_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[RECTYPE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="RECTYPE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[PROFILESERNO]"
+                      dataType="numeric"
+                      name="PROFILESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[TRXNTYPESERNO]"
+                      dataType="numeric"
+                      name="TRXNTYPESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTION]"
+                      dataType="wstr"
+                      length="40"
+                      name="DESCRIPTION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[NUMOFNORMALRATES]"
+                      dataType="i4"
+                      name="NUMOFNORMALRATES" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[NUMOFPENALTYRATES]"
+                      dataType="i4"
+                      name="NUMOFPENALTYRATES" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[NUMOFPERIODS]"
+                      dataType="i4"
+                      name="NUMOFPERIODS" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[ANCHORCYCLE]"
+                      dataType="i4"
+                      name="ANCHORCYCLE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[CHARGEFLAG]"
+                      dataType="i4"
+                      name="CHARGEFLAG" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[INCLUSIVENESS]"
+                      dataType="i4"
+                      name="INCLUSIVENESS" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[USENETAMOUNT]"
+                      dataType="i4"
+                      name="USENETAMOUNT" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[EXTENDTODUEDATE]"
+                      dataType="i4"
+                      name="EXTENDTODUEDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[REVEXCESSINTENABLE]"
+                      dataType="i4"
+                      name="REVEXCESSINTENABLE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[REVEXCESSINTNEGATIVEGRACE]"
+                      dataType="i4"
+                      name="REVEXCESSINTNEGATIVEGRACE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[REVEXCESSINTSEPARATETRXN]"
+                      dataType="i4"
+                      name="REVEXCESSINTSEPARATETRXN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[CREDITINTSEPARATETRXN]"
+                      dataType="i4"
+                      name="CREDITINTSEPARATETRXN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[MAXTRXNDAYS]"
+                      dataType="i4"
+                      name="MAXTRXNDAYS" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[IGNOREVALUEDATE]"
+                      dataType="i4"
+                      name="IGNOREVALUEDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input].ExternalColumns[SUSPENDINTERESTCYCLES]"
+                      dataType="i4"
+                      name="SUSPENDINTERESTCYCLES" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="DST_INTERESTBASE 1"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[LZOWN].[SRC_PRIME17_INTERESTBASE]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS,ROWS_PER_BATCH = 1000000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].Columns[INSTITUTION_ID]"
+                      cachedDataType="i4"
+                      cachedName="INSTITUTION_ID"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].Columns[SERNO]"
+                      cachedDataType="numeric"
+                      cachedName="SERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[SERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].Columns[RECTYPE]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="RECTYPE"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[RECTYPE]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[RECTYPE]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].Columns[PROFILESERNO]"
+                      cachedDataType="numeric"
+                      cachedName="PROFILESERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[PROFILESERNO]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[PROFILESERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].Columns[TRXNTYPESERNO]"
+                      cachedDataType="numeric"
+                      cachedName="TRXNTYPESERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[TRXNTYPESERNO]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[TRXNTYPESERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].Columns[DESCRIPTION]"
+                      cachedDataType="wstr"
+                      cachedLength="40"
+                      cachedName="DESCRIPTION"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTION]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[DESCRIPTION]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].Columns[NUMOFNORMALRATES]"
+                      cachedDataType="i4"
+                      cachedName="NUMOFNORMALRATES"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[NUMOFNORMALRATES]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[NUMOFNORMALRATES]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].Columns[NUMOFPENALTYRATES]"
+                      cachedDataType="i4"
+                      cachedName="NUMOFPENALTYRATES"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[NUMOFPENALTYRATES]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[NUMOFPENALTYRATES]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].Columns[NUMOFPERIODS]"
+                      cachedDataType="i4"
+                      cachedName="NUMOFPERIODS"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[NUMOFPERIODS]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[NUMOFPERIODS]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].Columns[ANCHORCYCLE]"
+                      cachedDataType="i4"
+                      cachedName="ANCHORCYCLE"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[ANCHORCYCLE]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[ANCHORCYCLE]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].Columns[CHARGEFLAG]"
+                      cachedDataType="i4"
+                      cachedName="CHARGEFLAG"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[CHARGEFLAG]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[CHARGEFLAG]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].Columns[INCLUSIVENESS]"
+                      cachedDataType="i4"
+                      cachedName="INCLUSIVENESS"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[INCLUSIVENESS]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[INCLUSIVENESS]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].Columns[USENETAMOUNT]"
+                      cachedDataType="i4"
+                      cachedName="USENETAMOUNT"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[USENETAMOUNT]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[USENETAMOUNT]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].Columns[EXTENDTODUEDATE]"
+                      cachedDataType="i4"
+                      cachedName="EXTENDTODUEDATE"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[EXTENDTODUEDATE]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[EXTENDTODUEDATE]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].Columns[REVEXCESSINTENABLE]"
+                      cachedDataType="i4"
+                      cachedName="REVEXCESSINTENABLE"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[REVEXCESSINTENABLE]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[REVEXCESSINTENABLE]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].Columns[REVEXCESSINTNEGATIVEGRACE]"
+                      cachedDataType="i4"
+                      cachedName="REVEXCESSINTNEGATIVEGRACE"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[REVEXCESSINTNEGATIVEGRACE]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[REVEXCESSINTNEGATIVEGRACE]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].Columns[REVEXCESSINTSEPARATETRXN]"
+                      cachedDataType="i4"
+                      cachedName="REVEXCESSINTSEPARATETRXN"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[REVEXCESSINTSEPARATETRXN]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[REVEXCESSINTSEPARATETRXN]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].Columns[CREDITINTSEPARATETRXN]"
+                      cachedDataType="i4"
+                      cachedName="CREDITINTSEPARATETRXN"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[CREDITINTSEPARATETRXN]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[CREDITINTSEPARATETRXN]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].Columns[MAXTRXNDAYS]"
+                      cachedDataType="i4"
+                      cachedName="MAXTRXNDAYS"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[MAXTRXNDAYS]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[MAXTRXNDAYS]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].Columns[IGNOREVALUEDATE]"
+                      cachedDataType="i4"
+                      cachedName="IGNOREVALUEDATE"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[IGNOREVALUEDATE]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[IGNOREVALUEDATE]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].Columns[SUSPENDINTERESTCYCLES]"
+                      cachedDataType="i4"
+                      cachedName="SUSPENDINTERESTCYCLES"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[SUSPENDINTERESTCYCLES]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[SUSPENDINTERESTCYCLES]" />
+                    <inputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].Columns[BATCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="BATCH_ID"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[LD_SEQ_ID]"
+                      dataType="i4"
+                      name="LD_SEQ_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      dataType="i8"
+                      name="BATCH_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[RECTYPE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="RECTYPE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[PROFILESERNO]"
+                      dataType="numeric"
+                      name="PROFILESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[TRXNTYPESERNO]"
+                      dataType="numeric"
+                      name="TRXNTYPESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTION]"
+                      dataType="wstr"
+                      length="40"
+                      name="DESCRIPTION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[NUMOFNORMALRATES]"
+                      dataType="i4"
+                      name="NUMOFNORMALRATES" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[NUMOFPENALTYRATES]"
+                      dataType="i4"
+                      name="NUMOFPENALTYRATES" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[NUMOFPERIODS]"
+                      dataType="i4"
+                      name="NUMOFPERIODS" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[ANCHORCYCLE]"
+                      dataType="i4"
+                      name="ANCHORCYCLE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[CHARGEFLAG]"
+                      dataType="i4"
+                      name="CHARGEFLAG" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[INCLUSIVENESS]"
+                      dataType="i4"
+                      name="INCLUSIVENESS" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[USENETAMOUNT]"
+                      dataType="i4"
+                      name="USENETAMOUNT" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[EXTENDTODUEDATE]"
+                      dataType="i4"
+                      name="EXTENDTODUEDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[REVEXCESSINTENABLE]"
+                      dataType="i4"
+                      name="REVEXCESSINTENABLE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[REVEXCESSINTNEGATIVEGRACE]"
+                      dataType="i4"
+                      name="REVEXCESSINTNEGATIVEGRACE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[REVEXCESSINTSEPARATETRXN]"
+                      dataType="i4"
+                      name="REVEXCESSINTSEPARATETRXN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[CREDITINTSEPARATETRXN]"
+                      dataType="i4"
+                      name="CREDITINTSEPARATETRXN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[MAXTRXNDAYS]"
+                      dataType="i4"
+                      name="MAXTRXNDAYS" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[IGNOREVALUEDATE]"
+                      dataType="i4"
+                      name="IGNOREVALUEDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input].ExternalColumns[SUSPENDINTERESTCYCLES]"
+                      dataType="i4"
+                      name="SUSPENDINTERESTCYCLES" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_INTERESTBASE_LOAD\RC_INTERESTBASE"
+              componentClassID="Microsoft.RowCount"
+              contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Counts rows as they pass through a data flow. For example, use the number of rows processed to determine whether or not to perform cleanup operations, or update text in an e-mail message to communicate processing status."
+              name="RC_INTERESTBASE">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable to hold the row count."
+                  name="VariableName">User::v_Rows_Read</property>
+              </properties>
+              <inputs>
+                <input
+                  refId="Package\DFT_INTERESTBASE_LOAD\RC_INTERESTBASE.Inputs[Row Count Input 1]"
+                  hasSideEffects="true"
+                  name="Row Count Input 1">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_INTERESTBASE_LOAD\RC_INTERESTBASE.Outputs[Row Count Output 1]"
+                  name="Row Count Output 1"
+                  synchronousInputId="Package\DFT_INTERESTBASE_LOAD\RC_INTERESTBASE.Inputs[Row Count Input 1]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE"
+              componentClassID="Attunity.SSISOraSrc"
+              contactInfo="Oracle Source;Microsoft Connector for Oracle by Attunity; Attunity Ltd.; All Rights Reserved; http://www.attunity.com;7"
+              description="Microsoft Oracle Source Component by Attunity"
+              name="SRC_INTERESTBASE"
+              usesDispositions="true"
+              version="6">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="The name of the table to be fetched."
+                  expressionType="Notify"
+                  name="TableName"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  expressionType="Notify"
+                  name="SqlCommand">SELECT 
+INSTITUTION_ID	
+,SERNO	
+,RECTYPE	
+,PROFILESERNO	
+,TRXNTYPESERNO	
+,DESCRIPTION	
+,NUMOFNORMALRATES	
+,NUMOFPENALTYRATES	
+,NUMOFPERIODS	
+,ANCHORCYCLE	
+,CHARGEFLAG	
+,INCLUSIVENESS	
+,USENETAMOUNT	
+,EXTENDTODUEDATE	
+,REVEXCESSINTENABLE	
+,REVEXCESSINTNEGATIVEGRACE	
+,REVEXCESSINTSEPARATETRXN	
+,CREDITINTSEPARATETRXN	
+,MAXTRXNDAYS	
+,IGNOREVALUEDATE	
+,SUSPENDINTERESTCYCLES 
+
+FROM TCTDBS.INTERESTBASE</property>
+                <property
+                  dataType="System.Int32"
+                  description="The number of rows fetched in a batch."
+                  expressionType="Notify"
+                  name="BatchSize">100</property>
+                <property
+                  dataType="System.Int32"
+                  description="Number of pre-fetched rows."
+                  expressionType="Notify"
+                  name="PrefetchCount">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Determines the chunk size allocation for LOB columns"
+                  expressionType="Notify"
+                  name="LobChunkSize">32768</property>
+                <property
+                  dataType="System.Int32"
+                  description="The code page to use when code page information is unavailable from the data source."
+                  expressionType="Notify"
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Int32"
+                  description="The mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">1</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Connections[MSOraConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_Prime_Attunity]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_Prime_Attunity]"
+                  description="The Oracle runtime connection"
+                  name="MSOraConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output]"
+                  errorRowDisposition="FailComponent"
+                  name="Oracle Source Output"
+                  truncationRowDisposition="FailComponent">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]"
+                      name="INSTITUTION_ID" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[SERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[SERNO]"
+                      name="SERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[RECTYPE]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[RECTYPE]"
+                      length="1"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[RECTYPE]"
+                      name="RECTYPE" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[PROFILESERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[PROFILESERNO]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[PROFILESERNO]"
+                      name="PROFILESERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[TRXNTYPESERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[TRXNTYPESERNO]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[TRXNTYPESERNO]"
+                      name="TRXNTYPESERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[DESCRIPTION]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[DESCRIPTION]"
+                      length="40"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[DESCRIPTION]"
+                      name="DESCRIPTION" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[NUMOFNORMALRATES]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[NUMOFNORMALRATES]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[NUMOFNORMALRATES]"
+                      name="NUMOFNORMALRATES" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[NUMOFPENALTYRATES]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[NUMOFPENALTYRATES]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[NUMOFPENALTYRATES]"
+                      name="NUMOFPENALTYRATES" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[NUMOFPERIODS]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[NUMOFPERIODS]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[NUMOFPERIODS]"
+                      name="NUMOFPERIODS" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[ANCHORCYCLE]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[ANCHORCYCLE]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[ANCHORCYCLE]"
+                      name="ANCHORCYCLE" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[CHARGEFLAG]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[CHARGEFLAG]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[CHARGEFLAG]"
+                      name="CHARGEFLAG" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[INCLUSIVENESS]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[INCLUSIVENESS]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[INCLUSIVENESS]"
+                      name="INCLUSIVENESS" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[USENETAMOUNT]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[USENETAMOUNT]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[USENETAMOUNT]"
+                      name="USENETAMOUNT" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[EXTENDTODUEDATE]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[EXTENDTODUEDATE]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[EXTENDTODUEDATE]"
+                      name="EXTENDTODUEDATE" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[REVEXCESSINTENABLE]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[REVEXCESSINTENABLE]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[REVEXCESSINTENABLE]"
+                      name="REVEXCESSINTENABLE" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[REVEXCESSINTNEGATIVEGRACE]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[REVEXCESSINTNEGATIVEGRACE]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[REVEXCESSINTNEGATIVEGRACE]"
+                      name="REVEXCESSINTNEGATIVEGRACE" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[REVEXCESSINTSEPARATETRXN]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[REVEXCESSINTSEPARATETRXN]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[REVEXCESSINTSEPARATETRXN]"
+                      name="REVEXCESSINTSEPARATETRXN" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[CREDITINTSEPARATETRXN]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[CREDITINTSEPARATETRXN]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[CREDITINTSEPARATETRXN]"
+                      name="CREDITINTSEPARATETRXN" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[MAXTRXNDAYS]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[MAXTRXNDAYS]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[MAXTRXNDAYS]"
+                      name="MAXTRXNDAYS" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[IGNOREVALUEDATE]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[IGNOREVALUEDATE]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[IGNOREVALUEDATE]"
+                      name="IGNOREVALUEDATE" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[SUSPENDINTERESTCYCLES]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[SUSPENDINTERESTCYCLES]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].Columns[SUSPENDINTERESTCYCLES]"
+                      name="SUSPENDINTERESTCYCLES" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[RECTYPE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="RECTYPE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[PROFILESERNO]"
+                      dataType="numeric"
+                      name="PROFILESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[TRXNTYPESERNO]"
+                      dataType="numeric"
+                      name="TRXNTYPESERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[DESCRIPTION]"
+                      dataType="wstr"
+                      length="40"
+                      name="DESCRIPTION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[NUMOFNORMALRATES]"
+                      dataType="i4"
+                      name="NUMOFNORMALRATES" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[NUMOFPENALTYRATES]"
+                      dataType="i4"
+                      name="NUMOFPENALTYRATES" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[NUMOFPERIODS]"
+                      dataType="i4"
+                      name="NUMOFPERIODS" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[ANCHORCYCLE]"
+                      dataType="i4"
+                      name="ANCHORCYCLE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[CHARGEFLAG]"
+                      dataType="i4"
+                      name="CHARGEFLAG" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[INCLUSIVENESS]"
+                      dataType="i4"
+                      name="INCLUSIVENESS" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[USENETAMOUNT]"
+                      dataType="i4"
+                      name="USENETAMOUNT" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[EXTENDTODUEDATE]"
+                      dataType="i4"
+                      name="EXTENDTODUEDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[REVEXCESSINTENABLE]"
+                      dataType="i4"
+                      name="REVEXCESSINTENABLE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[REVEXCESSINTNEGATIVEGRACE]"
+                      dataType="i4"
+                      name="REVEXCESSINTNEGATIVEGRACE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[REVEXCESSINTSEPARATETRXN]"
+                      dataType="i4"
+                      name="REVEXCESSINTSEPARATETRXN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[CREDITINTSEPARATETRXN]"
+                      dataType="i4"
+                      name="CREDITINTSEPARATETRXN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[MAXTRXNDAYS]"
+                      dataType="i4"
+                      name="MAXTRXNDAYS" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[IGNOREVALUEDATE]"
+                      dataType="i4"
+                      name="IGNOREVALUEDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[SUSPENDINTERESTCYCLES]"
+                      dataType="i4"
+                      name="SUSPENDINTERESTCYCLES" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output]"
+                  isErrorOut="true"
+                  name="Oracle Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[INSTITUTION_ID]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[INSTITUTION_ID]"
+                      name="INSTITUTION_ID" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[SERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[SERNO]"
+                      name="SERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[RECTYPE]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[RECTYPE]"
+                      length="1"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[RECTYPE]"
+                      name="RECTYPE" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[PROFILESERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[PROFILESERNO]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[PROFILESERNO]"
+                      name="PROFILESERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[TRXNTYPESERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[TRXNTYPESERNO]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[TRXNTYPESERNO]"
+                      name="TRXNTYPESERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[DESCRIPTION]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[DESCRIPTION]"
+                      length="40"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[DESCRIPTION]"
+                      name="DESCRIPTION" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[NUMOFNORMALRATES]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[NUMOFNORMALRATES]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[NUMOFNORMALRATES]"
+                      name="NUMOFNORMALRATES" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[NUMOFPENALTYRATES]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[NUMOFPENALTYRATES]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[NUMOFPENALTYRATES]"
+                      name="NUMOFPENALTYRATES" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[NUMOFPERIODS]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[NUMOFPERIODS]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[NUMOFPERIODS]"
+                      name="NUMOFPERIODS" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[ANCHORCYCLE]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[ANCHORCYCLE]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[ANCHORCYCLE]"
+                      name="ANCHORCYCLE" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[CHARGEFLAG]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[CHARGEFLAG]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[CHARGEFLAG]"
+                      name="CHARGEFLAG" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[INCLUSIVENESS]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[INCLUSIVENESS]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[INCLUSIVENESS]"
+                      name="INCLUSIVENESS" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[USENETAMOUNT]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[USENETAMOUNT]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[USENETAMOUNT]"
+                      name="USENETAMOUNT" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[EXTENDTODUEDATE]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[EXTENDTODUEDATE]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[EXTENDTODUEDATE]"
+                      name="EXTENDTODUEDATE" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[REVEXCESSINTENABLE]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[REVEXCESSINTENABLE]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[REVEXCESSINTENABLE]"
+                      name="REVEXCESSINTENABLE" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[REVEXCESSINTNEGATIVEGRACE]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[REVEXCESSINTNEGATIVEGRACE]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[REVEXCESSINTNEGATIVEGRACE]"
+                      name="REVEXCESSINTNEGATIVEGRACE" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[REVEXCESSINTSEPARATETRXN]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[REVEXCESSINTSEPARATETRXN]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[REVEXCESSINTSEPARATETRXN]"
+                      name="REVEXCESSINTSEPARATETRXN" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[CREDITINTSEPARATETRXN]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[CREDITINTSEPARATETRXN]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[CREDITINTSEPARATETRXN]"
+                      name="CREDITINTSEPARATETRXN" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[MAXTRXNDAYS]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[MAXTRXNDAYS]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[MAXTRXNDAYS]"
+                      name="MAXTRXNDAYS" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[IGNOREVALUEDATE]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[IGNOREVALUEDATE]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[IGNOREVALUEDATE]"
+                      name="IGNOREVALUEDATE" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[SUSPENDINTERESTCYCLES]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output].ExternalColumns[SUSPENDINTERESTCYCLES]"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[SUSPENDINTERESTCYCLES]"
+                      name="SUSPENDINTERESTCYCLES" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\DFT_INTERESTBASE_LOAD.Paths[Balanced Data Distributor Output 1]"
+              endId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE.Inputs[OLE DB Destination Input]"
+              name="Balanced Data Distributor Output 1"
+              startId="Package\DFT_INTERESTBASE_LOAD\BDD_INTERESTBASE.Outputs[Balanced Data Distributor Output 1]" />
+            <path
+              refId="Package\DFT_INTERESTBASE_LOAD.Paths[Balanced Data Distributor Output 2]"
+              endId="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1.Inputs[OLE DB Destination Input]"
+              name="Balanced Data Distributor Output 2"
+              startId="Package\DFT_INTERESTBASE_LOAD\BDD_INTERESTBASE.Outputs[Balanced Data Distributor Output 2]" />
+            <path
+              refId="Package\DFT_INTERESTBASE_LOAD.Paths[Derived Column Output]"
+              endId="Package\DFT_INTERESTBASE_LOAD\BDD_INTERESTBASE.Inputs[Balanced Data Distributor Input]"
+              name="Derived Column Output"
+              startId="Package\DFT_INTERESTBASE_LOAD\DC_BATCH.Outputs[Derived Column Output]" />
+            <path
+              refId="Package\DFT_INTERESTBASE_LOAD.Paths[Oracle Source Output]"
+              endId="Package\DFT_INTERESTBASE_LOAD\RC_INTERESTBASE.Inputs[Row Count Input 1]"
+              name="Oracle Source Output"
+              startId="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE.Outputs[Oracle Source Output]" />
+            <path
+              refId="Package\DFT_INTERESTBASE_LOAD.Paths[Row Count Output 1]"
+              endId="Package\DFT_INTERESTBASE_LOAD\DC_BATCH.Inputs[Derived Column Input]"
+              name="Row Count Output 1"
+              startId="Package\DFT_INTERESTBASE_LOAD\RC_INTERESTBASE.Outputs[Row Count Output 1]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_INTERESTBASE_GET_DEST_COUNT_LOAD"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{6A3374BB-6EFD-4864-B714-9C996567C9AF}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_INTERESTBASE_GET_DEST_COUNT_LOAD"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_GET_DEST_COUNT_LOAD"</DTS:PropertyExpression>
+      <DTS:EventHandlers>
+        <DTS:EventHandler
+          DTS:refId="Package\SQL_INTERESTBASE_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]"
+          DTS:CreationName="OnPreExecute"
+          DTS:DTSID="{0FC9A68A-04BC-44C5-A06D-BFA6EC494A4D}"
+          DTS:EventID="1076330902"
+          DTS:EventName="OnPreExecute"
+          DTS:LocaleID="-1">
+          <DTS:Variables>
+            <DTS:Variable
+              DTS:CreationName=""
+              DTS:Description="The propagate property of the event"
+              DTS:DTSID="{3CEE3747-F1A6-4D05-B50B-B2D8D34C6933}"
+              DTS:IncludeInDebugDump="6789"
+              DTS:Namespace="System"
+              DTS:ObjectName="Propagate">
+              <DTS:VariableValue
+                DTS:DataType="11">-1</DTS:VariableValue>
+            </DTS:Variable>
+          </DTS:Variables>
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\SQL_INTERESTBASE_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]\SQL_INTERESTBASE_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{D1E547FD-1B7F-4CDE-8AB4-4E5A4C9C8B02}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="SQL_INTERESTBASE_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+              <DTS:Variables />
+              <DTS:PropertyExpression
+                DTS:Name="Name">"SQL_"+ @[User::v_Task_Name]+"_UPDATE_DFT_LOAD_COMPLETED"</DTS:PropertyExpression>
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{494CDA55-58DD-435D-BEEB-44909787DC51}"
+                  SQLTask:SqlStatementSource="UPDATE DBO.BATCH_EXECUTION_STATUS&#xA; SET  &#xA;STATUS_FLAG = 'DFT LOAD COMPLETED'   WHERE&#xA; EXECUTION_ID = (&#xA;       SELECT MAX(EXECUTION_ID) EXECUTION_ID&#xA;       FROM DBO.BATCH_EXECUTION_STATUS&#xA;       WHERE PACKAGE_ID =?&#xA;       AND  BATCH_ID = ?&#xA;    )"
+                  SQLTask:TypeConversionMode="None" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="0"
+                    SQLTask:DtsVariableName="User::v_Package_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="1"
+                    SQLTask:DtsVariableName="User::v_Batch_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                </SQLTask:SqlTaskData>
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+        </DTS:EventHandler>
+      </DTS:EventHandlers>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{5C280D22-9A23-4DC0-AD64-7C7A5B52D968}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::v_Dest_Count_Query"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="0"
+            SQLTask:DtsVariableName="User::v_Rows_Inserted" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_INTERESTBASE_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{BFF6CFD6-2AE6-495C-AC6A-A6C5EC35A71E}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_INTERESTBASE_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_CHECK_PACKAGE_EXISTENCE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{494CDA55-58DD-435D-BEEB-44909787DC51}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_NAME VARCHAR(500) = ?&#xA;&#xA;EXEC [DBO].[SP_CHECK_PACKAGE_EXISTENCE]  @PACKAGE_NAME" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_INTERESTBASE_SP_GET_PACKAGE_BATCH_ID"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{296F01C4-7A28-4561-9F0B-D1156C851862}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_INTERESTBASE_SP_GET_PACKAGE_BATCH_ID"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_GET_PACKAGE_BATCH_ID"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{494CDA55-58DD-435D-BEEB-44909787DC51}"
+          SQLTask:SqlStatementSource="&#xA;DECLARE @PACKAGE_NAME VARCHAR(500) = ?&#xA;DECLARE @PACKAGE_ID  INT &#xA;DECLARE @BATCH_ID BIGINT&#xA;&#xA;&#xA; EXEC [DBO].[SP_GET_PACKAGE_BATCH_ID] @PACKAGE_NAME,@PACKAGE_ID OUT,@BATCH_ID OUT&#xA; SELECT ? = @PACKAGE_ID &#xA; SELECT ? = @BATCH_ID" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_INTERESTBASE_SP_INSERT_EXECUTION_STATUS"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{B4E03BF7-33CA-4841-8F32-96436C3423BF}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_INTERESTBASE_SP_INSERT_EXECUTION_STATUS"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_INSERT_EXECUTION_STATUS"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{494CDA55-58DD-435D-BEEB-44909787DC51}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @PACKAGE_START_TIME DATETIME = ?&#xA;DECLARE @JOB_ID INT  =?&#xA;&#xA;EXEC [DBO].[SP_INSERT_EXECUTION_STATUS]           @PACKAGE_ID&#xA;,@BATCH_ID&#xA;,@PACKAGE_START_TIME&#xA;,@JOB_ID" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="System::StartTime"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="7"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="$Project::p_JOB_ID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_INTERESTBASE_SP_UPDATE_EXECUTION_STATUS_LOAD"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{4BBECAA4-9284-41F0-921A-68630A62C5F4}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_INTERESTBASE_SP_UPDATE_EXECUTION_STATUS_LOAD"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_UPDATE_EXECUTION_STATUS_LOAD"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{494CDA55-58DD-435D-BEEB-44909787DC51}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @ROWS_READ BIGINT = ?&#xA;DECLARE @ROWS_INSERTED BIGINT = ?&#xA;DECLARE @ROWS_UPDATED BIGINT =0&#xA;DECLARE @ROWS_ERRORED  BIGINT=0&#xA;&#xA;&#xA;EXEC DBO.SP_UPDATE_EXECUTION_STATUS @PACKAGE_ID&#xA; , @BATCH_ID&#xA; , @ROWS_READ&#xA; , @ROWS_INSERTED&#xA; , @ROWS_UPDATED&#xA; , @ROWS_ERRORED" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::v_Rows_Read"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="User::v_Rows_Inserted"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_INTERESTBASE_TRUNCATE_STG_TABLE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{98F514FE-AA5F-43E9-8F14-61A955DB4E61}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_INTERESTBASE_TRUNCATE_STG_TABLE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_TRUNCATE_STG_TABLE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{5C280D22-9A23-4DC0-AD64-7C7A5B52D968}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::v_Trunc_Query" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{9CF577AA-4C25-4AF1-9DE5-20CDD320D464}"
+      DTS:From="Package\SQL_INTERESTBASE_SP_GET_PACKAGE_BATCH_ID"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\SQL_INTERESTBASE_SP_INSERT_EXECUTION_STATUS" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{091CB153-DE53-4BF8-83DB-0D281288B7D6}"
+      DTS:From="Package\SQL_INTERESTBASE_TRUNCATE_STG_TABLE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\DFT_INTERESTBASE_LOAD" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 10]"
+      DTS:CreationName=""
+      DTS:DTSID="{62605BBF-A80A-47E3-9089-07E589A212C2}"
+      DTS:From="Package\SQL_INTERESTBASE_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 10"
+      DTS:To="Package\SQL_INTERESTBASE_SP_GET_PACKAGE_BATCH_ID" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{E4E7E9B4-9392-4BBB-B9EC-8C7ECD1FED1A}"
+      DTS:From="Package\SQL_INTERESTBASE_SP_INSERT_EXECUTION_STATUS"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\SQL_INTERESTBASE_TRUNCATE_STG_TABLE" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 3]"
+      DTS:CreationName=""
+      DTS:DTSID="{109D1079-0857-4AEA-8815-A0F586C5C348}"
+      DTS:From="Package\DFT_INTERESTBASE_LOAD"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 3"
+      DTS:To="Package\SQL_INTERESTBASE_GET_DEST_COUNT_LOAD" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 7]"
+      DTS:CreationName=""
+      DTS:DTSID="{8FCECBF8-D655-4322-8FF2-E163AA71277F}"
+      DTS:Expression="@[User::v_Rows_Inserted] ==0"
+      DTS:From="Package\SQL_INTERESTBASE_GET_DEST_COUNT_LOAD"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 7"
+      DTS:To="Package\SQL_INTERESTBASE_SP_UPDATE_EXECUTION_STATUS_LOAD" />
+  </DTS:PrecedenceConstraints>
+  <DTS:EventHandlers>
+    <DTS:EventHandler
+      DTS:refId="Package.EventHandlers[OnError]"
+      DTS:CreationName="OnError"
+      DTS:DTSID="{E7AF8744-174C-452E-B500-2DD7B55B501B}"
+      DTS:EventID="2"
+      DTS:EventName="OnError"
+      DTS:LocaleID="-1">
+      <DTS:Variables>
+        <DTS:Variable
+          DTS:CreationName=""
+          DTS:Description="The propagate property of the event"
+          DTS:DTSID="{BBFC40B9-AB7C-4BDF-9372-BFB515EF6547}"
+          DTS:IncludeInDebugDump="6789"
+          DTS:Namespace="System"
+          DTS:ObjectName="Propagate">
+          <DTS:VariableValue
+            DTS:DataType="11">-1</DTS:VariableValue>
+        </DTS:Variable>
+      </DTS:Variables>
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package.EventHandlers[OnError]\SQL_INTERESTBASE_SP_SSIS_ERRORLOG"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{AC5FE9CD-A177-41DF-ADF8-6D8A52588BB2}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="SQL_INTERESTBASE_SP_SSIS_ERRORLOG"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:PropertyExpression
+            DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_SSIS_ERRORLOG"</DTS:PropertyExpression>
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{494CDA55-58DD-435D-BEEB-44909787DC51}"
+              SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @PKG_GUID SYSNAME = ?&#xA;DECLARE @PACKAGE_NAME SYSNAME = ?&#xA;DECLARE @SOURCE_NAME VARCHAR(100) = ?&#xA;DECLARE @TASK_NAME VARCHAR(100) = ?&#xA;DECLARE @MACHINE_NAME VARCHAR(50) = ?&#xA;DECLARE @USER_NAME VARCHAR(50) = ?&#xA;DECLARE @ERROR_NUMBER INT = ?&#xA;DECLARE @ERROR_DESCRIPTION VARCHAR(MAX) = ?&#xA;DECLARE @PACKAGE_START_TIME DATETIME  = NULL&#xA;DECLARE @ROWS_READ BIGINT = ?&#xA;DECLARE @ROWS_INSERTED BIGINT = ?&#xA;DECLARE @ROWS_UPDATED BIGINT = NULL&#xA;DECLARE @ROWS_ERRORED BIGINT = NULL&#xA;&#xA;EXEC DBO.[SP_SSIS_ERRORLOG] @PACKAGE_ID&#xA;&#x9;,@BATCH_ID&#xA;&#x9;,@PKG_GUID&#xA;&#x9;,@PACKAGE_NAME&#xA;&#x9;,@SOURCE_NAME&#xA;&#x9;,@TASK_NAME&#xA;&#x9;,@MACHINE_NAME&#xA;&#x9;,@USER_NAME&#xA;&#x9;,@ERROR_NUMBER&#xA;&#x9;,@ERROR_DESCRIPTION&#xA;&#x9;,@PACKAGE_START_TIME&#xA;&#x9;,@ROWS_READ&#xA;&#x9;,@ROWS_INSERTED&#xA;&#x9;,@ROWS_UPDATED &#xA;&#x9;,@ROWS_ERRORED" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::v_Package_Id"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="1"
+                SQLTask:DtsVariableName="User::v_Batch_Id"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="2"
+                SQLTask:DtsVariableName="System::PackageID"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="3"
+                SQLTask:DtsVariableName="System::PackageName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="4"
+                SQLTask:DtsVariableName="System::SourceName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="5"
+                SQLTask:DtsVariableName="System::TaskName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="6"
+                SQLTask:DtsVariableName="System::MachineName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="7"
+                SQLTask:DtsVariableName="System::UserName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="8"
+                SQLTask:DtsVariableName="System::ErrorCode"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="9"
+                SQLTask:DtsVariableName="System::ErrorDescription"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="10"
+                SQLTask:DtsVariableName="User::v_Rows_Read"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="11"
+                SQLTask:DtsVariableName="User::v_Rows_Inserted"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+    </DTS:EventHandler>
+  </DTS:EventHandlers>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="377.6,41.6"
+          Id="Package\DFT_INTERESTBASE_LOAD"
+          TopLeft="601.306973448068,412.182348771409" />
+        <NodeLayout
+          Size="377.6,41.6"
+          Id="Package\SQL_INTERESTBASE_GET_DEST_COUNT_LOAD"
+          TopLeft="601.306973448068,513.852935964261" />
+        <NodeLayout
+          Size="377.6,41.6"
+          Id="Package\SQL_INTERESTBASE_SP_CHECK_PACKAGE_EXISTENCE"
+          TopLeft="601.306973448068,5.5" />
+        <NodeLayout
+          Size="377.6,41.6"
+          Id="Package\SQL_INTERESTBASE_SP_GET_PACKAGE_BATCH_ID"
+          TopLeft="601.306973448068,107.170587192852" />
+        <NodeLayout
+          Size="377.6,41.6"
+          Id="Package\SQL_INTERESTBASE_SP_INSERT_EXECUTION_STATUS"
+          TopLeft="601.306973448068,208.841174385704" />
+        <NodeLayout
+          Size="377.6,41.6"
+          Id="Package\SQL_INTERESTBASE_SP_UPDATE_EXECUTION_STATUS_LOAD"
+          TopLeft="601.306973448068,615.523523157113" />
+        <NodeLayout
+          Size="377.6,41.6"
+          Id="Package\SQL_INTERESTBASE_TRUNCATE_STG_TABLE"
+          TopLeft="601.306973448068,310.511761578557" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="790.306973448068,149.170587192852">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.6705871928522"
+              Start="0,0"
+              End="0,52.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="790.306973448068,352.511761578557">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.6705871928522"
+              Start="0,0"
+              End="0,52.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 10]"
+          TopLeft="790.306973448068,47.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.6705871928522"
+              Start="0,0"
+              End="0,52.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="790.306973448068,250.841174385704">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.6705871928522"
+              Start="0,0"
+              End="0,52.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 3]"
+          TopLeft="790.306973448068,454.182348771409">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.6705871928522"
+              Start="0,0"
+              End="0,52.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 7]"
+          TopLeft="790.306973448068,555.852935964261">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.6705871928522"
+              Start="0,0"
+              End="0,52.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <DtsEventHandler
+    design-time-name="Package.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="280.8,41.6"
+          Id="Package.EventHandlers[OnError]\SQL_INTERESTBASE_SP_SSIS_ERRORLOG"
+          TopLeft="309.785716708825,170.864707752743" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <TaskHost
+    design-time-name="Package\DFT_INTERESTBASE_LOAD">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="203.2,41.6"
+          Id="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE"
+          TopLeft="74.071428376801,425.213725427278" />
+        <NodeLayout
+          Size="203.2,41.6"
+          Id="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1"
+          TopLeft="316.071428376801,425.213725427278" />
+        <NodeLayout
+          Size="203.2,41.6"
+          Id="Package\DFT_INTERESTBASE_LOAD\SRC_INTERESTBASE"
+          TopLeft="205.712041676985,63.213725427278" />
+        <NodeLayout
+          Size="203.2,41.6"
+          Id="Package\DFT_INTERESTBASE_LOAD\DC_BATCH"
+          TopLeft="205.712041676985,229.412418285401" />
+        <NodeLayout
+          Size="203.2,41.6"
+          Id="Package\DFT_INTERESTBASE_LOAD\RC_INTERESTBASE"
+          TopLeft="205.712041676985,146.313071856339" />
+        <NodeLayout
+          Size="203.2,41.6"
+          Id="Package\DFT_INTERESTBASE_LOAD\BDD_INTERESTBASE"
+          TopLeft="205.712041676985,312.511764714462" />
+        <EdgeLayout
+          Id="Package\DFT_INTERESTBASE_LOAD.Paths[Balanced Data Distributor Output 1]"
+          TopLeft="274.712041676985,354.511764714462">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-99.140613300184,70.701960712816"
+              Start="0,0"
+              End="-99.140613300184,63.201960712816">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.6125236902305" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,24.6125236902305"
+                    Point2="0,28.6125236902305"
+                    Point3="-4,28.6125236902305" />
+                  <mssgle:LineSegment
+                    End="-95.140613300184,28.6125236902305" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-95.140613300184,28.6125236902305"
+                    Point2="-99.140613300184,28.6125236902305"
+                    Point3="-99.140613300184,32.6125236902305" />
+                  <mssgle:LineSegment
+                    End="-99.140613300184,63.201960712816" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-127.270873056342,33.6125236902305,155.4011328125,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_INTERESTBASE_LOAD.Paths[Row Count Output 1]"
+          TopLeft="307.212041676985,188.313071856339">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,41.0993464290613"
+              Start="0,0"
+              End="0,33.5993464290613">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,33.5993464290613" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_INTERESTBASE_LOAD.Paths[Oracle Source Output]"
+          TopLeft="307.212041676985,105.213725427278">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,41.0993464290613"
+              Start="0,0"
+              End="0,33.5993464290613">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,33.5993464290613" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_INTERESTBASE_LOAD.Paths[Derived Column Output]"
+          TopLeft="307.212041676985,271.412418285401">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,41.0993464290613"
+              Start="0,0"
+              End="0,33.5993464290613">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,33.5993464290613" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_INTERESTBASE_LOAD.Paths[Balanced Data Distributor Output 2]"
+          TopLeft="339.712041676985,354.511764714462">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="77.859386699816,70.701960712816"
+              Start="0,0"
+              End="77.859386699816,63.201960712816">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.6125236902305" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,24.6125236902305"
+                    Point2="0,28.6125236902305"
+                    Point3="4,28.6125236902305" />
+                  <mssgle:LineSegment
+                    End="73.859386699816,28.6125236902305" />
+                  <mssgle:CubicBezierSegment
+                    Point1="73.859386699816,28.6125236902305"
+                    Point2="77.859386699816,28.6125236902305"
+                    Point3="77.859386699816,32.6125236902305" />
+                  <mssgle:LineSegment
+                    End="77.859386699816,63.201960712816" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-38.956419931342,33.6125236902305,155.7722265625,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_INTERESTBASE_LOAD\DST_INTERESTBASE 1">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <DtsEventHandler
+    design-time-name="Package\SQL_INTERESTBASE_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="313,42"
+          Id="Package\SQL_INTERESTBASE_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]\SQL_INTERESTBASE_UPDATE_DFT_LOAD_COMPLETED"
+          TopLeft="570.3,184.7" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

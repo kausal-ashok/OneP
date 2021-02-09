@@ -1,0 +1,2434 @@
+<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="11/28/2018 8:48:53 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="LAPTOP-SBSNQ3DE"
+  DTS:CreatorName="LAPTOP-SBSNQ3DE\HP"
+  DTS:DTSID="{1B8151D9-B218-4A07-89ED-83A0B4CBA0FB}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="14.0.0600.250"
+  DTS:LocaleID="16393"
+  DTS:ObjectName="ETL_ARCHIVE_PRIME17_PRODUCTRANGES_FULL_LOAD"
+  DTS:PackageType="5"
+  DTS:ProtectionLevel="0"
+  DTS:VersionBuild="720"
+  DTS:VersionGUID="{473A25FC-5E56-4988-BEB8-A10293518F54}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_AUDIT_FRAMEWORK]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{1F0F68A9-CEEC-47CC-B55A-1CE0F661F493}"
+      DTS:ObjectName="CM_AUDIT_FRAMEWORK">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_AUDIT_FRAMEWORK_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_AUDIT_FRAMEWORK_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=AUDIT_FRAMEWORK_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_EIMDW_ARCHIVE_PRIME]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{A1509048-19AB-4271-9A43-1F2692ED9584}"
+      DTS:ObjectName="CM_EIMDW_ARCHIVE_PRIME">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_ARCHIVE_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_ARCHIVE_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=DEV_EIMDW_Archive_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{6A8EB63D-3070-4605-B8F2-D34832F2846D}"
+      DTS:ObjectName="CM_EIMDW_LANDING_PRIME">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_LANDING_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_ARCHIVE_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=DEV_EIMDW_Landing_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:LogProviders>
+    <DTS:LogProvider
+      DTS:ConfigString="CM_AUDIT_FRAMEWORK"
+      DTS:CreationName="Microsoft.LogProviderSQLServer"
+      DTS:Description="Writes log entries for events to a SQL Server database"
+      DTS:DTSID="{0E13057E-AC0B-4715-AA60-0F37CC1D8DCF}"
+      DTS:ObjectName="SSIS log provider for SQL Server">
+      <DTS:ObjectData>
+        <InnerObject />
+      </DTS:ObjectData>
+    </DTS:LogProvider>
+  </DTS:LogProviders>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{D8741EFE-8D22-4478-95B1-120A768B073F}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Batch_Id">
+      <DTS:VariableValue
+        DTS:DataType="20">-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{AA13A31F-BD71-4C91-893C-1D074664C57E}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT COUNT(1) FROM &quot; +  @[User::v_Dest_Table]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Dest_Count_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT COUNT(1) FROM DEV_EIMDW_Archive_FIN10.[ARCHOWN].PRIME17_PRODUCTRANGES(NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{D23F304D-5E9E-439B-B0F1-B28FED4E3619}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="@[$Project::p_ARCHIVE_DATABASE]  +&quot;.&quot;+ @[$Project::p_ARCHIVE_SCHEMA] +&quot;.&quot;+&quot;PRIME17_PRODUCTRANGES(NOLOCK)&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Dest_Table">
+      <DTS:VariableValue
+        DTS:DataType="8">DEV_EIMDW_Archive_FIN10.[ARCHOWN].PRIME17_PRODUCTRANGES(NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{B4A3CB1F-94E6-4C15-936F-CF58145A5A93}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Package_Id">
+      <DTS:VariableValue
+        DTS:DataType="3">-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{2A72616D-267B-4634-BB17-7059E8565022}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Rows_Inserted">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{C35E9260-6837-4D1C-AEE2-FCE7D4AE084E}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Rows_Read">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{5956E9D1-0F62-4D41-BBAB-A468F98B659F}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT&#xA;   INSTITUTION_ID&#x9;&#xA;,SERNO&#x9;&#xA;,PRODUCTSERNO&#xA;,BINSERNO&#x9;&#xA;,APPLIESTO&#x9;&#xA;,PRIORITY&#x9;&#xA;,STATUS&#x9;&#xA;,FROMRANGE&#x9;&#xA;,TORANGE&#x9;&#xA;,DESCRIPTION&#x9;&#xA;,DESCRIPTIONSTRINGID&#xA;,LASTUSED&#x9;&#xA;,USEDCOUNT&#x9;&#xA;,NUMBERINGSCHEME &#xA;FROM &quot;+  @[User::v_Source_Table]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Source_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT
+   INSTITUTION_ID	
+,SERNO	
+,PRODUCTSERNO
+,BINSERNO	
+,APPLIESTO	
+,PRIORITY	
+,STATUS	
+,FROMRANGE	
+,TORANGE	
+,DESCRIPTION	
+,DESCRIPTIONSTRINGID
+,LASTUSED	
+,USEDCOUNT	
+,NUMBERINGSCHEME 
+FROM DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_PRODUCTRANGES(NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{6DF3DBD8-5962-4C71-89F5-1E62FFA5DE80}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="@[$Project::p_LANDING_DATABASE]   +&quot;.&quot;+  @[$Project::p_LANDING_SCHEMA] +&quot;.&quot;+&quot;SRC_PRIME17_PRODUCTRANGES(NOLOCK)&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Source_Table">
+      <DTS:VariableValue
+        DTS:DataType="8">DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_PRODUCTRANGES(NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{F7D6C2C9-ECED-4597-ADD2-5F76A3A827C6}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Task_Name">
+      <DTS:VariableValue
+        DTS:DataType="8">PRODUCTRANGES</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{0648098D-9794-41B9-8EF3-484E4BF96194}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;TRUNCATE TABLE &quot;  + REPLACE(@[User::v_Dest_Table],&quot;(NOLOCK)&quot;,&quot; &quot;)"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Trunc_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">TRUNCATE TABLE DEV_EIMDW_Archive_FIN10.[ARCHOWN].PRIME17_PRODUCTRANGES </DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:LoggingOptions
+    DTS:FilterKind="0"
+    DTS:LoggingMode="1">
+    <DTS:Property
+      DTS:DataType="8"
+      DTS:Name="EventFilter">3,7,OnError,13,OnPostExecute,12,OnTaskFailed</DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnError"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnPostExecute"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnTaskFailed"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:SelectedLogProviders>
+      <DTS:SelectedLogProvider
+        DTS:InstanceID="{0E13057E-AC0B-4715-AA60-0F37CC1D8DCF}" />
+    </DTS:SelectedLogProviders>
+  </DTS:LoggingOptions>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\DFT_PRODUCTRANGES_LOAD"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{04AAFC09-6FDA-427B-8ED1-095DE558FF9C}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="DFT_PRODUCTRANGES_LOAD"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"DFT_"+@[User::v_Task_Name]+"_LOAD"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <pipeline
+          defaultBufferMaxRows="100000"
+          defaultBufferSize="20485760"
+          version="1">
+          <components>
+            <component
+              refId="Package\DFT_PRODUCTRANGES_LOAD\BDD_PRODUCTRANGES"
+              componentClassID="Microsoft.BDD"
+              contactInfo="Balanced Data Distributor;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Evaluates and directs rows in a dataset to multiple destinations."
+              name="BDD_PRODUCTRANGES">
+              <inputs>
+                <input
+                  refId="Package\DFT_PRODUCTRANGES_LOAD\BDD_PRODUCTRANGES.Inputs[Balanced Data Distributor Input]"
+                  description="Input to the Balanced Data      Distributor Transformation"
+                  name="Balanced Data Distributor Input">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_PRODUCTRANGES_LOAD\BDD_PRODUCTRANGES.Outputs[Balanced Data Distributor Output 1]"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 1"
+                  synchronousInputId="Package\DFT_PRODUCTRANGES_LOAD\BDD_PRODUCTRANGES.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_PRODUCTRANGES_LOAD\BDD_PRODUCTRANGES.Outputs[Balanced Data Distributor Output 2]"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 2"
+                  synchronousInputId="Package\DFT_PRODUCTRANGES_LOAD\BDD_PRODUCTRANGES.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_PRODUCTRANGES_LOAD\BDD_PRODUCTRANGES.Outputs[Balanced Data Distributor Output 3]"
+                  dangling="true"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 3"
+                  synchronousInputId="Package\DFT_PRODUCTRANGES_LOAD\BDD_PRODUCTRANGES.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_PRODUCTRANGES_LOAD\DC_BATCH"
+              componentClassID="Microsoft.DerivedColumn"
+              contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+              name="DC_BATCH"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\DFT_PRODUCTRANGES_LOAD\DC_BATCH.Inputs[Derived Column Input]"
+                  description="Input to the Derived Column Transformation"
+                  name="Derived Column Input">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_PRODUCTRANGES_LOAD\DC_BATCH.Outputs[Derived Column Output]"
+                  description="Default Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  name="Derived Column Output"
+                  synchronousInputId="Package\DFT_PRODUCTRANGES_LOAD\DC_BATCH.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[CRTE_BTCH_ID]"
+                      dataType="i8"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[CRTE_BTCH_ID]"
+                      name="CRTE_BTCH_ID"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">@[User::v_Batch_Id]</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">@[User::v_Batch_Id]</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[START_DATE]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[START_DATE]"
+                      name="START_DATE"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">[GETDATE]()</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">GETDATE()</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[ACTIVE_FLAG]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      length="1"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[ACTIVE_FLAG]"
+                      name="ACTIVE_FLAG"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">(DT_STR,1,1252)"Y"</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">(DT_STR,1,1252)"Y"</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[DELETE_FLAG]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      length="1"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[DELETE_FLAG]"
+                      name="DELETE_FLAG"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">(DT_STR,1,1252)"N"</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">(DT_STR,1,1252)"N"</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[END_DATE]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[END_DATE]"
+                      name="END_DATE"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">(DT_DBTIMESTAMP)"9999-12-31"</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">(DT_DBTIMESTAMP)"9999-12-31"</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_PRODUCTRANGES_LOAD\DC_BATCH.Outputs[Derived Column Error Output]"
+                  description="Error Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Derived Column Error Output"
+                  synchronousInputId="Package\DFT_PRODUCTRANGES_LOAD\DC_BATCH.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="DST_PRODUCTRANGES"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[ARCHOWN].[PRIME17_PRODUCTRANGES]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS,ROWS_PER_BATCH = 1000000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_ARCHIVE_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_ARCHIVE_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].Columns[SERNO]"
+                      cachedDataType="numeric"
+                      cachedName="SERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[SERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].Columns[INSTITUTION_ID]"
+                      cachedDataType="numeric"
+                      cachedName="INSTITUTION_ID"
+                      cachedPrecision="5"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[INSTITUTION_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].Columns[PRODUCTSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="PRODUCTSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[PRODUCTSERNO]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[PRODUCTSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].Columns[BINSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="BINSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[BINSERNO]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[BINSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].Columns[APPLIESTO]"
+                      cachedDataType="wstr"
+                      cachedLength="1"
+                      cachedName="APPLIESTO"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[APPLIESTO]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[APPLIESTO]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].Columns[PRIORITY]"
+                      cachedDataType="i4"
+                      cachedName="PRIORITY"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[PRIORITY]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[PRIORITY]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].Columns[STATUS]"
+                      cachedDataType="wstr"
+                      cachedLength="1"
+                      cachedName="STATUS"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[STATUS]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[STATUS]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].Columns[FROMRANGE]"
+                      cachedDataType="wstr"
+                      cachedLength="25"
+                      cachedName="FROMRANGE"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[FROMRANGE]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[FROMRANGE]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].Columns[TORANGE]"
+                      cachedDataType="wstr"
+                      cachedLength="25"
+                      cachedName="TORANGE"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[TORANGE]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[TORANGE]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].Columns[DESCRIPTION]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="DESCRIPTION"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTION]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[DESCRIPTION]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].Columns[DESCRIPTIONSTRINGID]"
+                      cachedDataType="numeric"
+                      cachedName="DESCRIPTIONSTRINGID"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTIONSTRINGID]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[DESCRIPTIONSTRINGID]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].Columns[LASTUSED]"
+                      cachedDataType="wstr"
+                      cachedLength="25"
+                      cachedName="LASTUSED"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[LASTUSED]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[LASTUSED]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].Columns[USEDCOUNT]"
+                      cachedDataType="numeric"
+                      cachedName="USEDCOUNT"
+                      cachedPrecision="25"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[USEDCOUNT]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[USEDCOUNT]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].Columns[NUMBERINGSCHEME]"
+                      cachedDataType="wstr"
+                      cachedLength="30"
+                      cachedName="NUMBERINGSCHEME"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[NUMBERINGSCHEME]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[NUMBERINGSCHEME]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].Columns[CRTE_BTCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="CRTE_BTCH_ID"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[CRTE_BTCH_ID]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[CRTE_BTCH_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].Columns[START_DATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="START_DATE"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[START_DATE]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[START_DATE]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].Columns[ACTIVE_FLAG]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="ACTIVE_FLAG"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[ACTIVE_FLAG]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[ACTIVE_FLAG]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].Columns[DELETE_FLAG]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="DELETE_FLAG"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[DELETE_FLAG]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[DELETE_FLAG]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].Columns[END_DATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="END_DATE"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[END_DATE]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[END_DATE]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[CRTE_BTCH_ID]"
+                      dataType="i4"
+                      name="CRTE_BTCH_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[UPDT_BTCH_ID]"
+                      dataType="i4"
+                      name="UPDT_BTCH_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[START_DATE]"
+                      dataType="dbTimeStamp"
+                      name="START_DATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[END_DATE]"
+                      dataType="dbTimeStamp"
+                      name="END_DATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[ACTIVE_FLAG]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="ACTIVE_FLAG" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[DELETE_FLAG]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="DELETE_FLAG" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[PRODUCTSERNO]"
+                      dataType="numeric"
+                      name="PRODUCTSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[BINSERNO]"
+                      dataType="numeric"
+                      name="BINSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[APPLIESTO]"
+                      dataType="wstr"
+                      length="1"
+                      name="APPLIESTO" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[PRIORITY]"
+                      dataType="i4"
+                      name="PRIORITY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[STATUS]"
+                      dataType="wstr"
+                      length="1"
+                      name="STATUS" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[FROMRANGE]"
+                      dataType="wstr"
+                      length="25"
+                      name="FROMRANGE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[TORANGE]"
+                      dataType="wstr"
+                      length="25"
+                      name="TORANGE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTION]"
+                      dataType="wstr"
+                      length="255"
+                      name="DESCRIPTION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTIONSTRINGID]"
+                      dataType="numeric"
+                      name="DESCRIPTIONSTRINGID"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[LASTUSED]"
+                      dataType="wstr"
+                      length="25"
+                      name="LASTUSED" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[USEDCOUNT]"
+                      dataType="numeric"
+                      name="USEDCOUNT"
+                      precision="25" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[NUMBERINGSCHEME]"
+                      dataType="wstr"
+                      length="30"
+                      name="NUMBERINGSCHEME" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID_SEQ_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID_SEQ_ID" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="DST_PRODUCTRANGES 1"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[ARCHOWN].[PRIME17_PRODUCTRANGES]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS,ROWS_PER_BATCH = 1000000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_ARCHIVE_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_ARCHIVE_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].Columns[SERNO]"
+                      cachedDataType="numeric"
+                      cachedName="SERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[SERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].Columns[INSTITUTION_ID]"
+                      cachedDataType="numeric"
+                      cachedName="INSTITUTION_ID"
+                      cachedPrecision="5"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[INSTITUTION_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].Columns[PRODUCTSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="PRODUCTSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[PRODUCTSERNO]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[PRODUCTSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].Columns[BINSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="BINSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[BINSERNO]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[BINSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].Columns[APPLIESTO]"
+                      cachedDataType="wstr"
+                      cachedLength="1"
+                      cachedName="APPLIESTO"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[APPLIESTO]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[APPLIESTO]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].Columns[PRIORITY]"
+                      cachedDataType="i4"
+                      cachedName="PRIORITY"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[PRIORITY]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[PRIORITY]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].Columns[STATUS]"
+                      cachedDataType="wstr"
+                      cachedLength="1"
+                      cachedName="STATUS"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[STATUS]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[STATUS]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].Columns[FROMRANGE]"
+                      cachedDataType="wstr"
+                      cachedLength="25"
+                      cachedName="FROMRANGE"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[FROMRANGE]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[FROMRANGE]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].Columns[TORANGE]"
+                      cachedDataType="wstr"
+                      cachedLength="25"
+                      cachedName="TORANGE"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[TORANGE]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[TORANGE]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].Columns[DESCRIPTION]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="DESCRIPTION"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTION]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[DESCRIPTION]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].Columns[DESCRIPTIONSTRINGID]"
+                      cachedDataType="numeric"
+                      cachedName="DESCRIPTIONSTRINGID"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTIONSTRINGID]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[DESCRIPTIONSTRINGID]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].Columns[LASTUSED]"
+                      cachedDataType="wstr"
+                      cachedLength="25"
+                      cachedName="LASTUSED"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[LASTUSED]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[LASTUSED]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].Columns[USEDCOUNT]"
+                      cachedDataType="numeric"
+                      cachedName="USEDCOUNT"
+                      cachedPrecision="25"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[USEDCOUNT]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[USEDCOUNT]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].Columns[NUMBERINGSCHEME]"
+                      cachedDataType="wstr"
+                      cachedLength="30"
+                      cachedName="NUMBERINGSCHEME"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[NUMBERINGSCHEME]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[NUMBERINGSCHEME]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].Columns[CRTE_BTCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="CRTE_BTCH_ID"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[CRTE_BTCH_ID]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[CRTE_BTCH_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].Columns[START_DATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="START_DATE"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[START_DATE]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[START_DATE]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].Columns[ACTIVE_FLAG]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="ACTIVE_FLAG"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[ACTIVE_FLAG]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[ACTIVE_FLAG]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].Columns[DELETE_FLAG]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="DELETE_FLAG"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[DELETE_FLAG]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[DELETE_FLAG]" />
+                    <inputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].Columns[END_DATE]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="END_DATE"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[END_DATE]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[END_DATE]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[CRTE_BTCH_ID]"
+                      dataType="i4"
+                      name="CRTE_BTCH_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[UPDT_BTCH_ID]"
+                      dataType="i4"
+                      name="UPDT_BTCH_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[START_DATE]"
+                      dataType="dbTimeStamp"
+                      name="START_DATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[END_DATE]"
+                      dataType="dbTimeStamp"
+                      name="END_DATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[ACTIVE_FLAG]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="ACTIVE_FLAG" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[DELETE_FLAG]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="DELETE_FLAG" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[PRODUCTSERNO]"
+                      dataType="numeric"
+                      name="PRODUCTSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[BINSERNO]"
+                      dataType="numeric"
+                      name="BINSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[APPLIESTO]"
+                      dataType="wstr"
+                      length="1"
+                      name="APPLIESTO" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[PRIORITY]"
+                      dataType="i4"
+                      name="PRIORITY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[STATUS]"
+                      dataType="wstr"
+                      length="1"
+                      name="STATUS" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[FROMRANGE]"
+                      dataType="wstr"
+                      length="25"
+                      name="FROMRANGE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[TORANGE]"
+                      dataType="wstr"
+                      length="25"
+                      name="TORANGE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTION]"
+                      dataType="wstr"
+                      length="255"
+                      name="DESCRIPTION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[DESCRIPTIONSTRINGID]"
+                      dataType="numeric"
+                      name="DESCRIPTIONSTRINGID"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[LASTUSED]"
+                      dataType="wstr"
+                      length="25"
+                      name="LASTUSED" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[USEDCOUNT]"
+                      dataType="numeric"
+                      name="USEDCOUNT"
+                      precision="25" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[NUMBERINGSCHEME]"
+                      dataType="wstr"
+                      length="30"
+                      name="NUMBERINGSCHEME" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID_SEQ_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID_SEQ_ID" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_PRODUCTRANGES_LOAD\RC_PRODUCTRANGES"
+              componentClassID="Microsoft.RowCount"
+              contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Counts rows as they pass through a data flow. For example, use the number of rows processed to determine whether or not to perform cleanup operations, or update text in an e-mail message to communicate processing status."
+              name="RC_PRODUCTRANGES">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable to hold the row count."
+                  name="VariableName">User::v_Rows_Read</property>
+              </properties>
+              <inputs>
+                <input
+                  refId="Package\DFT_PRODUCTRANGES_LOAD\RC_PRODUCTRANGES.Inputs[Row Count Input 1]"
+                  hasSideEffects="true"
+                  name="Row Count Input 1">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_PRODUCTRANGES_LOAD\RC_PRODUCTRANGES.Outputs[Row Count Output 1]"
+                  name="Row Count Output 1"
+                  synchronousInputId="Package\DFT_PRODUCTRANGES_LOAD\RC_PRODUCTRANGES.Inputs[Row Count Input 1]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="SRC_PRODUCTRANGES"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset"></property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable">User::v_Source_Query</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[SERNO]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[SERNO]"
+                      name="SERNO"
+                      precision="10"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[INSTITUTION_ID]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[INSTITUTION_ID]"
+                      name="INSTITUTION_ID"
+                      precision="5"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[PRODUCTSERNO]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].ExternalColumns[PRODUCTSERNO]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[PRODUCTSERNO]"
+                      name="PRODUCTSERNO"
+                      precision="10"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[BINSERNO]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].ExternalColumns[BINSERNO]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[BINSERNO]"
+                      name="BINSERNO"
+                      precision="10"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[APPLIESTO]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].ExternalColumns[APPLIESTO]"
+                      length="1"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[APPLIESTO]"
+                      name="APPLIESTO"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[PRIORITY]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].ExternalColumns[PRIORITY]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[PRIORITY]"
+                      name="PRIORITY"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[STATUS]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].ExternalColumns[STATUS]"
+                      length="1"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[STATUS]"
+                      name="STATUS"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[FROMRANGE]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].ExternalColumns[FROMRANGE]"
+                      length="25"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[FROMRANGE]"
+                      name="FROMRANGE"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[TORANGE]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].ExternalColumns[TORANGE]"
+                      length="25"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[TORANGE]"
+                      name="TORANGE"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[DESCRIPTION]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].ExternalColumns[DESCRIPTION]"
+                      length="255"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[DESCRIPTION]"
+                      name="DESCRIPTION"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[DESCRIPTIONSTRINGID]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].ExternalColumns[DESCRIPTIONSTRINGID]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[DESCRIPTIONSTRINGID]"
+                      name="DESCRIPTIONSTRINGID"
+                      precision="10"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[LASTUSED]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].ExternalColumns[LASTUSED]"
+                      length="25"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[LASTUSED]"
+                      name="LASTUSED"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[USEDCOUNT]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].ExternalColumns[USEDCOUNT]"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[USEDCOUNT]"
+                      name="USEDCOUNT"
+                      precision="25"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[NUMBERINGSCHEME]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].ExternalColumns[NUMBERINGSCHEME]"
+                      length="30"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].Columns[NUMBERINGSCHEME]"
+                      name="NUMBERINGSCHEME"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].ExternalColumns[PRODUCTSERNO]"
+                      dataType="numeric"
+                      name="PRODUCTSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].ExternalColumns[BINSERNO]"
+                      dataType="numeric"
+                      name="BINSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].ExternalColumns[APPLIESTO]"
+                      dataType="wstr"
+                      length="1"
+                      name="APPLIESTO" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].ExternalColumns[PRIORITY]"
+                      dataType="i4"
+                      name="PRIORITY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].ExternalColumns[STATUS]"
+                      dataType="wstr"
+                      length="1"
+                      name="STATUS" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].ExternalColumns[FROMRANGE]"
+                      dataType="wstr"
+                      length="25"
+                      name="FROMRANGE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].ExternalColumns[TORANGE]"
+                      dataType="wstr"
+                      length="25"
+                      name="TORANGE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].ExternalColumns[DESCRIPTION]"
+                      dataType="wstr"
+                      length="255"
+                      name="DESCRIPTION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].ExternalColumns[DESCRIPTIONSTRINGID]"
+                      dataType="numeric"
+                      name="DESCRIPTIONSTRINGID"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].ExternalColumns[LASTUSED]"
+                      dataType="wstr"
+                      length="25"
+                      name="LASTUSED" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].ExternalColumns[USEDCOUNT]"
+                      dataType="numeric"
+                      name="USEDCOUNT"
+                      precision="25" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output].ExternalColumns[NUMBERINGSCHEME]"
+                      dataType="wstr"
+                      length="30"
+                      name="NUMBERINGSCHEME" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Error Output].Columns[SERNO]"
+                      dataType="numeric"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Error Output].Columns[SERNO]"
+                      name="SERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Error Output].Columns[INSTITUTION_ID]"
+                      dataType="i4"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Error Output].Columns[INSTITUTION_ID]"
+                      name="INSTITUTION_ID" />
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Error Output].Columns[PRODUCTSERNO]"
+                      dataType="numeric"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Error Output].Columns[PRODUCTSERNO]"
+                      name="PRODUCTSERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Error Output].Columns[BINSERNO]"
+                      dataType="numeric"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Error Output].Columns[BINSERNO]"
+                      name="BINSERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Error Output].Columns[APPLIESTO]"
+                      dataType="wstr"
+                      length="1"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Error Output].Columns[APPLIESTO]"
+                      name="APPLIESTO" />
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Error Output].Columns[PRIORITY]"
+                      dataType="i4"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Error Output].Columns[PRIORITY]"
+                      name="PRIORITY" />
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Error Output].Columns[STATUS]"
+                      dataType="wstr"
+                      length="1"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Error Output].Columns[STATUS]"
+                      name="STATUS" />
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Error Output].Columns[FROMRANGE]"
+                      dataType="wstr"
+                      length="25"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Error Output].Columns[FROMRANGE]"
+                      name="FROMRANGE" />
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Error Output].Columns[TORANGE]"
+                      dataType="wstr"
+                      length="25"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Error Output].Columns[TORANGE]"
+                      name="TORANGE" />
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Error Output].Columns[DESCRIPTION]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Error Output].Columns[DESCRIPTION]"
+                      name="DESCRIPTION" />
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Error Output].Columns[DESCRIPTIONSTRINGID]"
+                      dataType="numeric"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Error Output].Columns[DESCRIPTIONSTRINGID]"
+                      name="DESCRIPTIONSTRINGID"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Error Output].Columns[LASTUSED]"
+                      dataType="wstr"
+                      length="25"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Error Output].Columns[LASTUSED]"
+                      name="LASTUSED" />
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Error Output].Columns[USEDCOUNT]"
+                      dataType="numeric"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Error Output].Columns[USEDCOUNT]"
+                      name="USEDCOUNT"
+                      precision="25" />
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Error Output].Columns[NUMBERINGSCHEME]"
+                      dataType="wstr"
+                      length="30"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Error Output].Columns[NUMBERINGSCHEME]"
+                      name="NUMBERINGSCHEME" />
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\DFT_PRODUCTRANGES_LOAD.Paths[Balanced Data Distributor Output 1]"
+              endId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES.Inputs[OLE DB Destination Input]"
+              name="Balanced Data Distributor Output 1"
+              startId="Package\DFT_PRODUCTRANGES_LOAD\BDD_PRODUCTRANGES.Outputs[Balanced Data Distributor Output 1]" />
+            <path
+              refId="Package\DFT_PRODUCTRANGES_LOAD.Paths[Balanced Data Distributor Output 2]"
+              endId="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1.Inputs[OLE DB Destination Input]"
+              name="Balanced Data Distributor Output 2"
+              startId="Package\DFT_PRODUCTRANGES_LOAD\BDD_PRODUCTRANGES.Outputs[Balanced Data Distributor Output 2]" />
+            <path
+              refId="Package\DFT_PRODUCTRANGES_LOAD.Paths[Derived Column Output]"
+              endId="Package\DFT_PRODUCTRANGES_LOAD\BDD_PRODUCTRANGES.Inputs[Balanced Data Distributor Input]"
+              name="Derived Column Output"
+              startId="Package\DFT_PRODUCTRANGES_LOAD\DC_BATCH.Outputs[Derived Column Output]" />
+            <path
+              refId="Package\DFT_PRODUCTRANGES_LOAD.Paths[OLE DB Source Output]"
+              endId="Package\DFT_PRODUCTRANGES_LOAD\RC_PRODUCTRANGES.Inputs[Row Count Input 1]"
+              name="OLE DB Source Output"
+              startId="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES.Outputs[OLE DB Source Output]" />
+            <path
+              refId="Package\DFT_PRODUCTRANGES_LOAD.Paths[Row Count Output 1]"
+              endId="Package\DFT_PRODUCTRANGES_LOAD\DC_BATCH.Inputs[Derived Column Input]"
+              name="Row Count Output 1"
+              startId="Package\DFT_PRODUCTRANGES_LOAD\RC_PRODUCTRANGES.Outputs[Row Count Output 1]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_PRODUCTRANGES_GET_DEST_COUNT_LOAD"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{1C9F5EC4-8A99-404D-BA9E-1B07866C0071}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_PRODUCTRANGES_GET_DEST_COUNT_LOAD"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_GET_DEST_COUNT_LOAD"</DTS:PropertyExpression>
+      <DTS:EventHandlers>
+        <DTS:EventHandler
+          DTS:refId="Package\SQL_PRODUCTRANGES_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]"
+          DTS:CreationName="OnPreExecute"
+          DTS:DTSID="{870D4EAC-02D1-4646-B9B1-7B396B6B21D6}"
+          DTS:EventID="1076330902"
+          DTS:EventName="OnPreExecute"
+          DTS:LocaleID="-1">
+          <DTS:Variables>
+            <DTS:Variable
+              DTS:CreationName=""
+              DTS:Description="The propagate property of the event"
+              DTS:DTSID="{6F78AD08-BD9C-4829-9160-460643B4AF3F}"
+              DTS:IncludeInDebugDump="6789"
+              DTS:Namespace="System"
+              DTS:ObjectName="Propagate">
+              <DTS:VariableValue
+                DTS:DataType="11">-1</DTS:VariableValue>
+            </DTS:Variable>
+          </DTS:Variables>
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\SQL_PRODUCTRANGES_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]\SQL_PRODUCTRANGES_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{FB329526-6640-480E-A858-53D521004885}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="SQL_PRODUCTRANGES_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+              <DTS:Variables />
+              <DTS:PropertyExpression
+                DTS:Name="Name">"SQL_"+ @[User::v_Task_Name]+"_UPDATE_DFT_LOAD_COMPLETED"</DTS:PropertyExpression>
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{1F0F68A9-CEEC-47CC-B55A-1CE0F661F493}"
+                  SQLTask:SqlStatementSource="UPDATE DBO.BATCH_EXECUTION_STATUS&#xA; SET  &#xA;STATUS_FLAG = 'DFT LOAD COMPLETED'   WHERE&#xA; EXECUTION_ID = (&#xA;       SELECT MAX(EXECUTION_ID) EXECUTION_ID&#xA;       FROM DBO.BATCH_EXECUTION_STATUS&#xA;       WHERE PACKAGE_ID =?&#xA;       AND  BATCH_ID = ?&#xA;    )"
+                  SQLTask:TypeConversionMode="None" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="0"
+                    SQLTask:DtsVariableName="User::v_Package_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="1"
+                    SQLTask:DtsVariableName="User::v_Batch_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                </SQLTask:SqlTaskData>
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+        </DTS:EventHandler>
+      </DTS:EventHandlers>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{6A8EB63D-3070-4605-B8F2-D34832F2846D}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::v_Dest_Count_Query"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="0"
+            SQLTask:DtsVariableName="User::v_Rows_Inserted" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_PRODUCTRANGES_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{B6CF162E-D229-40CE-933C-F9ACA1B847C9}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_PRODUCTRANGES_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_CHECK_PACKAGE_EXISTENCE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{1F0F68A9-CEEC-47CC-B55A-1CE0F661F493}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_NAME VARCHAR(500) = ?&#xA;&#xA;EXEC [DBO].[SP_CHECK_PACKAGE_EXISTENCE]  @PACKAGE_NAME " xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_PRODUCTRANGES_SP_GET_PACKAGE_BATCH_ID"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{35E21211-5FA1-42BE-8A88-A5FEF709DEF9}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_PRODUCTRANGES_SP_GET_PACKAGE_BATCH_ID"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_GET_PACKAGE_BATCH_ID"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{1F0F68A9-CEEC-47CC-B55A-1CE0F661F493}"
+          SQLTask:SqlStatementSource="&#xA;DECLARE @PACKAGE_NAME VARCHAR(500) = ?&#xA;DECLARE @PACKAGE_ID  INT &#xA;DECLARE @BATCH_ID BIGINT&#xA;&#xA;&#xA; EXEC [DBO].[SP_GET_PACKAGE_BATCH_ID]  @PACKAGE_NAME,@PACKAGE_ID OUT,@BATCH_ID OUT&#xA; SELECT ? = @PACKAGE_ID &#xA; SELECT ? = @BATCH_ID" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_PRODUCTRANGES_SP_INSERT_EXECUTION_STATUS"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{8611D209-95AF-44C5-A3A3-06E5CBB51BEE}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_PRODUCTRANGES_SP_INSERT_EXECUTION_STATUS"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_INSERT_EXECUTION_STATUS"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{1F0F68A9-CEEC-47CC-B55A-1CE0F661F493}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @PACKAGE_START_TIME DATETIME = ?&#xA;DECLARE @JOB_ID INT  =?&#xA;&#xA;EXEC [DBO].[SP_INSERT_EXECUTION_STATUS]               @PACKAGE_ID&#xA;,@BATCH_ID&#xA;,@PACKAGE_START_TIME&#xA;,@JOB_ID" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="System::StartTime"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="7"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="$Project::p_JOB_ID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_PRODUCTRANGES_SP_UPDATE_EXECUTION_STATUS_LOAD"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{0A9191D0-511E-4D54-B549-31E68B17758F}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_PRODUCTRANGES_SP_UPDATE_EXECUTION_STATUS_LOAD"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_UPDATE_EXECUTION_STATUS_LOAD"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{1F0F68A9-CEEC-47CC-B55A-1CE0F661F493}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @ROWS_READ BIGINT = ?&#xA;DECLARE @ROWS_INSERTED BIGINT = ?&#xA;DECLARE @ROWS_UPDATED BIGINT =0&#xA;DECLARE @ROWS_ERRORED  BIGINT=0&#xA;&#xA;&#xA;EXEC DBO.SP_UPDATE_EXECUTION_STATUS @PACKAGE_ID&#xA; , @BATCH_ID&#xA; , @ROWS_READ&#xA; , @ROWS_INSERTED&#xA; , @ROWS_UPDATED&#xA; , @ROWS_ERRORED" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::v_Rows_Read"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="User::v_Rows_Inserted"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_PRODUCTRANGES_TRUNCATE_STG_TABLE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{704568F8-8637-4A90-800E-4F7C878AFEBD}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_PRODUCTRANGES_TRUNCATE_STG_TABLE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_TRUNCATE_STG_TABLE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{6A8EB63D-3070-4605-B8F2-D34832F2846D}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::v_Trunc_Query" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{AC92FF1D-97FA-4E5D-9F59-0AA34AF91137}"
+      DTS:From="Package\SQL_PRODUCTRANGES_SP_GET_PACKAGE_BATCH_ID"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\SQL_PRODUCTRANGES_SP_INSERT_EXECUTION_STATUS" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 10]"
+      DTS:CreationName=""
+      DTS:DTSID="{5B30BF5B-2E48-40E5-84F3-6102C754375B}"
+      DTS:From="Package\SQL_PRODUCTRANGES_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 10"
+      DTS:To="Package\SQL_PRODUCTRANGES_SP_GET_PACKAGE_BATCH_ID" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 12]"
+      DTS:CreationName=""
+      DTS:DTSID="{5603B54F-4333-4554-97DE-DA068C539007}"
+      DTS:From="Package\DFT_PRODUCTRANGES_LOAD"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 12"
+      DTS:To="Package\SQL_PRODUCTRANGES_GET_DEST_COUNT_LOAD" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{1A0926E8-2592-4CDE-83B9-8523849059B3}"
+      DTS:From="Package\SQL_PRODUCTRANGES_SP_INSERT_EXECUTION_STATUS"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\SQL_PRODUCTRANGES_TRUNCATE_STG_TABLE" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 5]"
+      DTS:CreationName=""
+      DTS:DTSID="{6B84CA73-B812-476C-88CB-354FB53B5D4C}"
+      DTS:Expression="@[User::v_Inc_Date] == (DT_DBTIMESTAMP) &quot;1753-01-01&quot;"
+      DTS:From="Package\SQL_PRODUCTRANGES_TRUNCATE_STG_TABLE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 5"
+      DTS:To="Package\DFT_PRODUCTRANGES_LOAD" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 7]"
+      DTS:CreationName=""
+      DTS:DTSID="{92C282AE-048C-4073-BAA5-FFAC86AE284D}"
+      DTS:Expression="@[User::v_Rows_Inserted] ==0"
+      DTS:From="Package\SQL_PRODUCTRANGES_GET_DEST_COUNT_LOAD"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 7"
+      DTS:To="Package\SQL_PRODUCTRANGES_SP_UPDATE_EXECUTION_STATUS_LOAD" />
+  </DTS:PrecedenceConstraints>
+  <DTS:EventHandlers>
+    <DTS:EventHandler
+      DTS:refId="Package.EventHandlers[OnError]"
+      DTS:CreationName="OnError"
+      DTS:DTSID="{B0569DE3-8E75-45CA-90AC-6FA277165774}"
+      DTS:EventID="2"
+      DTS:EventName="OnError"
+      DTS:LocaleID="-1">
+      <DTS:Variables>
+        <DTS:Variable
+          DTS:CreationName=""
+          DTS:Description="The propagate property of the event"
+          DTS:DTSID="{B44D82B9-8DCC-4461-BD3B-ABDFBB3910B3}"
+          DTS:IncludeInDebugDump="6789"
+          DTS:Namespace="System"
+          DTS:ObjectName="Propagate">
+          <DTS:VariableValue
+            DTS:DataType="11">-1</DTS:VariableValue>
+        </DTS:Variable>
+      </DTS:Variables>
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package.EventHandlers[OnError]\SQL_PRODUCTRANGES_SP_SSIS_ERRORLOG"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{64146868-3BE3-46A5-A949-C06AF2A27BDC}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="SQL_PRODUCTRANGES_SP_SSIS_ERRORLOG"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:PropertyExpression
+            DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_SSIS_ERRORLOG"</DTS:PropertyExpression>
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{1F0F68A9-CEEC-47CC-B55A-1CE0F661F493}"
+              SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @PKG_GUID SYSNAME = ?&#xA;DECLARE @PACKAGE_NAME SYSNAME = ?&#xA;DECLARE @SOURCE_NAME VARCHAR(100) = ?&#xA;DECLARE @TASK_NAME VARCHAR(100) = ?&#xA;DECLARE @MACHINE_NAME VARCHAR(50) = ?&#xA;DECLARE @USER_NAME VARCHAR(50) = ?&#xA;DECLARE @ERROR_NUMBER INT = ?&#xA;DECLARE @ERROR_DESCRIPTION VARCHAR(MAX) = ?&#xA;DECLARE @PACKAGE_START_TIME DATETIME  = NULL&#xA;DECLARE @ROWS_READ BIGINT = ?&#xA;DECLARE @ROWS_INSERTED BIGINT = ?&#xA;DECLARE @ROWS_UPDATED BIGINT = NULL&#xA;DECLARE @ROWS_ERRORED BIGINT = NULL&#xA;&#xA;EXEC DBO.[SP_SSIS_ERRORLOG] @PACKAGE_ID&#xA;&#x9;,@BATCH_ID&#xA;&#x9;,@PKG_GUID&#xA;&#x9;,@PACKAGE_NAME&#xA;&#x9;,@SOURCE_NAME&#xA;&#x9;,@TASK_NAME&#xA;&#x9;,@MACHINE_NAME&#xA;&#x9;,@USER_NAME&#xA;&#x9;,@ERROR_NUMBER&#xA;&#x9;,@ERROR_DESCRIPTION&#xA;&#x9;,@PACKAGE_START_TIME&#xA;&#x9;,@ROWS_READ&#xA;&#x9;,@ROWS_INSERTED&#xA;&#x9;,@ROWS_UPDATED &#xA;&#x9;,@ROWS_ERRORED" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::v_Package_Id"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="1"
+                SQLTask:DtsVariableName="User::v_Batch_Id"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="2"
+                SQLTask:DtsVariableName="System::PackageID"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="3"
+                SQLTask:DtsVariableName="System::PackageName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="4"
+                SQLTask:DtsVariableName="System::SourceName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="5"
+                SQLTask:DtsVariableName="System::TaskName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="6"
+                SQLTask:DtsVariableName="System::MachineName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="7"
+                SQLTask:DtsVariableName="System::UserName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="8"
+                SQLTask:DtsVariableName="System::ErrorCode"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="9"
+                SQLTask:DtsVariableName="System::ErrorDescription"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="10"
+                SQLTask:DtsVariableName="User::v_Rows_Read"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="11"
+                SQLTask:DtsVariableName="User::v_Rows_Inserted"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+    </DTS:EventHandler>
+  </DTS:EventHandlers>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="390,43"
+          Id="Package\DFT_PRODUCTRANGES_LOAD"
+          TopLeft="602.878402019497,412.182348771409" />
+        <NodeLayout
+          Size="390,43"
+          Id="Package\SQL_PRODUCTRANGES_GET_DEST_COUNT_LOAD"
+          TopLeft="602.878402019497,513.852935964261" />
+        <NodeLayout
+          Size="390,43"
+          Id="Package\SQL_PRODUCTRANGES_SP_CHECK_PACKAGE_EXISTENCE"
+          TopLeft="602.878402019497,5.5" />
+        <NodeLayout
+          Size="390,43"
+          Id="Package\SQL_PRODUCTRANGES_SP_GET_PACKAGE_BATCH_ID"
+          TopLeft="602.878402019497,107.170587192852" />
+        <NodeLayout
+          Size="390,43"
+          Id="Package\SQL_PRODUCTRANGES_SP_INSERT_EXECUTION_STATUS"
+          TopLeft="602.878402019497,208.841174385704" />
+        <NodeLayout
+          Size="390,43"
+          Id="Package\SQL_PRODUCTRANGES_SP_UPDATE_EXECUTION_STATUS_LOAD"
+          TopLeft="602.878402019497,615.523523157113" />
+        <NodeLayout
+          Size="390,43"
+          Id="Package\SQL_PRODUCTRANGES_TRUNCATE_STG_TABLE"
+          TopLeft="602.878402019497,310.511761578557" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="797.878402019497,150.170587192852">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 10]"
+          TopLeft="797.878402019497,48.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 12]"
+          TopLeft="797.878402019497,455.182348771409">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="797.878402019497,251.841174385704">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 5]"
+          TopLeft="797.878402019497,353.511761578557">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 7]"
+          TopLeft="797.878402019497,556.852935964261">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <DtsEventHandler
+    design-time-name="Package.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="294,42"
+          Id="Package.EventHandlers[OnError]\SQL_PRODUCTRANGES_SP_SSIS_ERRORLOG"
+          TopLeft="541.35714460879,182.041178469675" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <TaskHost
+    design-time-name="Package\DFT_PRODUCTRANGES_LOAD">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="205,42"
+          Id="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES"
+          TopLeft="74.071428376801,425.213725427278" />
+        <NodeLayout
+          Size="205,42"
+          Id="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES"
+          TopLeft="203.488086125232,76.5647058566136" />
+        <NodeLayout
+          Size="205,42"
+          Id="Package\DFT_PRODUCTRANGES_LOAD\DC_BATCH"
+          TopLeft="203.488086125232,233.862745095179" />
+        <NodeLayout
+          Size="205,42"
+          Id="Package\DFT_PRODUCTRANGES_LOAD\RC_PRODUCTRANGES"
+          TopLeft="203.488086125232,155.213725475896" />
+        <NodeLayout
+          Size="205,42"
+          Id="Package\DFT_PRODUCTRANGES_LOAD\BDD_PRODUCTRANGES"
+          TopLeft="203.488086125232,312.511764714462" />
+        <NodeLayout
+          Size="205,42"
+          Id="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1"
+          TopLeft="316.071428376801,425.213725427278" />
+        <EdgeLayout
+          Id="Package\DFT_PRODUCTRANGES_LOAD.Paths[Balanced Data Distributor Output 1]"
+          TopLeft="273.154752791899,354.511764714462">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-96.5833244150977,70.701960712816"
+              Start="0,0"
+              End="-96.5833244150977,63.201960712816">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.6093122729497" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,24.6093122729497"
+                    Point2="0,28.6093122729497"
+                    Point3="-4,28.6093122729497" />
+                  <mssgle:LineSegment
+                    End="-92.5833244150977,28.6093122729497" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-92.5833244150977,28.6093122729497"
+                    Point2="-96.5833244150977,28.6093122729497"
+                    Point3="-96.5833244150977,32.6093122729497" />
+                  <mssgle:LineSegment
+                    End="-96.5833244150977,63.201960712816" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-125.992228613799,33.6093122729497,155.4011328125,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_PRODUCTRANGES_LOAD.Paths[Row Count Output 1]"
+          TopLeft="305.988086125232,197.213725475896">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,36.649019619283"
+              Start="0,0"
+              End="0,29.149019619283">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,29.149019619283" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_PRODUCTRANGES_LOAD.Paths[OLE DB Source Output]"
+          TopLeft="305.988086125232,118.564705856614">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,36.6490196192824"
+              Start="0,0"
+              End="0,29.1490196192824">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,29.1490196192824" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_PRODUCTRANGES_LOAD.Paths[Derived Column Output]"
+          TopLeft="305.988086125232,275.862745095179">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,36.649019619283"
+              Start="0,0"
+              End="0,29.149019619283">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,29.149019619283" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_PRODUCTRANGES_LOAD.Paths[Balanced Data Distributor Output 2]"
+          TopLeft="338.821419458565,354.511764714462">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="79.7500089182357,70.701960712816"
+              Start="0,0"
+              End="79.7500089182357,63.201960712816">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.6093122729498" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,24.6093122729498"
+                    Point2="0,28.6093122729498"
+                    Point3="4,28.6093122729498" />
+                  <mssgle:LineSegment
+                    End="75.7500089182357,28.6093122729498" />
+                  <mssgle:CubicBezierSegment
+                    Point1="75.7500089182357,28.6093122729498"
+                    Point2="79.7500089182357,28.6093122729498"
+                    Point3="79.7500089182357,32.6093122729498" />
+                  <mssgle:LineSegment
+                    End="79.7500089182357,63.201960712816" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-38.0111088221322,33.6093122729498,155.7722265625,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_PRODUCTRANGES_LOAD\SRC_PRODUCTRANGES">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_PRODUCTRANGES_LOAD\DST_PRODUCTRANGES 1">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <DtsEventHandler
+    design-time-name="Package\SQL_PRODUCTRANGES_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="313,42"
+          Id="Package\SQL_PRODUCTRANGES_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]\SQL_PRODUCTRANGES_UPDATE_DFT_LOAD_COMPLETED"
+          TopLeft="570.3,184.7" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

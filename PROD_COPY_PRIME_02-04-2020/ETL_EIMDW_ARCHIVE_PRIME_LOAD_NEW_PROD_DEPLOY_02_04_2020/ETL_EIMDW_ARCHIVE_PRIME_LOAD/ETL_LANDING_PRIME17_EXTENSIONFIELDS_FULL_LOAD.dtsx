@@ -1,0 +1,2906 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="11/28/2018 8:48:53 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="LAPTOP-SBSNQ3DE"
+  DTS:CreatorName="LAPTOP-SBSNQ3DE\HP"
+  DTS:DTSID="{8F2C9DE0-A720-4E81-B370-2C3B6ECA530B}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="14.0.0600.250"
+  DTS:LocaleID="16393"
+  DTS:ObjectName="ETL_LANDING_PRIME17_EXTENSIONFIELDS_FULL_LOAD"
+  DTS:PackageType="5"
+  DTS:ProtectionLevel="0"
+  DTS:VersionBuild="742"
+  DTS:VersionGUID="{94F87968-E95A-49AE-ABDE-38F68A99FAD8}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_AUDIT_FRAMEWORK]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{D3AC4771-F864-4C4B-B253-9F8EEC5B53D1}"
+      DTS:ObjectName="CM_AUDIT_FRAMEWORK">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_AUDIT_FRAMEWORK_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_AUDIT_FRAMEWORK_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=AUDIT_FRAMEWORK_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{2D89FA31-E785-4462-9975-EDBF7B70F0A3}"
+      DTS:ObjectName="CM_EIMDW_LANDING_PRIME">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_LANDING_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_ARCHIVE_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=DEV_EIMDW_Landing_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_Prime_Attunity]"
+      DTS:CreationName="MSORA"
+      DTS:DTSID="{925ED773-A4CD-42E3-8103-A4F2581E02EE}"
+      DTS:ObjectName="CM_Prime_Attunity">
+      <DTS:PropertyExpression
+        DTS:Name="Password">@[$Project::p_PRIME_PWD]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_PRIME_SERVER]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="UserName">@[$Project::p_PRIME_USER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <OracleXMLPackage>
+          <OraConnectionString>SERVER=10.180.2.215:1522/prime;USERNAME=AMBERCONNECT;ORACLEHOME=;ORACLEHOME64=;WINAUTH=0</OraConnectionString>
+          <OraRetain>False</OraRetain>
+          <OraInitialCatalog></OraInitialCatalog>
+          <OraServerName>10.180.2.215:1522/prime</OraServerName>
+          <OraUserName>AMBERCONNECT</OraUserName>
+          <OraOracleHome></OraOracleHome>
+          <OraOracleHome64></OraOracleHome64>
+          <OraWinAuthentication>False</OraWinAuthentication>
+          <OraEnableDetailedTracing>False</OraEnableDetailedTracing>
+          <OraPassword
+            Sensitive="1"></OraPassword>
+        </OracleXMLPackage>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:LogProviders>
+    <DTS:LogProvider
+      DTS:ConfigString="CM_AUDIT_FRAMEWORK"
+      DTS:CreationName="Microsoft.LogProviderSQLServer"
+      DTS:Description="Writes log entries for events to a SQL Server database"
+      DTS:DTSID="{2A6C861E-F597-4AD5-A277-29CC05B69387}"
+      DTS:ObjectName="SSIS log provider for SQL Server">
+      <DTS:ObjectData>
+        <InnerObject />
+      </DTS:ObjectData>
+    </DTS:LogProvider>
+  </DTS:LogProviders>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{BC6A0DD6-EAFD-4479-BE9B-B042583DF2FA}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Batch_Id">
+      <DTS:VariableValue
+        DTS:DataType="20">-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{803D195F-7342-4A54-AB92-5DD0B39BFFBE}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT COUNT(1) FROM &quot; +  @[User::v_Dest_Table]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Dest_Count_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT COUNT(1) FROM DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_EXTENSIONFIELDS (NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{CF7F6CB2-B381-4D78-BB8C-E2ED186C7643}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="@[$Project::p_LANDING_DATABASE]  +&quot;.&quot;+ @[$Project::p_LANDING_SCHEMA] +&quot;.&quot;+&quot;SRC_PRIME17_EXTENSIONFIELDS (NOLOCK)&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Dest_Table">
+      <DTS:VariableValue
+        DTS:DataType="8">DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_EXTENSIONFIELDS (NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{0626508E-9153-44DB-A6AF-98A9109A5BA2}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Package_Id">
+      <DTS:VariableValue
+        DTS:DataType="3">-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{7C3D88E4-F987-49BE-A8E1-E67625BC1598}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Rows_Inserted">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{AA202E25-520A-495B-987F-509E04A1B07F}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Rows_Read">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{C1C3F53C-FE81-427B-A141-B0A0A4143CF5}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT INSTITUTION_ID&#x9;&#xA;,PSERNO&#x9;&#xA;,CATEGORY&#x9;&#xA;,APPLIESTO&#x9;&#xA;,SUBTABINDICATOR&#x9;&#xA;,FIELDNO&#x9;&#xA;,FIELDNAME&#x9;&#xA;,DEFAULTVALUE&#x9;&#xA;,FIELDMASK&#x9;&#xA;,FIELDFORMAT&#x9;&#xA;,LISTOFVALUES&#x9;&#xA;,ENFORCELIST&#x9;&#xA;,VALIDATEASDATE&#x9;&#xA;,SHOWONMAINSCREEN&#x9;&#xA;,SHOWONDETAILSCREEN&#x9;&#xA;,ORDERSEQ&#x9;&#xA;,ENABLESEARCH&#x9;&#xA;,STATE&#x9;&#xA;,LEVELDEPTH&#x9;&#xA;,INHERITFROM&#x9;&#xA;,REALTIMEUPDATE&#x9;&#xA;,FUNCTIONBASED&#x9;&#xA;,FUNCTIONNAME&#x9;&#xA;,SENDTOFG&#x9;&#xA;,SENDTOONLINE&#x9;&#xA;,AFFECTSGL&#x9;&#xA;,EDITPERMISSIONID&#x9;&#xA;,VIEWPERMISSIONID&#x9;&#xA;,LOGVERSION&#x9;&#xA;,TRANSFERMODE&#x9;&#xA;,RETURNBYAPI  &#xA;&#xA;FROM &quot;+  @[User::v_Source_Table]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Source_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT INSTITUTION_ID	
+,PSERNO	
+,CATEGORY	
+,APPLIESTO	
+,SUBTABINDICATOR	
+,FIELDNO	
+,FIELDNAME	
+,DEFAULTVALUE	
+,FIELDMASK	
+,FIELDFORMAT	
+,LISTOFVALUES	
+,ENFORCELIST	
+,VALIDATEASDATE	
+,SHOWONMAINSCREEN	
+,SHOWONDETAILSCREEN	
+,ORDERSEQ	
+,ENABLESEARCH	
+,STATE	
+,LEVELDEPTH	
+,INHERITFROM	
+,REALTIMEUPDATE	
+,FUNCTIONBASED	
+,FUNCTIONNAME	
+,SENDTOFG	
+,SENDTOONLINE	
+,AFFECTSGL	
+,EDITPERMISSIONID	
+,VIEWPERMISSIONID	
+,LOGVERSION	
+,TRANSFERMODE	
+,RETURNBYAPI  
+
+FROM TCTDBS.EXTENSIONFIELDS</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{3F418BBA-BB22-47D9-9796-5E1AA89AB311}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Source_Table">
+      <DTS:VariableValue
+        DTS:DataType="8">TCTDBS.EXTENSIONFIELDS</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{33D1B0E9-C157-4BDE-9241-F99DB08A56F7}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Task_Name">
+      <DTS:VariableValue
+        DTS:DataType="8">EXTENSIONFIELDS</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{95BAA873-2A51-425A-B574-1774BA0205D4}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;TRUNCATE TABLE &quot;  + REPLACE(@[User::v_Dest_Table],&quot;(NOLOCK)&quot;,&quot; &quot;)"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Trunc_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">TRUNCATE TABLE DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_EXTENSIONFIELDS  </DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:LoggingOptions
+    DTS:FilterKind="0"
+    DTS:LoggingMode="1">
+    <DTS:Property
+      DTS:DataType="8"
+      DTS:Name="EventFilter">3,7,OnError,13,OnPostExecute,12,OnTaskFailed</DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnError"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnPostExecute"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnTaskFailed"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:SelectedLogProviders>
+      <DTS:SelectedLogProvider
+        DTS:InstanceID="{2A6C861E-F597-4AD5-A277-29CC05B69387}" />
+    </DTS:SelectedLogProviders>
+  </DTS:LoggingOptions>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\DFT_EXTENSIONFIELDS_LOAD"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{A0B3B156-3FEC-45D6-9FCD-783FD4EB4578}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="DFT_EXTENSIONFIELDS_LOAD"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"DFT_"+@[User::v_Task_Name]+"_LOAD"</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="[SRC_EXTENSIONFIELDS].[SqlCommand]">@[User::v_Source_Query]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <pipeline
+          defaultBufferMaxRows="100000"
+          defaultBufferSize="20485760"
+          version="1">
+          <components>
+            <component
+              refId="Package\DFT_EXTENSIONFIELDS_LOAD\BDD_EXTENSIONFIELDS"
+              componentClassID="Microsoft.BDD"
+              contactInfo="Balanced Data Distributor;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Evaluates and directs rows in a dataset to multiple destinations."
+              name="BDD_EXTENSIONFIELDS">
+              <inputs>
+                <input
+                  refId="Package\DFT_EXTENSIONFIELDS_LOAD\BDD_EXTENSIONFIELDS.Inputs[Balanced Data Distributor Input]"
+                  description="Input to the Balanced Data      Distributor Transformation"
+                  name="Balanced Data Distributor Input">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_EXTENSIONFIELDS_LOAD\BDD_EXTENSIONFIELDS.Outputs[Balanced Data Distributor Output 1]"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 1"
+                  synchronousInputId="Package\DFT_EXTENSIONFIELDS_LOAD\BDD_EXTENSIONFIELDS.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_EXTENSIONFIELDS_LOAD\BDD_EXTENSIONFIELDS.Outputs[Balanced Data Distributor Output 2]"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 2"
+                  synchronousInputId="Package\DFT_EXTENSIONFIELDS_LOAD\BDD_EXTENSIONFIELDS.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_EXTENSIONFIELDS_LOAD\BDD_EXTENSIONFIELDS.Outputs[Balanced Data Distributor Output 3]"
+                  dangling="true"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 3"
+                  synchronousInputId="Package\DFT_EXTENSIONFIELDS_LOAD\BDD_EXTENSIONFIELDS.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_EXTENSIONFIELDS_LOAD\DC_BATCH"
+              componentClassID="Microsoft.DerivedColumn"
+              contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+              name="DC_BATCH"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\DFT_EXTENSIONFIELDS_LOAD\DC_BATCH.Inputs[Derived Column Input]"
+                  description="Input to the Derived Column Transformation"
+                  name="Derived Column Input">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_EXTENSIONFIELDS_LOAD\DC_BATCH.Outputs[Derived Column Output]"
+                  description="Default Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  name="Derived Column Output"
+                  synchronousInputId="Package\DFT_EXTENSIONFIELDS_LOAD\DC_BATCH.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]"
+                      dataType="i8"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]"
+                      name="BATCH_ID"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">@[User::v_Batch_Id]</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">@[User::v_Batch_Id]</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_EXTENSIONFIELDS_LOAD\DC_BATCH.Outputs[Derived Column Error Output]"
+                  description="Error Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Derived Column Error Output"
+                  synchronousInputId="Package\DFT_EXTENSIONFIELDS_LOAD\DC_BATCH.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="DST_EXTENSIONFIELDS"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[LZOWN].[SRC_PRIME17_EXTENSIONFIELDS]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS,ROWS_PER_BATCH = 1000000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].Columns[INSTITUTION_ID]"
+                      cachedDataType="i4"
+                      cachedName="INSTITUTION_ID"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].Columns[PSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="PSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[PSERNO]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[PSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].Columns[CATEGORY]"
+                      cachedDataType="wstr"
+                      cachedLength="20"
+                      cachedName="CATEGORY"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[CATEGORY]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[CATEGORY]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].Columns[APPLIESTO]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="APPLIESTO"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[APPLIESTO]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[APPLIESTO]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].Columns[SUBTABINDICATOR]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="10"
+                      cachedName="SUBTABINDICATOR"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[SUBTABINDICATOR]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[SUBTABINDICATOR]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].Columns[FIELDNO]"
+                      cachedDataType="i4"
+                      cachedName="FIELDNO"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[FIELDNO]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[FIELDNO]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].Columns[FIELDNAME]"
+                      cachedDataType="wstr"
+                      cachedLength="100"
+                      cachedName="FIELDNAME"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[FIELDNAME]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[FIELDNAME]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].Columns[DEFAULTVALUE]"
+                      cachedDataType="wstr"
+                      cachedLength="250"
+                      cachedName="DEFAULTVALUE"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[DEFAULTVALUE]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[DEFAULTVALUE]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].Columns[FIELDMASK]"
+                      cachedDataType="wstr"
+                      cachedLength="250"
+                      cachedName="FIELDMASK"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[FIELDMASK]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[FIELDMASK]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].Columns[FIELDFORMAT]"
+                      cachedDataType="wstr"
+                      cachedLength="250"
+                      cachedName="FIELDFORMAT"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[FIELDFORMAT]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[FIELDFORMAT]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].Columns[LISTOFVALUES]"
+                      cachedDataType="wstr"
+                      cachedLength="2000"
+                      cachedName="LISTOFVALUES"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[LISTOFVALUES]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[LISTOFVALUES]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].Columns[ENFORCELIST]"
+                      cachedDataType="i4"
+                      cachedName="ENFORCELIST"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[ENFORCELIST]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[ENFORCELIST]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].Columns[VALIDATEASDATE]"
+                      cachedDataType="i4"
+                      cachedName="VALIDATEASDATE"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[VALIDATEASDATE]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[VALIDATEASDATE]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].Columns[SHOWONMAINSCREEN]"
+                      cachedDataType="i4"
+                      cachedName="SHOWONMAINSCREEN"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[SHOWONMAINSCREEN]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[SHOWONMAINSCREEN]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].Columns[SHOWONDETAILSCREEN]"
+                      cachedDataType="i1"
+                      cachedName="SHOWONDETAILSCREEN"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[SHOWONDETAILSCREEN]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[SHOWONDETAILSCREEN]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].Columns[ORDERSEQ]"
+                      cachedDataType="numeric"
+                      cachedName="ORDERSEQ"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[ORDERSEQ]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[ORDERSEQ]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].Columns[ENABLESEARCH]"
+                      cachedDataType="i4"
+                      cachedName="ENABLESEARCH"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[ENABLESEARCH]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[ENABLESEARCH]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].Columns[STATE]"
+                      cachedDataType="i4"
+                      cachedName="STATE"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[STATE]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[STATE]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].Columns[LEVELDEPTH]"
+                      cachedDataType="i4"
+                      cachedName="LEVELDEPTH"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[LEVELDEPTH]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[LEVELDEPTH]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].Columns[INHERITFROM]"
+                      cachedDataType="wstr"
+                      cachedLength="20"
+                      cachedName="INHERITFROM"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[INHERITFROM]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[INHERITFROM]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].Columns[REALTIMEUPDATE]"
+                      cachedDataType="i1"
+                      cachedName="REALTIMEUPDATE"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[REALTIMEUPDATE]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[REALTIMEUPDATE]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].Columns[FUNCTIONBASED]"
+                      cachedDataType="i1"
+                      cachedName="FUNCTIONBASED"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[FUNCTIONBASED]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[FUNCTIONBASED]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].Columns[FUNCTIONNAME]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="61"
+                      cachedName="FUNCTIONNAME"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[FUNCTIONNAME]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[FUNCTIONNAME]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].Columns[SENDTOFG]"
+                      cachedDataType="i4"
+                      cachedName="SENDTOFG"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[SENDTOFG]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[SENDTOFG]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].Columns[SENDTOONLINE]"
+                      cachedDataType="i4"
+                      cachedName="SENDTOONLINE"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[SENDTOONLINE]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[SENDTOONLINE]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].Columns[AFFECTSGL]"
+                      cachedDataType="i4"
+                      cachedName="AFFECTSGL"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[AFFECTSGL]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[AFFECTSGL]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].Columns[EDITPERMISSIONID]"
+                      cachedDataType="numeric"
+                      cachedName="EDITPERMISSIONID"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[EDITPERMISSIONID]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[EDITPERMISSIONID]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].Columns[VIEWPERMISSIONID]"
+                      cachedDataType="numeric"
+                      cachedName="VIEWPERMISSIONID"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[VIEWPERMISSIONID]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[VIEWPERMISSIONID]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].Columns[LOGVERSION]"
+                      cachedDataType="i4"
+                      cachedName="LOGVERSION"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[LOGVERSION]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[LOGVERSION]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].Columns[TRANSFERMODE]"
+                      cachedDataType="i1"
+                      cachedName="TRANSFERMODE"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[TRANSFERMODE]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[TRANSFERMODE]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].Columns[RETURNBYAPI]"
+                      cachedDataType="i1"
+                      cachedName="RETURNBYAPI"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[RETURNBYAPI]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[RETURNBYAPI]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].Columns[BATCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="BATCH_ID"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[LD_SEQ_ID]"
+                      dataType="i4"
+                      name="LD_SEQ_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      dataType="i8"
+                      name="BATCH_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[PSERNO]"
+                      dataType="numeric"
+                      name="PSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[CATEGORY]"
+                      dataType="wstr"
+                      length="20"
+                      name="CATEGORY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[APPLIESTO]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="APPLIESTO" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[SUBTABINDICATOR]"
+                      codePage="1252"
+                      dataType="str"
+                      length="10"
+                      name="SUBTABINDICATOR" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[FIELDNO]"
+                      dataType="i4"
+                      name="FIELDNO" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[FIELDNAME]"
+                      dataType="wstr"
+                      length="100"
+                      name="FIELDNAME" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[DEFAULTVALUE]"
+                      dataType="wstr"
+                      length="250"
+                      name="DEFAULTVALUE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[FIELDMASK]"
+                      dataType="wstr"
+                      length="250"
+                      name="FIELDMASK" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[FIELDFORMAT]"
+                      dataType="wstr"
+                      length="250"
+                      name="FIELDFORMAT" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[LISTOFVALUES]"
+                      dataType="wstr"
+                      length="2000"
+                      name="LISTOFVALUES" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[ENFORCELIST]"
+                      dataType="i4"
+                      name="ENFORCELIST" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[VALIDATEASDATE]"
+                      dataType="i4"
+                      name="VALIDATEASDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[SHOWONMAINSCREEN]"
+                      dataType="i4"
+                      name="SHOWONMAINSCREEN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[SHOWONDETAILSCREEN]"
+                      dataType="i2"
+                      name="SHOWONDETAILSCREEN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[ORDERSEQ]"
+                      dataType="numeric"
+                      name="ORDERSEQ"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[ENABLESEARCH]"
+                      dataType="i4"
+                      name="ENABLESEARCH" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[STATE]"
+                      dataType="i4"
+                      name="STATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[LEVELDEPTH]"
+                      dataType="i4"
+                      name="LEVELDEPTH" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[INHERITFROM]"
+                      dataType="wstr"
+                      length="20"
+                      name="INHERITFROM" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[REALTIMEUPDATE]"
+                      dataType="i2"
+                      name="REALTIMEUPDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[FUNCTIONBASED]"
+                      dataType="i2"
+                      name="FUNCTIONBASED" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[FUNCTIONNAME]"
+                      codePage="1252"
+                      dataType="str"
+                      length="61"
+                      name="FUNCTIONNAME" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[SENDTOFG]"
+                      dataType="i4"
+                      name="SENDTOFG" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[SENDTOONLINE]"
+                      dataType="i4"
+                      name="SENDTOONLINE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[AFFECTSGL]"
+                      dataType="i4"
+                      name="AFFECTSGL" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[EDITPERMISSIONID]"
+                      dataType="numeric"
+                      name="EDITPERMISSIONID"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[VIEWPERMISSIONID]"
+                      dataType="numeric"
+                      name="VIEWPERMISSIONID"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[LOGVERSION]"
+                      dataType="i4"
+                      name="LOGVERSION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[TRANSFERMODE]"
+                      dataType="i2"
+                      name="TRANSFERMODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input].ExternalColumns[RETURNBYAPI]"
+                      dataType="i2"
+                      name="RETURNBYAPI" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="DST_EXTENSIONFIELDS 1"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[LZOWN].[SRC_PRIME17_EXTENSIONFIELDS]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS,ROWS_PER_BATCH = 1000000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].Columns[INSTITUTION_ID]"
+                      cachedDataType="i4"
+                      cachedName="INSTITUTION_ID"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].Columns[PSERNO]"
+                      cachedDataType="numeric"
+                      cachedName="PSERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[PSERNO]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[PSERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].Columns[CATEGORY]"
+                      cachedDataType="wstr"
+                      cachedLength="20"
+                      cachedName="CATEGORY"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[CATEGORY]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[CATEGORY]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].Columns[APPLIESTO]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="APPLIESTO"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[APPLIESTO]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[APPLIESTO]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].Columns[SUBTABINDICATOR]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="10"
+                      cachedName="SUBTABINDICATOR"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[SUBTABINDICATOR]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[SUBTABINDICATOR]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].Columns[FIELDNO]"
+                      cachedDataType="i4"
+                      cachedName="FIELDNO"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[FIELDNO]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[FIELDNO]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].Columns[FIELDNAME]"
+                      cachedDataType="wstr"
+                      cachedLength="100"
+                      cachedName="FIELDNAME"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[FIELDNAME]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[FIELDNAME]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].Columns[DEFAULTVALUE]"
+                      cachedDataType="wstr"
+                      cachedLength="250"
+                      cachedName="DEFAULTVALUE"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[DEFAULTVALUE]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[DEFAULTVALUE]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].Columns[FIELDMASK]"
+                      cachedDataType="wstr"
+                      cachedLength="250"
+                      cachedName="FIELDMASK"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[FIELDMASK]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[FIELDMASK]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].Columns[FIELDFORMAT]"
+                      cachedDataType="wstr"
+                      cachedLength="250"
+                      cachedName="FIELDFORMAT"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[FIELDFORMAT]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[FIELDFORMAT]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].Columns[LISTOFVALUES]"
+                      cachedDataType="wstr"
+                      cachedLength="2000"
+                      cachedName="LISTOFVALUES"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[LISTOFVALUES]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[LISTOFVALUES]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].Columns[ENFORCELIST]"
+                      cachedDataType="i4"
+                      cachedName="ENFORCELIST"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[ENFORCELIST]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[ENFORCELIST]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].Columns[VALIDATEASDATE]"
+                      cachedDataType="i4"
+                      cachedName="VALIDATEASDATE"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[VALIDATEASDATE]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[VALIDATEASDATE]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].Columns[SHOWONMAINSCREEN]"
+                      cachedDataType="i4"
+                      cachedName="SHOWONMAINSCREEN"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[SHOWONMAINSCREEN]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[SHOWONMAINSCREEN]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].Columns[SHOWONDETAILSCREEN]"
+                      cachedDataType="i1"
+                      cachedName="SHOWONDETAILSCREEN"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[SHOWONDETAILSCREEN]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[SHOWONDETAILSCREEN]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].Columns[ORDERSEQ]"
+                      cachedDataType="numeric"
+                      cachedName="ORDERSEQ"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[ORDERSEQ]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[ORDERSEQ]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].Columns[ENABLESEARCH]"
+                      cachedDataType="i4"
+                      cachedName="ENABLESEARCH"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[ENABLESEARCH]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[ENABLESEARCH]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].Columns[STATE]"
+                      cachedDataType="i4"
+                      cachedName="STATE"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[STATE]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[STATE]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].Columns[LEVELDEPTH]"
+                      cachedDataType="i4"
+                      cachedName="LEVELDEPTH"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[LEVELDEPTH]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[LEVELDEPTH]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].Columns[INHERITFROM]"
+                      cachedDataType="wstr"
+                      cachedLength="20"
+                      cachedName="INHERITFROM"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[INHERITFROM]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[INHERITFROM]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].Columns[REALTIMEUPDATE]"
+                      cachedDataType="i1"
+                      cachedName="REALTIMEUPDATE"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[REALTIMEUPDATE]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[REALTIMEUPDATE]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].Columns[FUNCTIONBASED]"
+                      cachedDataType="i1"
+                      cachedName="FUNCTIONBASED"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[FUNCTIONBASED]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[FUNCTIONBASED]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].Columns[FUNCTIONNAME]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="61"
+                      cachedName="FUNCTIONNAME"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[FUNCTIONNAME]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[FUNCTIONNAME]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].Columns[SENDTOFG]"
+                      cachedDataType="i4"
+                      cachedName="SENDTOFG"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[SENDTOFG]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[SENDTOFG]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].Columns[SENDTOONLINE]"
+                      cachedDataType="i4"
+                      cachedName="SENDTOONLINE"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[SENDTOONLINE]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[SENDTOONLINE]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].Columns[AFFECTSGL]"
+                      cachedDataType="i4"
+                      cachedName="AFFECTSGL"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[AFFECTSGL]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[AFFECTSGL]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].Columns[EDITPERMISSIONID]"
+                      cachedDataType="numeric"
+                      cachedName="EDITPERMISSIONID"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[EDITPERMISSIONID]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[EDITPERMISSIONID]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].Columns[VIEWPERMISSIONID]"
+                      cachedDataType="numeric"
+                      cachedName="VIEWPERMISSIONID"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[VIEWPERMISSIONID]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[VIEWPERMISSIONID]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].Columns[LOGVERSION]"
+                      cachedDataType="i4"
+                      cachedName="LOGVERSION"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[LOGVERSION]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[LOGVERSION]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].Columns[TRANSFERMODE]"
+                      cachedDataType="i1"
+                      cachedName="TRANSFERMODE"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[TRANSFERMODE]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[TRANSFERMODE]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].Columns[RETURNBYAPI]"
+                      cachedDataType="i1"
+                      cachedName="RETURNBYAPI"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[RETURNBYAPI]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[RETURNBYAPI]" />
+                    <inputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].Columns[BATCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="BATCH_ID"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[LD_SEQ_ID]"
+                      dataType="i4"
+                      name="LD_SEQ_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      dataType="i8"
+                      name="BATCH_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[PSERNO]"
+                      dataType="numeric"
+                      name="PSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[CATEGORY]"
+                      dataType="wstr"
+                      length="20"
+                      name="CATEGORY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[APPLIESTO]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="APPLIESTO" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[SUBTABINDICATOR]"
+                      codePage="1252"
+                      dataType="str"
+                      length="10"
+                      name="SUBTABINDICATOR" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[FIELDNO]"
+                      dataType="i4"
+                      name="FIELDNO" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[FIELDNAME]"
+                      dataType="wstr"
+                      length="100"
+                      name="FIELDNAME" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[DEFAULTVALUE]"
+                      dataType="wstr"
+                      length="250"
+                      name="DEFAULTVALUE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[FIELDMASK]"
+                      dataType="wstr"
+                      length="250"
+                      name="FIELDMASK" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[FIELDFORMAT]"
+                      dataType="wstr"
+                      length="250"
+                      name="FIELDFORMAT" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[LISTOFVALUES]"
+                      dataType="wstr"
+                      length="2000"
+                      name="LISTOFVALUES" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[ENFORCELIST]"
+                      dataType="i4"
+                      name="ENFORCELIST" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[VALIDATEASDATE]"
+                      dataType="i4"
+                      name="VALIDATEASDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[SHOWONMAINSCREEN]"
+                      dataType="i4"
+                      name="SHOWONMAINSCREEN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[SHOWONDETAILSCREEN]"
+                      dataType="i2"
+                      name="SHOWONDETAILSCREEN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[ORDERSEQ]"
+                      dataType="numeric"
+                      name="ORDERSEQ"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[ENABLESEARCH]"
+                      dataType="i4"
+                      name="ENABLESEARCH" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[STATE]"
+                      dataType="i4"
+                      name="STATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[LEVELDEPTH]"
+                      dataType="i4"
+                      name="LEVELDEPTH" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[INHERITFROM]"
+                      dataType="wstr"
+                      length="20"
+                      name="INHERITFROM" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[REALTIMEUPDATE]"
+                      dataType="i2"
+                      name="REALTIMEUPDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[FUNCTIONBASED]"
+                      dataType="i2"
+                      name="FUNCTIONBASED" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[FUNCTIONNAME]"
+                      codePage="1252"
+                      dataType="str"
+                      length="61"
+                      name="FUNCTIONNAME" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[SENDTOFG]"
+                      dataType="i4"
+                      name="SENDTOFG" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[SENDTOONLINE]"
+                      dataType="i4"
+                      name="SENDTOONLINE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[AFFECTSGL]"
+                      dataType="i4"
+                      name="AFFECTSGL" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[EDITPERMISSIONID]"
+                      dataType="numeric"
+                      name="EDITPERMISSIONID"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[VIEWPERMISSIONID]"
+                      dataType="numeric"
+                      name="VIEWPERMISSIONID"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[LOGVERSION]"
+                      dataType="i4"
+                      name="LOGVERSION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[TRANSFERMODE]"
+                      dataType="i2"
+                      name="TRANSFERMODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input].ExternalColumns[RETURNBYAPI]"
+                      dataType="i2"
+                      name="RETURNBYAPI" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_EXTENSIONFIELDS_LOAD\RC_EXTENSIONFIELDS"
+              componentClassID="Microsoft.RowCount"
+              contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Counts rows as they pass through a data flow. For example, use the number of rows processed to determine whether or not to perform cleanup operations, or update text in an e-mail message to communicate processing status."
+              name="RC_EXTENSIONFIELDS">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable to hold the row count."
+                  name="VariableName">User::v_Rows_Read</property>
+              </properties>
+              <inputs>
+                <input
+                  refId="Package\DFT_EXTENSIONFIELDS_LOAD\RC_EXTENSIONFIELDS.Inputs[Row Count Input 1]"
+                  hasSideEffects="true"
+                  name="Row Count Input 1">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_EXTENSIONFIELDS_LOAD\RC_EXTENSIONFIELDS.Outputs[Row Count Output 1]"
+                  name="Row Count Output 1"
+                  synchronousInputId="Package\DFT_EXTENSIONFIELDS_LOAD\RC_EXTENSIONFIELDS.Inputs[Row Count Input 1]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS"
+              componentClassID="Attunity.SSISOraSrc"
+              contactInfo="Oracle Source;Microsoft Connector for Oracle by Attunity; Attunity Ltd.; All Rights Reserved; http://www.attunity.com;7"
+              description="Microsoft Oracle Source Component by Attunity"
+              name="SRC_EXTENSIONFIELDS"
+              usesDispositions="true"
+              version="6">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="The name of the table to be fetched."
+                  expressionType="Notify"
+                  name="TableName"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  expressionType="Notify"
+                  name="SqlCommand">SELECT INSTITUTION_ID	
+,PSERNO	
+,CATEGORY	
+,APPLIESTO	
+,SUBTABINDICATOR	
+,FIELDNO	
+,FIELDNAME	
+,DEFAULTVALUE	
+,FIELDMASK	
+,FIELDFORMAT	
+,LISTOFVALUES	
+,ENFORCELIST	
+,VALIDATEASDATE	
+,SHOWONMAINSCREEN	
+,SHOWONDETAILSCREEN	
+,ORDERSEQ	
+,ENABLESEARCH	
+,STATE	
+,LEVELDEPTH	
+,INHERITFROM	
+,REALTIMEUPDATE	
+,FUNCTIONBASED	
+,FUNCTIONNAME	
+,SENDTOFG	
+,SENDTOONLINE	
+,AFFECTSGL	
+,EDITPERMISSIONID	
+,VIEWPERMISSIONID	
+,LOGVERSION	
+,TRANSFERMODE	
+,RETURNBYAPI  
+
+FROM TCTDBS.EXTENSIONFIELDS</property>
+                <property
+                  dataType="System.Int32"
+                  description="The number of rows fetched in a batch."
+                  expressionType="Notify"
+                  name="BatchSize">100</property>
+                <property
+                  dataType="System.Int32"
+                  description="Number of pre-fetched rows."
+                  expressionType="Notify"
+                  name="PrefetchCount">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Determines the chunk size allocation for LOB columns"
+                  expressionType="Notify"
+                  name="LobChunkSize">32768</property>
+                <property
+                  dataType="System.Int32"
+                  description="The code page to use when code page information is unavailable from the data source."
+                  expressionType="Notify"
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Int32"
+                  description="The mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">1</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Connections[MSOraConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_Prime_Attunity]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_Prime_Attunity]"
+                  description="The Oracle runtime connection"
+                  name="MSOraConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output]"
+                  errorRowDisposition="FailComponent"
+                  name="Oracle Source Output"
+                  truncationRowDisposition="FailComponent">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]"
+                      name="INSTITUTION_ID" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[PSERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[PSERNO]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[PSERNO]"
+                      name="PSERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[CATEGORY]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[CATEGORY]"
+                      length="20"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[CATEGORY]"
+                      name="CATEGORY" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[APPLIESTO]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[APPLIESTO]"
+                      length="1"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[APPLIESTO]"
+                      name="APPLIESTO" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[SUBTABINDICATOR]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[SUBTABINDICATOR]"
+                      length="10"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[SUBTABINDICATOR]"
+                      name="SUBTABINDICATOR" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[FIELDNO]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[FIELDNO]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[FIELDNO]"
+                      name="FIELDNO" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[FIELDNAME]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[FIELDNAME]"
+                      length="100"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[FIELDNAME]"
+                      name="FIELDNAME" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[DEFAULTVALUE]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[DEFAULTVALUE]"
+                      length="250"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[DEFAULTVALUE]"
+                      name="DEFAULTVALUE" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[FIELDMASK]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[FIELDMASK]"
+                      length="250"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[FIELDMASK]"
+                      name="FIELDMASK" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[FIELDFORMAT]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[FIELDFORMAT]"
+                      length="250"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[FIELDFORMAT]"
+                      name="FIELDFORMAT" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[LISTOFVALUES]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[LISTOFVALUES]"
+                      length="2000"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[LISTOFVALUES]"
+                      name="LISTOFVALUES" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[ENFORCELIST]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[ENFORCELIST]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[ENFORCELIST]"
+                      name="ENFORCELIST" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[VALIDATEASDATE]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[VALIDATEASDATE]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[VALIDATEASDATE]"
+                      name="VALIDATEASDATE" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[SHOWONMAINSCREEN]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[SHOWONMAINSCREEN]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[SHOWONMAINSCREEN]"
+                      name="SHOWONMAINSCREEN" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[SHOWONDETAILSCREEN]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[SHOWONDETAILSCREEN]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[SHOWONDETAILSCREEN]"
+                      name="SHOWONDETAILSCREEN" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[ORDERSEQ]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[ORDERSEQ]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[ORDERSEQ]"
+                      name="ORDERSEQ"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[ENABLESEARCH]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[ENABLESEARCH]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[ENABLESEARCH]"
+                      name="ENABLESEARCH" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[STATE]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[STATE]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[STATE]"
+                      name="STATE" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[LEVELDEPTH]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[LEVELDEPTH]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[LEVELDEPTH]"
+                      name="LEVELDEPTH" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[INHERITFROM]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[INHERITFROM]"
+                      length="20"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[INHERITFROM]"
+                      name="INHERITFROM" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[REALTIMEUPDATE]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[REALTIMEUPDATE]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[REALTIMEUPDATE]"
+                      name="REALTIMEUPDATE" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[FUNCTIONBASED]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[FUNCTIONBASED]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[FUNCTIONBASED]"
+                      name="FUNCTIONBASED" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[FUNCTIONNAME]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[FUNCTIONNAME]"
+                      length="61"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[FUNCTIONNAME]"
+                      name="FUNCTIONNAME" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[SENDTOFG]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[SENDTOFG]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[SENDTOFG]"
+                      name="SENDTOFG" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[SENDTOONLINE]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[SENDTOONLINE]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[SENDTOONLINE]"
+                      name="SENDTOONLINE" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[AFFECTSGL]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[AFFECTSGL]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[AFFECTSGL]"
+                      name="AFFECTSGL" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[EDITPERMISSIONID]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[EDITPERMISSIONID]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[EDITPERMISSIONID]"
+                      name="EDITPERMISSIONID"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[VIEWPERMISSIONID]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[VIEWPERMISSIONID]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[VIEWPERMISSIONID]"
+                      name="VIEWPERMISSIONID"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[LOGVERSION]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[LOGVERSION]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[LOGVERSION]"
+                      name="LOGVERSION" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[TRANSFERMODE]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[TRANSFERMODE]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[TRANSFERMODE]"
+                      name="TRANSFERMODE" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[RETURNBYAPI]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[RETURNBYAPI]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].Columns[RETURNBYAPI]"
+                      name="RETURNBYAPI" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[PSERNO]"
+                      dataType="numeric"
+                      name="PSERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[CATEGORY]"
+                      dataType="wstr"
+                      length="20"
+                      name="CATEGORY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[APPLIESTO]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="APPLIESTO" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[SUBTABINDICATOR]"
+                      codePage="1252"
+                      dataType="str"
+                      length="10"
+                      name="SUBTABINDICATOR" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[FIELDNO]"
+                      dataType="i4"
+                      name="FIELDNO" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[FIELDNAME]"
+                      dataType="wstr"
+                      length="100"
+                      name="FIELDNAME" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[DEFAULTVALUE]"
+                      dataType="wstr"
+                      length="250"
+                      name="DEFAULTVALUE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[FIELDMASK]"
+                      dataType="wstr"
+                      length="250"
+                      name="FIELDMASK" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[FIELDFORMAT]"
+                      dataType="wstr"
+                      length="250"
+                      name="FIELDFORMAT" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[LISTOFVALUES]"
+                      dataType="wstr"
+                      length="2000"
+                      name="LISTOFVALUES" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[ENFORCELIST]"
+                      dataType="i4"
+                      name="ENFORCELIST" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[VALIDATEASDATE]"
+                      dataType="i4"
+                      name="VALIDATEASDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[SHOWONMAINSCREEN]"
+                      dataType="i4"
+                      name="SHOWONMAINSCREEN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[SHOWONDETAILSCREEN]"
+                      dataType="i1"
+                      name="SHOWONDETAILSCREEN" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[ORDERSEQ]"
+                      dataType="numeric"
+                      name="ORDERSEQ"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[ENABLESEARCH]"
+                      dataType="i4"
+                      name="ENABLESEARCH" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[STATE]"
+                      dataType="i4"
+                      name="STATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[LEVELDEPTH]"
+                      dataType="i4"
+                      name="LEVELDEPTH" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[INHERITFROM]"
+                      dataType="wstr"
+                      length="20"
+                      name="INHERITFROM" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[REALTIMEUPDATE]"
+                      dataType="i1"
+                      name="REALTIMEUPDATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[FUNCTIONBASED]"
+                      dataType="i1"
+                      name="FUNCTIONBASED" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[FUNCTIONNAME]"
+                      codePage="1252"
+                      dataType="str"
+                      length="61"
+                      name="FUNCTIONNAME" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[SENDTOFG]"
+                      dataType="i4"
+                      name="SENDTOFG" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[SENDTOONLINE]"
+                      dataType="i4"
+                      name="SENDTOONLINE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[AFFECTSGL]"
+                      dataType="i4"
+                      name="AFFECTSGL" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[EDITPERMISSIONID]"
+                      dataType="numeric"
+                      name="EDITPERMISSIONID"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[VIEWPERMISSIONID]"
+                      dataType="numeric"
+                      name="VIEWPERMISSIONID"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[LOGVERSION]"
+                      dataType="i4"
+                      name="LOGVERSION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[TRANSFERMODE]"
+                      dataType="i1"
+                      name="TRANSFERMODE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[RETURNBYAPI]"
+                      dataType="i1"
+                      name="RETURNBYAPI" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output]"
+                  isErrorOut="true"
+                  name="Oracle Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[INSTITUTION_ID]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[INSTITUTION_ID]"
+                      name="INSTITUTION_ID" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[PSERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[PSERNO]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[PSERNO]"
+                      name="PSERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[CATEGORY]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[CATEGORY]"
+                      length="20"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[CATEGORY]"
+                      name="CATEGORY" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[APPLIESTO]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[APPLIESTO]"
+                      length="1"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[APPLIESTO]"
+                      name="APPLIESTO" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[SUBTABINDICATOR]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[SUBTABINDICATOR]"
+                      length="10"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[SUBTABINDICATOR]"
+                      name="SUBTABINDICATOR" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[FIELDNO]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[FIELDNO]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[FIELDNO]"
+                      name="FIELDNO" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[FIELDNAME]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[FIELDNAME]"
+                      length="100"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[FIELDNAME]"
+                      name="FIELDNAME" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[DEFAULTVALUE]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[DEFAULTVALUE]"
+                      length="250"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[DEFAULTVALUE]"
+                      name="DEFAULTVALUE" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[FIELDMASK]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[FIELDMASK]"
+                      length="250"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[FIELDMASK]"
+                      name="FIELDMASK" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[FIELDFORMAT]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[FIELDFORMAT]"
+                      length="250"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[FIELDFORMAT]"
+                      name="FIELDFORMAT" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[LISTOFVALUES]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[LISTOFVALUES]"
+                      length="2000"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[LISTOFVALUES]"
+                      name="LISTOFVALUES" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[ENFORCELIST]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[ENFORCELIST]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[ENFORCELIST]"
+                      name="ENFORCELIST" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[VALIDATEASDATE]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[VALIDATEASDATE]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[VALIDATEASDATE]"
+                      name="VALIDATEASDATE" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[SHOWONMAINSCREEN]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[SHOWONMAINSCREEN]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[SHOWONMAINSCREEN]"
+                      name="SHOWONMAINSCREEN" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[SHOWONDETAILSCREEN]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[SHOWONDETAILSCREEN]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[SHOWONDETAILSCREEN]"
+                      name="SHOWONDETAILSCREEN" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[ORDERSEQ]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[ORDERSEQ]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[ORDERSEQ]"
+                      name="ORDERSEQ"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[ENABLESEARCH]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[ENABLESEARCH]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[ENABLESEARCH]"
+                      name="ENABLESEARCH" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[STATE]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[STATE]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[STATE]"
+                      name="STATE" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[LEVELDEPTH]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[LEVELDEPTH]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[LEVELDEPTH]"
+                      name="LEVELDEPTH" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[INHERITFROM]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[INHERITFROM]"
+                      length="20"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[INHERITFROM]"
+                      name="INHERITFROM" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[REALTIMEUPDATE]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[REALTIMEUPDATE]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[REALTIMEUPDATE]"
+                      name="REALTIMEUPDATE" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[FUNCTIONBASED]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[FUNCTIONBASED]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[FUNCTIONBASED]"
+                      name="FUNCTIONBASED" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[FUNCTIONNAME]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[FUNCTIONNAME]"
+                      length="61"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[FUNCTIONNAME]"
+                      name="FUNCTIONNAME" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[SENDTOFG]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[SENDTOFG]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[SENDTOFG]"
+                      name="SENDTOFG" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[SENDTOONLINE]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[SENDTOONLINE]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[SENDTOONLINE]"
+                      name="SENDTOONLINE" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[AFFECTSGL]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[AFFECTSGL]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[AFFECTSGL]"
+                      name="AFFECTSGL" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[EDITPERMISSIONID]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[EDITPERMISSIONID]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[EDITPERMISSIONID]"
+                      name="EDITPERMISSIONID"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[VIEWPERMISSIONID]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[VIEWPERMISSIONID]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[VIEWPERMISSIONID]"
+                      name="VIEWPERMISSIONID"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[LOGVERSION]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[LOGVERSION]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[LOGVERSION]"
+                      name="LOGVERSION" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[TRANSFERMODE]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[TRANSFERMODE]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[TRANSFERMODE]"
+                      name="TRANSFERMODE" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[RETURNBYAPI]"
+                      dataType="i1"
+                      externalMetadataColumnId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output].ExternalColumns[RETURNBYAPI]"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[RETURNBYAPI]"
+                      name="RETURNBYAPI" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\DFT_EXTENSIONFIELDS_LOAD.Paths[Balanced Data Distributor Output 1]"
+              endId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS.Inputs[OLE DB Destination Input]"
+              name="Balanced Data Distributor Output 1"
+              startId="Package\DFT_EXTENSIONFIELDS_LOAD\BDD_EXTENSIONFIELDS.Outputs[Balanced Data Distributor Output 1]" />
+            <path
+              refId="Package\DFT_EXTENSIONFIELDS_LOAD.Paths[Balanced Data Distributor Output 2]"
+              endId="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1.Inputs[OLE DB Destination Input]"
+              name="Balanced Data Distributor Output 2"
+              startId="Package\DFT_EXTENSIONFIELDS_LOAD\BDD_EXTENSIONFIELDS.Outputs[Balanced Data Distributor Output 2]" />
+            <path
+              refId="Package\DFT_EXTENSIONFIELDS_LOAD.Paths[Derived Column Output]"
+              endId="Package\DFT_EXTENSIONFIELDS_LOAD\BDD_EXTENSIONFIELDS.Inputs[Balanced Data Distributor Input]"
+              name="Derived Column Output"
+              startId="Package\DFT_EXTENSIONFIELDS_LOAD\DC_BATCH.Outputs[Derived Column Output]" />
+            <path
+              refId="Package\DFT_EXTENSIONFIELDS_LOAD.Paths[Oracle Source Output]"
+              endId="Package\DFT_EXTENSIONFIELDS_LOAD\RC_EXTENSIONFIELDS.Inputs[Row Count Input 1]"
+              name="Oracle Source Output"
+              startId="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS.Outputs[Oracle Source Output]" />
+            <path
+              refId="Package\DFT_EXTENSIONFIELDS_LOAD.Paths[Row Count Output 1]"
+              endId="Package\DFT_EXTENSIONFIELDS_LOAD\DC_BATCH.Inputs[Derived Column Input]"
+              name="Row Count Output 1"
+              startId="Package\DFT_EXTENSIONFIELDS_LOAD\RC_EXTENSIONFIELDS.Outputs[Row Count Output 1]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_EXTENSIONFIELDS_GET_DEST_COUNT_LOAD"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{60937D73-05BC-4477-97F5-9FDCD9355864}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_EXTENSIONFIELDS_GET_DEST_COUNT_LOAD"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_GET_DEST_COUNT_LOAD"</DTS:PropertyExpression>
+      <DTS:EventHandlers>
+        <DTS:EventHandler
+          DTS:refId="Package\SQL_EXTENSIONFIELDS_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]"
+          DTS:CreationName="OnPreExecute"
+          DTS:DTSID="{B5FD7E65-532A-4497-AD8C-EB54DA9DDD89}"
+          DTS:EventID="1076330902"
+          DTS:EventName="OnPreExecute"
+          DTS:LocaleID="-1">
+          <DTS:Variables>
+            <DTS:Variable
+              DTS:CreationName=""
+              DTS:Description="The propagate property of the event"
+              DTS:DTSID="{6386B5E5-6EAF-4BBB-8344-8C98EBDFF5B7}"
+              DTS:IncludeInDebugDump="6789"
+              DTS:Namespace="System"
+              DTS:ObjectName="Propagate">
+              <DTS:VariableValue
+                DTS:DataType="11">-1</DTS:VariableValue>
+            </DTS:Variable>
+          </DTS:Variables>
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\SQL_EXTENSIONFIELDS_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]\SQL_EXTENSIONFIELDS_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{8D23F9F0-54CE-4612-8E3E-31FC55CB120C}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="SQL_EXTENSIONFIELDS_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+              <DTS:Variables />
+              <DTS:PropertyExpression
+                DTS:Name="Name">"SQL_"+ @[User::v_Task_Name]+"_UPDATE_DFT_LOAD_COMPLETED"</DTS:PropertyExpression>
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{D3AC4771-F864-4C4B-B253-9F8EEC5B53D1}"
+                  SQLTask:SqlStatementSource="UPDATE DBO.BATCH_EXECUTION_STATUS&#xA; SET  &#xA;STATUS_FLAG = 'DFT LOAD COMPLETED'   WHERE&#xA; EXECUTION_ID = (&#xA;       SELECT MAX(EXECUTION_ID) EXECUTION_ID&#xA;       FROM DBO.BATCH_EXECUTION_STATUS&#xA;       WHERE PACKAGE_ID =?&#xA;       AND  BATCH_ID = ?&#xA;    )"
+                  SQLTask:TypeConversionMode="None" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="0"
+                    SQLTask:DtsVariableName="User::v_Package_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="1"
+                    SQLTask:DtsVariableName="User::v_Batch_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                </SQLTask:SqlTaskData>
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+        </DTS:EventHandler>
+      </DTS:EventHandlers>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{2D89FA31-E785-4462-9975-EDBF7B70F0A3}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::v_Dest_Count_Query"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="0"
+            SQLTask:DtsVariableName="User::v_Rows_Inserted" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_EXTENSIONFIELDS_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{8B5F9179-4B57-499B-86C1-C06A2A94AF14}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_EXTENSIONFIELDS_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_CHECK_PACKAGE_EXISTENCE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{D3AC4771-F864-4C4B-B253-9F8EEC5B53D1}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_NAME VARCHAR(500) = ?&#xA;&#xA;EXEC [DBO].[SP_CHECK_PACKAGE_EXISTENCE]  @PACKAGE_NAME" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_EXTENSIONFIELDS_SP_GET_PACKAGE_BATCH_ID"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{06139DA5-EF07-42C0-ABE9-D0337A2F8C50}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_EXTENSIONFIELDS_SP_GET_PACKAGE_BATCH_ID"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_GET_PACKAGE_BATCH_ID"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{D3AC4771-F864-4C4B-B253-9F8EEC5B53D1}"
+          SQLTask:SqlStatementSource="&#xA;DECLARE @PACKAGE_NAME VARCHAR(500) = ?&#xA;DECLARE @PACKAGE_ID  INT &#xA;DECLARE @BATCH_ID BIGINT&#xA;&#xA;&#xA; EXEC [DBO].[SP_GET_PACKAGE_BATCH_ID] @PACKAGE_NAME,@PACKAGE_ID OUT,@BATCH_ID OUT&#xA; SELECT ? = @PACKAGE_ID &#xA; SELECT ? = @BATCH_ID" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_EXTENSIONFIELDS_SP_INSERT_EXECUTION_STATUS"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{A3AF37AE-1E15-475C-9B0D-82E49483012C}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_EXTENSIONFIELDS_SP_INSERT_EXECUTION_STATUS"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_INSERT_EXECUTION_STATUS"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{D3AC4771-F864-4C4B-B253-9F8EEC5B53D1}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @PACKAGE_START_TIME DATETIME = ?&#xA;DECLARE @JOB_ID INT  =?&#xA;&#xA;EXEC [DBO].[SP_INSERT_EXECUTION_STATUS]           @PACKAGE_ID&#xA;,@BATCH_ID&#xA;,@PACKAGE_START_TIME&#xA;,@JOB_ID" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="System::StartTime"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="7"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="$Project::p_JOB_ID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_EXTENSIONFIELDS_SP_UPDATE_EXECUTION_STATUS_LOAD"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{4F1936CE-5DFF-49E6-BF99-FC1B6E1FD833}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_EXTENSIONFIELDS_SP_UPDATE_EXECUTION_STATUS_LOAD"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_UPDATE_EXECUTION_STATUS_LOAD"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{D3AC4771-F864-4C4B-B253-9F8EEC5B53D1}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @ROWS_READ BIGINT = ?&#xA;DECLARE @ROWS_INSERTED BIGINT = ?&#xA;DECLARE @ROWS_UPDATED BIGINT =0&#xA;DECLARE @ROWS_ERRORED  BIGINT=0&#xA;&#xA;&#xA;EXEC DBO.SP_UPDATE_EXECUTION_STATUS @PACKAGE_ID&#xA; , @BATCH_ID&#xA; , @ROWS_READ&#xA; , @ROWS_INSERTED&#xA; , @ROWS_UPDATED&#xA; , @ROWS_ERRORED" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::v_Rows_Read"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="User::v_Rows_Inserted"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_EXTENSIONFIELDS_TRUNCATE_STG_TABLE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{CD4CCC20-8A17-4F9E-AB41-A9F2701D093E}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_EXTENSIONFIELDS_TRUNCATE_STG_TABLE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_TRUNCATE_STG_TABLE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{2D89FA31-E785-4462-9975-EDBF7B70F0A3}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::v_Trunc_Query" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{388E5BDB-FE1E-41F1-A4B2-E3B83C7CD595}"
+      DTS:From="Package\SQL_EXTENSIONFIELDS_SP_GET_PACKAGE_BATCH_ID"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\SQL_EXTENSIONFIELDS_SP_INSERT_EXECUTION_STATUS" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{56173B00-624A-4883-BD7D-5E07712DBAA1}"
+      DTS:From="Package\SQL_EXTENSIONFIELDS_TRUNCATE_STG_TABLE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\DFT_EXTENSIONFIELDS_LOAD" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 10]"
+      DTS:CreationName=""
+      DTS:DTSID="{036E7C8D-2EFF-4FC3-A561-E467E2B6261F}"
+      DTS:From="Package\SQL_EXTENSIONFIELDS_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 10"
+      DTS:To="Package\SQL_EXTENSIONFIELDS_SP_GET_PACKAGE_BATCH_ID" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{747806E1-F1D9-4C31-9FD2-E84C21140A3D}"
+      DTS:From="Package\SQL_EXTENSIONFIELDS_SP_INSERT_EXECUTION_STATUS"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\SQL_EXTENSIONFIELDS_TRUNCATE_STG_TABLE" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 3]"
+      DTS:CreationName=""
+      DTS:DTSID="{3DF59999-6EA3-425D-85BA-1DAC8EFBFF61}"
+      DTS:From="Package\DFT_EXTENSIONFIELDS_LOAD"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 3"
+      DTS:To="Package\SQL_EXTENSIONFIELDS_GET_DEST_COUNT_LOAD" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 7]"
+      DTS:CreationName=""
+      DTS:DTSID="{DBB87296-5189-4E41-9D81-AEB5ED516A86}"
+      DTS:Expression="@[User::v_Rows_Inserted] ==0"
+      DTS:From="Package\SQL_EXTENSIONFIELDS_GET_DEST_COUNT_LOAD"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 7"
+      DTS:To="Package\SQL_EXTENSIONFIELDS_SP_UPDATE_EXECUTION_STATUS_LOAD" />
+  </DTS:PrecedenceConstraints>
+  <DTS:EventHandlers>
+    <DTS:EventHandler
+      DTS:refId="Package.EventHandlers[OnError]"
+      DTS:CreationName="OnError"
+      DTS:DTSID="{FEF6F09B-FDDE-44D0-960A-18B13A28225A}"
+      DTS:EventID="2"
+      DTS:EventName="OnError"
+      DTS:LocaleID="-1">
+      <DTS:Variables>
+        <DTS:Variable
+          DTS:CreationName=""
+          DTS:Description="The propagate property of the event"
+          DTS:DTSID="{BF7131B8-567A-418F-B7FC-484E077DAB95}"
+          DTS:IncludeInDebugDump="6789"
+          DTS:Namespace="System"
+          DTS:ObjectName="Propagate">
+          <DTS:VariableValue
+            DTS:DataType="11">-1</DTS:VariableValue>
+        </DTS:Variable>
+      </DTS:Variables>
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package.EventHandlers[OnError]\SQL_EXTENSIONFIELDS_SP_SSIS_ERRORLOG"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{5A1E32EC-81BB-45E5-8EA3-91831F263A49}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="SQL_EXTENSIONFIELDS_SP_SSIS_ERRORLOG"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:PropertyExpression
+            DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_SSIS_ERRORLOG"</DTS:PropertyExpression>
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{D3AC4771-F864-4C4B-B253-9F8EEC5B53D1}"
+              SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @PKG_GUID SYSNAME = ?&#xA;DECLARE @PACKAGE_NAME SYSNAME = ?&#xA;DECLARE @SOURCE_NAME VARCHAR(100) = ?&#xA;DECLARE @TASK_NAME VARCHAR(100) = ?&#xA;DECLARE @MACHINE_NAME VARCHAR(50) = ?&#xA;DECLARE @USER_NAME VARCHAR(50) = ?&#xA;DECLARE @ERROR_NUMBER INT = ?&#xA;DECLARE @ERROR_DESCRIPTION VARCHAR(MAX) = ?&#xA;DECLARE @PACKAGE_START_TIME DATETIME  = NULL&#xA;DECLARE @ROWS_READ BIGINT = ?&#xA;DECLARE @ROWS_INSERTED BIGINT = ?&#xA;DECLARE @ROWS_UPDATED BIGINT = NULL&#xA;DECLARE @ROWS_ERRORED BIGINT = NULL&#xA;&#xA;EXEC DBO.[SP_SSIS_ERRORLOG] @PACKAGE_ID&#xA;&#x9;,@BATCH_ID&#xA;&#x9;,@PKG_GUID&#xA;&#x9;,@PACKAGE_NAME&#xA;&#x9;,@SOURCE_NAME&#xA;&#x9;,@TASK_NAME&#xA;&#x9;,@MACHINE_NAME&#xA;&#x9;,@USER_NAME&#xA;&#x9;,@ERROR_NUMBER&#xA;&#x9;,@ERROR_DESCRIPTION&#xA;&#x9;,@PACKAGE_START_TIME&#xA;&#x9;,@ROWS_READ&#xA;&#x9;,@ROWS_INSERTED&#xA;&#x9;,@ROWS_UPDATED &#xA;&#x9;,@ROWS_ERRORED" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::v_Package_Id"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="1"
+                SQLTask:DtsVariableName="User::v_Batch_Id"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="2"
+                SQLTask:DtsVariableName="System::PackageID"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="3"
+                SQLTask:DtsVariableName="System::PackageName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="4"
+                SQLTask:DtsVariableName="System::SourceName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="5"
+                SQLTask:DtsVariableName="System::TaskName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="6"
+                SQLTask:DtsVariableName="System::MachineName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="7"
+                SQLTask:DtsVariableName="System::UserName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="8"
+                SQLTask:DtsVariableName="System::ErrorCode"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="9"
+                SQLTask:DtsVariableName="System::ErrorDescription"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="10"
+                SQLTask:DtsVariableName="User::v_Rows_Read"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="11"
+                SQLTask:DtsVariableName="User::v_Rows_Inserted"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+    </DTS:EventHandler>
+  </DTS:EventHandlers>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="393.6,41.6"
+          Id="Package\DFT_EXTENSIONFIELDS_LOAD"
+          TopLeft="604.021259162354,412.182348771409" />
+        <NodeLayout
+          Size="393.6,41.6"
+          Id="Package\SQL_EXTENSIONFIELDS_GET_DEST_COUNT_LOAD"
+          TopLeft="604.021259162354,513.852935964261" />
+        <NodeLayout
+          Size="393.6,41.6"
+          Id="Package\SQL_EXTENSIONFIELDS_SP_CHECK_PACKAGE_EXISTENCE"
+          TopLeft="604.021259162354,5.5" />
+        <NodeLayout
+          Size="393.6,41.6"
+          Id="Package\SQL_EXTENSIONFIELDS_SP_GET_PACKAGE_BATCH_ID"
+          TopLeft="604.021259162354,107.170587192852" />
+        <NodeLayout
+          Size="393.6,41.6"
+          Id="Package\SQL_EXTENSIONFIELDS_SP_INSERT_EXECUTION_STATUS"
+          TopLeft="604.021259162354,208.841174385704" />
+        <NodeLayout
+          Size="393.6,41.6"
+          Id="Package\SQL_EXTENSIONFIELDS_SP_UPDATE_EXECUTION_STATUS_LOAD"
+          TopLeft="604.021259162354,615.523523157113" />
+        <NodeLayout
+          Size="393.6,41.6"
+          Id="Package\SQL_EXTENSIONFIELDS_TRUNCATE_STG_TABLE"
+          TopLeft="604.021259162354,310.511761578557" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="801.021259162354,149.170587192852">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.6705871928522"
+              Start="0,0"
+              End="0,52.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="801.021259162354,352.511761578557">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.6705871928522"
+              Start="0,0"
+              End="0,52.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 10]"
+          TopLeft="801.021259162354,47.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.6705871928522"
+              Start="0,0"
+              End="0,52.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="801.021259162354,250.841174385704">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.6705871928522"
+              Start="0,0"
+              End="0,52.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 3]"
+          TopLeft="801.021259162354,454.182348771409">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.6705871928522"
+              Start="0,0"
+              End="0,52.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 7]"
+          TopLeft="801.021259162354,555.852935964261">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.6705871928522"
+              Start="0,0"
+              End="0,52.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <DtsEventHandler
+    design-time-name="Package.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="297.6,41.6"
+          Id="Package.EventHandlers[OnError]\SQL_EXTENSIONFIELDS_SP_SSIS_ERRORLOG"
+          TopLeft="362.785716981304,180.429413755213" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <TaskHost
+    design-time-name="Package\DFT_EXTENSIONFIELDS_LOAD">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="203.2,41.6"
+          Id="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS"
+          TopLeft="74.071428376801,425.213725427278" />
+        <NodeLayout
+          Size="203.2,41.6"
+          Id="Package\DFT_EXTENSIONFIELDS_LOAD\SRC_EXTENSIONFIELDS"
+          TopLeft="205.712041676985,63.213725427278" />
+        <NodeLayout
+          Size="203.2,41.6"
+          Id="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1"
+          TopLeft="316.071428376801,425.213725427278" />
+        <NodeLayout
+          Size="203.2,41.6"
+          Id="Package\DFT_EXTENSIONFIELDS_LOAD\RC_EXTENSIONFIELDS"
+          TopLeft="205.712041676985,146.313071856339" />
+        <NodeLayout
+          Size="203.2,41.6"
+          Id="Package\DFT_EXTENSIONFIELDS_LOAD\DC_BATCH"
+          TopLeft="205.712041676985,229.412418285401" />
+        <NodeLayout
+          Size="203.2,41.6"
+          Id="Package\DFT_EXTENSIONFIELDS_LOAD\BDD_EXTENSIONFIELDS"
+          TopLeft="205.712041676985,312.511764714462" />
+        <EdgeLayout
+          Id="Package\DFT_EXTENSIONFIELDS_LOAD.Paths[Row Count Output 1]"
+          TopLeft="307.212041676985,188.313071856339">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,41.0993464290613"
+              Start="0,0"
+              End="0,33.5993464290613">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,33.5993464290613" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_EXTENSIONFIELDS_LOAD.Paths[Oracle Source Output]"
+          TopLeft="307.212041676985,105.213725427278">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,41.0993464290613"
+              Start="0,0"
+              End="0,33.5993464290613">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,33.5993464290613" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_EXTENSIONFIELDS_LOAD.Paths[Derived Column Output]"
+          TopLeft="307.212041676985,271.412418285401">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,41.0993464290613"
+              Start="0,0"
+              End="0,33.5993464290613">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,33.5993464290613" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_EXTENSIONFIELDS_LOAD.Paths[Balanced Data Distributor Output 2]"
+          TopLeft="339.712041676985,354.511764714462">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="77.859386699816,70.701960712816"
+              Start="0,0"
+              End="77.859386699816,63.201960712816">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.6125236902305" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,24.6125236902305"
+                    Point2="0,28.6125236902305"
+                    Point3="4,28.6125236902305" />
+                  <mssgle:LineSegment
+                    End="73.859386699816,28.6125236902305" />
+                  <mssgle:CubicBezierSegment
+                    Point1="73.859386699816,28.6125236902305"
+                    Point2="77.859386699816,28.6125236902305"
+                    Point3="77.859386699816,32.6125236902305" />
+                  <mssgle:LineSegment
+                    End="77.859386699816,63.201960712816" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-38.956419931342,33.6125236902305,155.7722265625,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_EXTENSIONFIELDS_LOAD.Paths[Balanced Data Distributor Output 1]"
+          TopLeft="274.712041676985,354.511764714462">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-99.140613300184,70.701960712816"
+              Start="0,0"
+              End="-99.140613300184,63.201960712816">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.6125236902305" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,24.6125236902305"
+                    Point2="0,28.6125236902305"
+                    Point3="-4,28.6125236902305" />
+                  <mssgle:LineSegment
+                    End="-95.140613300184,28.6125236902305" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-95.140613300184,28.6125236902305"
+                    Point2="-99.140613300184,28.6125236902305"
+                    Point3="-99.140613300184,32.6125236902305" />
+                  <mssgle:LineSegment
+                    End="-99.140613300184,63.201960712816" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-127.270873056342,33.6125236902305,155.4011328125,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_EXTENSIONFIELDS_LOAD\DST_EXTENSIONFIELDS 1">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <DtsEventHandler
+    design-time-name="Package\SQL_EXTENSIONFIELDS_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="313,42"
+          Id="Package\SQL_EXTENSIONFIELDS_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]\SQL_EXTENSIONFIELDS_UPDATE_DFT_LOAD_COMPLETED"
+          TopLeft="570.3,184.7" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

@@ -1,0 +1,2734 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="11/28/2018 8:48:53 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="LAPTOP-SBSNQ3DE"
+  DTS:CreatorName="LAPTOP-SBSNQ3DE\HP"
+  DTS:DTSID="{1C77F46B-ADCB-471E-9415-7F5302E1935B}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="14.0.0600.250"
+  DTS:LocaleID="16393"
+  DTS:ObjectName="ETL_LANDING_PRIME17_MADDRESSES_FULL_LOAD"
+  DTS:PackageType="5"
+  DTS:ProtectionLevel="0"
+  DTS:VersionBuild="714"
+  DTS:VersionGUID="{67EF4CBD-6BD9-45A1-9B0B-54D5385CA491}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_AUDIT_FRAMEWORK]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{021EA68C-8D4A-4381-947C-E2025D63192A}"
+      DTS:ObjectName="CM_AUDIT_FRAMEWORK">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_AUDIT_FRAMEWORK_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_AUDIT_FRAMEWORK_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=AUDIT_FRAMEWORK_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{512B96AF-B1C4-48FF-AB10-86256A0627BB}"
+      DTS:ObjectName="CM_EIMDW_LANDING_PRIME">
+      <DTS:PropertyExpression
+        DTS:Name="InitialCatalog">@[$Project::p_LANDING_DATABASE]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_ARCHIVE_SERVER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=XENIA;Initial Catalog=DEV_EIMDW_Landing_FIN10;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CM_Prime_Attunity]"
+      DTS:CreationName="MSORA"
+      DTS:DTSID="{1680D113-E107-4CA7-99B2-64E6CCCA5716}"
+      DTS:ObjectName="CM_Prime_Attunity">
+      <DTS:PropertyExpression
+        DTS:Name="Password">@[$Project::p_PRIME_PWD]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="ServerName">@[$Project::p_PRIME_SERVER]</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="UserName">@[$Project::p_PRIME_USER]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <OracleXMLPackage>
+          <OraConnectionString>SERVER=10.180.2.215:1522/prime;USERNAME=AMBERCONNECT;ORACLEHOME=;ORACLEHOME64=;WINAUTH=0</OraConnectionString>
+          <OraRetain>False</OraRetain>
+          <OraInitialCatalog></OraInitialCatalog>
+          <OraServerName>10.180.2.215:1522/prime</OraServerName>
+          <OraUserName>AMBERCONNECT</OraUserName>
+          <OraOracleHome></OraOracleHome>
+          <OraOracleHome64></OraOracleHome64>
+          <OraWinAuthentication>False</OraWinAuthentication>
+          <OraEnableDetailedTracing>False</OraEnableDetailedTracing>
+          <OraPassword
+            Sensitive="1"></OraPassword>
+        </OracleXMLPackage>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:LogProviders>
+    <DTS:LogProvider
+      DTS:ConfigString="CM_AUDIT_FRAMEWORK"
+      DTS:CreationName="Microsoft.LogProviderSQLServer"
+      DTS:Description="Writes log entries for events to a SQL Server database"
+      DTS:DTSID="{093E9C5D-65AB-4C7C-AB0A-9078CA349A10}"
+      DTS:ObjectName="SSIS log provider for SQL Server">
+      <DTS:ObjectData>
+        <InnerObject />
+      </DTS:ObjectData>
+    </DTS:LogProvider>
+  </DTS:LogProviders>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{DD66D988-851E-4420-9FAF-EA54DF5419D1}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Batch_Id">
+      <DTS:VariableValue
+        DTS:DataType="20">-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{AC29C770-B73C-4882-AD05-27A1B0A8B629}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT COUNT(1) FROM &quot; +  @[User::v_Dest_Table]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Dest_Count_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT COUNT(1) FROM DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_MADDRESSES (NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{33C1684A-E5AA-406A-BB9D-2FC768957615}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="@[$Project::p_LANDING_DATABASE]  +&quot;.&quot;+ @[$Project::p_LANDING_SCHEMA] +&quot;.&quot;+&quot;SRC_PRIME17_MADDRESSES (NOLOCK)&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Dest_Table">
+      <DTS:VariableValue
+        DTS:DataType="8">DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_MADDRESSES (NOLOCK)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{4CCAEFF7-A5AA-46BE-A8FC-62E3980D6E0A}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Package_Id">
+      <DTS:VariableValue
+        DTS:DataType="3">-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{A6BCAFE8-521D-4DE9-B92F-EB546E1DB9F9}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Rows_Inserted">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{2849E9EF-EA7D-465F-90E5-CE3EF1ABFDFA}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Rows_Read">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{4B4F6750-DCCE-4A5C-8EEE-BB518BD20466}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT SERNO&#xA;,ADDRESS1&#xA;,ADDRESS2&#xA;,ADDRESS3&#xA;,ADDRESS4&#xA;,ADDRESS5&#xA;,CITY&#xA;,COUNTRY&#xA;,COUNTY&#xA;,EMAIL&#xA;,FAX&#xA;,FIRSTNAME&#xA;,INSTITUTION_ID&#xA;,LASTNAME&#xA;,LOCATION&#xA;,LOGACTION&#xA;,MIDNAME&#xA;,MOBILE&#xA;,POSITION&#xA;,STATE&#xA;,TEL1&#xA;,TEL2&#xA;,TEXT&#xA;,TITLE&#xA;,ZIP&#xA;&#xA;FROM &quot;+  @[User::v_Source_Table]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Source_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT SERNO
+,ADDRESS1
+,ADDRESS2
+,ADDRESS3
+,ADDRESS4
+,ADDRESS5
+,CITY
+,COUNTRY
+,COUNTY
+,EMAIL
+,FAX
+,FIRSTNAME
+,INSTITUTION_ID
+,LASTNAME
+,LOCATION
+,LOGACTION
+,MIDNAME
+,MOBILE
+,POSITION
+,STATE
+,TEL1
+,TEL2
+,TEXT
+,TITLE
+,ZIP
+
+FROM TCTDBS.MADDRESSES</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{0B815F97-5CF7-4B4F-8977-A4D7773EB223}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Source_Table">
+      <DTS:VariableValue
+        DTS:DataType="8">TCTDBS.MADDRESSES</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{A0CED498-CEA9-4710-94E6-806F2C9C400D}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Task_Name">
+      <DTS:VariableValue
+        DTS:DataType="8">MADDRESSES</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{91A092C7-6642-4DD5-B184-7F1194A0210E}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;TRUNCATE TABLE &quot;  + REPLACE(@[User::v_Dest_Table],&quot;(NOLOCK)&quot;,&quot; &quot;)"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_Trunc_Query">
+      <DTS:VariableValue
+        DTS:DataType="8">TRUNCATE TABLE DEV_EIMDW_Landing_FIN10.[LZOWN].SRC_PRIME17_MADDRESSES  </DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:LoggingOptions
+    DTS:FilterKind="0"
+    DTS:LoggingMode="1">
+    <DTS:Property
+      DTS:DataType="8"
+      DTS:Name="EventFilter">3,7,OnError,13,OnPostExecute,12,OnTaskFailed</DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnError"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnPostExecute"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnTaskFailed"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:SelectedLogProviders>
+      <DTS:SelectedLogProvider
+        DTS:InstanceID="{093E9C5D-65AB-4C7C-AB0A-9078CA349A10}" />
+    </DTS:SelectedLogProviders>
+  </DTS:LoggingOptions>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\DFT_MADDRESSES_LOAD"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{7222EEF9-23D0-4FD4-9434-3951E04BB027}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="DFT_MADDRESSES_LOAD"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"DFT_"+@[User::v_Task_Name]+"_LOAD"</DTS:PropertyExpression>
+      <DTS:PropertyExpression
+        DTS:Name="[SRC_MADDRESSES].[SqlCommand]">@[User::v_Source_Query]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <pipeline
+          defaultBufferMaxRows="100000"
+          defaultBufferSize="20485760"
+          version="1">
+          <components>
+            <component
+              refId="Package\DFT_MADDRESSES_LOAD\BDD_MADDRESSES"
+              componentClassID="Microsoft.BDD"
+              contactInfo="Balanced Data Distributor;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Evaluates and directs rows in a dataset to multiple destinations."
+              name="BDD_MADDRESSES">
+              <inputs>
+                <input
+                  refId="Package\DFT_MADDRESSES_LOAD\BDD_MADDRESSES.Inputs[Balanced Data Distributor Input]"
+                  description="Input to the Balanced Data      Distributor Transformation"
+                  name="Balanced Data Distributor Input">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_MADDRESSES_LOAD\BDD_MADDRESSES.Outputs[Balanced Data Distributor Output 1]"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 1"
+                  synchronousInputId="Package\DFT_MADDRESSES_LOAD\BDD_MADDRESSES.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_MADDRESSES_LOAD\BDD_MADDRESSES.Outputs[Balanced Data Distributor Output 2]"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 2"
+                  synchronousInputId="Package\DFT_MADDRESSES_LOAD\BDD_MADDRESSES.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_MADDRESSES_LOAD\BDD_MADDRESSES.Outputs[Balanced Data Distributor Output 3]"
+                  dangling="true"
+                  deleteOutputOnPathDetached="true"
+                  exclusionGroup="1"
+                  name="Balanced Data Distributor Output 3"
+                  synchronousInputId="Package\DFT_MADDRESSES_LOAD\BDD_MADDRESSES.Inputs[Balanced Data Distributor Input]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_MADDRESSES_LOAD\DC_BATCH"
+              componentClassID="Microsoft.DerivedColumn"
+              contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+              name="DC_BATCH"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\DFT_MADDRESSES_LOAD\DC_BATCH.Inputs[Derived Column Input]"
+                  description="Input to the Derived Column Transformation"
+                  name="Derived Column Input">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_MADDRESSES_LOAD\DC_BATCH.Outputs[Derived Column Output]"
+                  description="Default Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  name="Derived Column Output"
+                  synchronousInputId="Package\DFT_MADDRESSES_LOAD\DC_BATCH.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]"
+                      dataType="i8"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]"
+                      name="BATCH_ID"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">@[User::v_Batch_Id]</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">@[User::v_Batch_Id]</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_MADDRESSES_LOAD\DC_BATCH.Outputs[Derived Column Error Output]"
+                  description="Error Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Derived Column Error Output"
+                  synchronousInputId="Package\DFT_MADDRESSES_LOAD\DC_BATCH.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\DC_BATCH.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="DST_MADDRESSES"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[LZOWN].[SRC_PRIME17_MADDRESSES]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS,ROWS_PER_BATCH = 1000000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].Columns[INSTITUTION_ID]"
+                      cachedDataType="i4"
+                      cachedName="INSTITUTION_ID"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].Columns[ADDRESS1]"
+                      cachedDataType="wstr"
+                      cachedLength="100"
+                      cachedName="ADDRESS1"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESS1]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[ADDRESS1]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].Columns[ADDRESS2]"
+                      cachedDataType="wstr"
+                      cachedLength="100"
+                      cachedName="ADDRESS2"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESS2]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[ADDRESS2]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].Columns[ADDRESS3]"
+                      cachedDataType="wstr"
+                      cachedLength="100"
+                      cachedName="ADDRESS3"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESS3]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[ADDRESS3]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].Columns[ADDRESS4]"
+                      cachedDataType="wstr"
+                      cachedLength="100"
+                      cachedName="ADDRESS4"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESS4]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[ADDRESS4]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].Columns[ADDRESS5]"
+                      cachedDataType="wstr"
+                      cachedLength="100"
+                      cachedName="ADDRESS5"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESS5]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[ADDRESS5]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].Columns[CITY]"
+                      cachedDataType="wstr"
+                      cachedLength="30"
+                      cachedName="CITY"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[CITY]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[CITY]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].Columns[COUNTRY]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="3"
+                      cachedName="COUNTRY"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[COUNTRY]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[COUNTRY]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].Columns[COUNTY]"
+                      cachedDataType="wstr"
+                      cachedLength="30"
+                      cachedName="COUNTY"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[COUNTY]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[COUNTY]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].Columns[EMAIL]"
+                      cachedDataType="wstr"
+                      cachedLength="100"
+                      cachedName="EMAIL"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[EMAIL]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[EMAIL]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].Columns[FAX]"
+                      cachedDataType="wstr"
+                      cachedLength="40"
+                      cachedName="FAX"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[FAX]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[FAX]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].Columns[FIRSTNAME]"
+                      cachedDataType="wstr"
+                      cachedLength="30"
+                      cachedName="FIRSTNAME"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[FIRSTNAME]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[FIRSTNAME]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].Columns[SERNO]"
+                      cachedDataType="numeric"
+                      cachedName="SERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[SERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].Columns[LASTNAME]"
+                      cachedDataType="wstr"
+                      cachedLength="30"
+                      cachedName="LASTNAME"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[LASTNAME]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[LASTNAME]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].Columns[LOCATION]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="LOCATION"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[LOCATION]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[LOCATION]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].Columns[LOGACTION]"
+                      cachedDataType="wstr"
+                      cachedLength="11"
+                      cachedName="LOGACTION"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[LOGACTION]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[LOGACTION]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].Columns[MIDNAME]"
+                      cachedDataType="wstr"
+                      cachedLength="30"
+                      cachedName="MIDNAME"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[MIDNAME]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[MIDNAME]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].Columns[MOBILE]"
+                      cachedDataType="wstr"
+                      cachedLength="40"
+                      cachedName="MOBILE"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[MOBILE]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[MOBILE]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].Columns[POSITION]"
+                      cachedDataType="wstr"
+                      cachedLength="30"
+                      cachedName="POSITION"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[POSITION]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[POSITION]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].Columns[STATE]"
+                      cachedDataType="wstr"
+                      cachedLength="3"
+                      cachedName="STATE"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[STATE]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[STATE]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].Columns[TEL1]"
+                      cachedDataType="wstr"
+                      cachedLength="40"
+                      cachedName="TEL1"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[TEL1]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[TEL1]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].Columns[TEL2]"
+                      cachedDataType="wstr"
+                      cachedLength="40"
+                      cachedName="TEL2"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[TEL2]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[TEL2]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].Columns[TEXT]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="TEXT"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[TEXT]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[TEXT]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].Columns[TITLE]"
+                      cachedDataType="wstr"
+                      cachedLength="20"
+                      cachedName="TITLE"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[TITLE]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[TITLE]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].Columns[ZIP]"
+                      cachedDataType="wstr"
+                      cachedLength="10"
+                      cachedName="ZIP"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[ZIP]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[ZIP]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].Columns[BATCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="BATCH_ID"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[LD_SEQ_ID]"
+                      dataType="i4"
+                      name="LD_SEQ_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      dataType="i8"
+                      name="BATCH_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESS1]"
+                      dataType="wstr"
+                      length="100"
+                      name="ADDRESS1" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESS2]"
+                      dataType="wstr"
+                      length="100"
+                      name="ADDRESS2" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESS3]"
+                      dataType="wstr"
+                      length="100"
+                      name="ADDRESS3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESS4]"
+                      dataType="wstr"
+                      length="100"
+                      name="ADDRESS4" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESS5]"
+                      dataType="wstr"
+                      length="100"
+                      name="ADDRESS5" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[CITY]"
+                      dataType="wstr"
+                      length="30"
+                      name="CITY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[COUNTRY]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="COUNTRY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[COUNTY]"
+                      dataType="wstr"
+                      length="30"
+                      name="COUNTY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[EMAIL]"
+                      dataType="wstr"
+                      length="100"
+                      name="EMAIL" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[FAX]"
+                      dataType="wstr"
+                      length="40"
+                      name="FAX" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[FIRSTNAME]"
+                      dataType="wstr"
+                      length="30"
+                      name="FIRSTNAME" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[LASTNAME]"
+                      dataType="wstr"
+                      length="30"
+                      name="LASTNAME" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[LOCATION]"
+                      dataType="wstr"
+                      length="50"
+                      name="LOCATION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[LOGACTION]"
+                      dataType="wstr"
+                      length="11"
+                      name="LOGACTION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[MIDNAME]"
+                      dataType="wstr"
+                      length="30"
+                      name="MIDNAME" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[MOBILE]"
+                      dataType="wstr"
+                      length="40"
+                      name="MOBILE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[POSITION]"
+                      dataType="wstr"
+                      length="30"
+                      name="POSITION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[STATE]"
+                      dataType="wstr"
+                      length="3"
+                      name="STATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[TEL1]"
+                      dataType="wstr"
+                      length="40"
+                      name="TEL1" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[TEL2]"
+                      dataType="wstr"
+                      length="40"
+                      name="TEL2" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[TEXT]"
+                      dataType="wstr"
+                      length="255"
+                      name="TEXT" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[TITLE]"
+                      dataType="wstr"
+                      length="20"
+                      name="TITLE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input].ExternalColumns[ZIP]"
+                      dataType="wstr"
+                      length="10"
+                      name="ZIP" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="DST_MADDRESSES 1"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[LZOWN].[SRC_PRIME17_MADDRESSES]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS,ROWS_PER_BATCH = 1000000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_EIMDW_LANDING_PRIME]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].Columns[INSTITUTION_ID]"
+                      cachedDataType="i4"
+                      cachedName="INSTITUTION_ID"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].Columns[ADDRESS1]"
+                      cachedDataType="wstr"
+                      cachedLength="100"
+                      cachedName="ADDRESS1"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESS1]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[ADDRESS1]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].Columns[ADDRESS2]"
+                      cachedDataType="wstr"
+                      cachedLength="100"
+                      cachedName="ADDRESS2"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESS2]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[ADDRESS2]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].Columns[ADDRESS3]"
+                      cachedDataType="wstr"
+                      cachedLength="100"
+                      cachedName="ADDRESS3"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESS3]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[ADDRESS3]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].Columns[ADDRESS4]"
+                      cachedDataType="wstr"
+                      cachedLength="100"
+                      cachedName="ADDRESS4"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESS4]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[ADDRESS4]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].Columns[ADDRESS5]"
+                      cachedDataType="wstr"
+                      cachedLength="100"
+                      cachedName="ADDRESS5"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESS5]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[ADDRESS5]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].Columns[CITY]"
+                      cachedDataType="wstr"
+                      cachedLength="30"
+                      cachedName="CITY"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[CITY]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[CITY]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].Columns[COUNTRY]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="3"
+                      cachedName="COUNTRY"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[COUNTRY]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[COUNTRY]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].Columns[COUNTY]"
+                      cachedDataType="wstr"
+                      cachedLength="30"
+                      cachedName="COUNTY"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[COUNTY]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[COUNTY]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].Columns[EMAIL]"
+                      cachedDataType="wstr"
+                      cachedLength="100"
+                      cachedName="EMAIL"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[EMAIL]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[EMAIL]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].Columns[FAX]"
+                      cachedDataType="wstr"
+                      cachedLength="40"
+                      cachedName="FAX"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[FAX]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[FAX]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].Columns[FIRSTNAME]"
+                      cachedDataType="wstr"
+                      cachedLength="30"
+                      cachedName="FIRSTNAME"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[FIRSTNAME]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[FIRSTNAME]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].Columns[SERNO]"
+                      cachedDataType="numeric"
+                      cachedName="SERNO"
+                      cachedPrecision="10"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[SERNO]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].Columns[LASTNAME]"
+                      cachedDataType="wstr"
+                      cachedLength="30"
+                      cachedName="LASTNAME"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[LASTNAME]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[LASTNAME]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].Columns[LOCATION]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="LOCATION"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[LOCATION]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[LOCATION]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].Columns[LOGACTION]"
+                      cachedDataType="wstr"
+                      cachedLength="11"
+                      cachedName="LOGACTION"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[LOGACTION]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[LOGACTION]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].Columns[MIDNAME]"
+                      cachedDataType="wstr"
+                      cachedLength="30"
+                      cachedName="MIDNAME"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[MIDNAME]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[MIDNAME]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].Columns[MOBILE]"
+                      cachedDataType="wstr"
+                      cachedLength="40"
+                      cachedName="MOBILE"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[MOBILE]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[MOBILE]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].Columns[POSITION]"
+                      cachedDataType="wstr"
+                      cachedLength="30"
+                      cachedName="POSITION"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[POSITION]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[POSITION]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].Columns[STATE]"
+                      cachedDataType="wstr"
+                      cachedLength="3"
+                      cachedName="STATE"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[STATE]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[STATE]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].Columns[TEL1]"
+                      cachedDataType="wstr"
+                      cachedLength="40"
+                      cachedName="TEL1"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[TEL1]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[TEL1]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].Columns[TEL2]"
+                      cachedDataType="wstr"
+                      cachedLength="40"
+                      cachedName="TEL2"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[TEL2]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[TEL2]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].Columns[TEXT]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="TEXT"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[TEXT]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[TEXT]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].Columns[TITLE]"
+                      cachedDataType="wstr"
+                      cachedLength="20"
+                      cachedName="TITLE"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[TITLE]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[TITLE]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].Columns[ZIP]"
+                      cachedDataType="wstr"
+                      cachedLength="10"
+                      cachedName="ZIP"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[ZIP]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[ZIP]" />
+                    <inputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].Columns[BATCH_ID]"
+                      cachedDataType="i8"
+                      cachedName="BATCH_ID"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\DC_BATCH.Outputs[Derived Column Output].Columns[BATCH_ID]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[LD_SEQ_ID]"
+                      dataType="i4"
+                      name="LD_SEQ_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[BATCH_ID]"
+                      dataType="i8"
+                      name="BATCH_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESS1]"
+                      dataType="wstr"
+                      length="100"
+                      name="ADDRESS1" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESS2]"
+                      dataType="wstr"
+                      length="100"
+                      name="ADDRESS2" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESS3]"
+                      dataType="wstr"
+                      length="100"
+                      name="ADDRESS3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESS4]"
+                      dataType="wstr"
+                      length="100"
+                      name="ADDRESS4" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[ADDRESS5]"
+                      dataType="wstr"
+                      length="100"
+                      name="ADDRESS5" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[CITY]"
+                      dataType="wstr"
+                      length="30"
+                      name="CITY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[COUNTRY]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="COUNTRY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[COUNTY]"
+                      dataType="wstr"
+                      length="30"
+                      name="COUNTY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[EMAIL]"
+                      dataType="wstr"
+                      length="100"
+                      name="EMAIL" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[FAX]"
+                      dataType="wstr"
+                      length="40"
+                      name="FAX" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[FIRSTNAME]"
+                      dataType="wstr"
+                      length="30"
+                      name="FIRSTNAME" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[LASTNAME]"
+                      dataType="wstr"
+                      length="30"
+                      name="LASTNAME" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[LOCATION]"
+                      dataType="wstr"
+                      length="50"
+                      name="LOCATION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[LOGACTION]"
+                      dataType="wstr"
+                      length="11"
+                      name="LOGACTION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[MIDNAME]"
+                      dataType="wstr"
+                      length="30"
+                      name="MIDNAME" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[MOBILE]"
+                      dataType="wstr"
+                      length="40"
+                      name="MOBILE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[POSITION]"
+                      dataType="wstr"
+                      length="30"
+                      name="POSITION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[STATE]"
+                      dataType="wstr"
+                      length="3"
+                      name="STATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[TEL1]"
+                      dataType="wstr"
+                      length="40"
+                      name="TEL1" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[TEL2]"
+                      dataType="wstr"
+                      length="40"
+                      name="TEL2" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[TEXT]"
+                      dataType="wstr"
+                      length="255"
+                      name="TEXT" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[TITLE]"
+                      dataType="wstr"
+                      length="20"
+                      name="TITLE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input].ExternalColumns[ZIP]"
+                      dataType="wstr"
+                      length="10"
+                      name="ZIP" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_MADDRESSES_LOAD\RC_MADDRESSES"
+              componentClassID="Microsoft.RowCount"
+              contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Counts rows as they pass through a data flow. For example, use the number of rows processed to determine whether or not to perform cleanup operations, or update text in an e-mail message to communicate processing status."
+              name="RC_MADDRESSES">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable to hold the row count."
+                  name="VariableName">User::v_Rows_Read</property>
+              </properties>
+              <inputs>
+                <input
+                  refId="Package\DFT_MADDRESSES_LOAD\RC_MADDRESSES.Inputs[Row Count Input 1]"
+                  hasSideEffects="true"
+                  name="Row Count Input 1">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_MADDRESSES_LOAD\RC_MADDRESSES.Outputs[Row Count Output 1]"
+                  name="Row Count Output 1"
+                  synchronousInputId="Package\DFT_MADDRESSES_LOAD\RC_MADDRESSES.Inputs[Row Count Input 1]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES"
+              componentClassID="Attunity.SSISOraSrc"
+              contactInfo="Oracle Source;Microsoft Connector for Oracle by Attunity; Attunity Ltd.; All Rights Reserved; http://www.attunity.com;7"
+              description="Microsoft Oracle Source Component by Attunity"
+              name="SRC_MADDRESSES"
+              usesDispositions="true"
+              version="6">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="The name of the table to be fetched."
+                  expressionType="Notify"
+                  name="TableName"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  expressionType="Notify"
+                  name="SqlCommand">SELECT SERNO
+,ADDRESS1
+,ADDRESS2
+,ADDRESS3
+,ADDRESS4
+,ADDRESS5
+,CITY
+,COUNTRY
+,COUNTY
+,EMAIL
+,FAX
+,FIRSTNAME
+,INSTITUTION_ID
+,LASTNAME
+,LOCATION
+,LOGACTION
+,MIDNAME
+,MOBILE
+,POSITION
+,STATE
+,TEL1
+,TEL2
+,TEXT
+,TITLE
+,ZIP
+
+FROM TCTDBS.MADDRESSES</property>
+                <property
+                  dataType="System.Int32"
+                  description="The number of rows fetched in a batch."
+                  expressionType="Notify"
+                  name="BatchSize">100</property>
+                <property
+                  dataType="System.Int32"
+                  description="Number of pre-fetched rows."
+                  expressionType="Notify"
+                  name="PrefetchCount">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Determines the chunk size allocation for LOB columns"
+                  expressionType="Notify"
+                  name="LobChunkSize">32768</property>
+                <property
+                  dataType="System.Int32"
+                  description="The code page to use when code page information is unavailable from the data source."
+                  expressionType="Notify"
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Int32"
+                  description="The mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">1</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Connections[MSOraConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CM_Prime_Attunity]"
+                  connectionManagerRefId="Package.ConnectionManagers[CM_Prime_Attunity]"
+                  description="The Oracle runtime connection"
+                  name="MSOraConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output]"
+                  errorRowDisposition="FailComponent"
+                  name="Oracle Source Output"
+                  truncationRowDisposition="FailComponent">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[SERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[SERNO]"
+                      name="SERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[ADDRESS1]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[ADDRESS1]"
+                      length="100"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[ADDRESS1]"
+                      name="ADDRESS1" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[ADDRESS2]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[ADDRESS2]"
+                      length="100"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[ADDRESS2]"
+                      name="ADDRESS2" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[ADDRESS3]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[ADDRESS3]"
+                      length="100"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[ADDRESS3]"
+                      name="ADDRESS3" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[ADDRESS4]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[ADDRESS4]"
+                      length="100"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[ADDRESS4]"
+                      name="ADDRESS4" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[ADDRESS5]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[ADDRESS5]"
+                      length="100"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[ADDRESS5]"
+                      name="ADDRESS5" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[CITY]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[CITY]"
+                      length="30"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[CITY]"
+                      name="CITY" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[COUNTRY]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[COUNTRY]"
+                      length="3"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[COUNTRY]"
+                      name="COUNTRY" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[COUNTY]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[COUNTY]"
+                      length="30"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[COUNTY]"
+                      name="COUNTY" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[EMAIL]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[EMAIL]"
+                      length="100"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[EMAIL]"
+                      name="EMAIL" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[FAX]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[FAX]"
+                      length="40"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[FAX]"
+                      name="FAX" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[FIRSTNAME]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[FIRSTNAME]"
+                      length="30"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[FIRSTNAME]"
+                      name="FIRSTNAME" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[INSTITUTION_ID]"
+                      name="INSTITUTION_ID" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[LASTNAME]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[LASTNAME]"
+                      length="30"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[LASTNAME]"
+                      name="LASTNAME" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[LOCATION]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[LOCATION]"
+                      length="50"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[LOCATION]"
+                      name="LOCATION" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[LOGACTION]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[LOGACTION]"
+                      length="11"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[LOGACTION]"
+                      name="LOGACTION" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[MIDNAME]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[MIDNAME]"
+                      length="30"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[MIDNAME]"
+                      name="MIDNAME" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[MOBILE]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[MOBILE]"
+                      length="40"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[MOBILE]"
+                      name="MOBILE" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[POSITION]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[POSITION]"
+                      length="30"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[POSITION]"
+                      name="POSITION" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[STATE]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[STATE]"
+                      length="3"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[STATE]"
+                      name="STATE" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[TEL1]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[TEL1]"
+                      length="40"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[TEL1]"
+                      name="TEL1" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[TEL2]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[TEL2]"
+                      length="40"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[TEL2]"
+                      name="TEL2" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[TEXT]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[TEXT]"
+                      length="255"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[TEXT]"
+                      name="TEXT" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[TITLE]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[TITLE]"
+                      length="20"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[TITLE]"
+                      name="TITLE" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[ZIP]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[ZIP]"
+                      length="10"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].Columns[ZIP]"
+                      name="ZIP" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[SERNO]"
+                      dataType="numeric"
+                      name="SERNO"
+                      precision="10" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[ADDRESS1]"
+                      dataType="wstr"
+                      length="100"
+                      name="ADDRESS1" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[ADDRESS2]"
+                      dataType="wstr"
+                      length="100"
+                      name="ADDRESS2" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[ADDRESS3]"
+                      dataType="wstr"
+                      length="100"
+                      name="ADDRESS3" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[ADDRESS4]"
+                      dataType="wstr"
+                      length="100"
+                      name="ADDRESS4" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[ADDRESS5]"
+                      dataType="wstr"
+                      length="100"
+                      name="ADDRESS5" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[CITY]"
+                      dataType="wstr"
+                      length="30"
+                      name="CITY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[COUNTRY]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="COUNTRY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[COUNTY]"
+                      dataType="wstr"
+                      length="30"
+                      name="COUNTY" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[EMAIL]"
+                      dataType="wstr"
+                      length="100"
+                      name="EMAIL" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[FAX]"
+                      dataType="wstr"
+                      length="40"
+                      name="FAX" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[FIRSTNAME]"
+                      dataType="wstr"
+                      length="30"
+                      name="FIRSTNAME" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[INSTITUTION_ID]"
+                      dataType="i4"
+                      name="INSTITUTION_ID" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[LASTNAME]"
+                      dataType="wstr"
+                      length="30"
+                      name="LASTNAME" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[LOCATION]"
+                      dataType="wstr"
+                      length="50"
+                      name="LOCATION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[LOGACTION]"
+                      dataType="wstr"
+                      length="11"
+                      name="LOGACTION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[MIDNAME]"
+                      dataType="wstr"
+                      length="30"
+                      name="MIDNAME" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[MOBILE]"
+                      dataType="wstr"
+                      length="40"
+                      name="MOBILE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[POSITION]"
+                      dataType="wstr"
+                      length="30"
+                      name="POSITION" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[STATE]"
+                      dataType="wstr"
+                      length="3"
+                      name="STATE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[TEL1]"
+                      dataType="wstr"
+                      length="40"
+                      name="TEL1" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[TEL2]"
+                      dataType="wstr"
+                      length="40"
+                      name="TEL2" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[TEXT]"
+                      dataType="wstr"
+                      length="255"
+                      name="TEXT" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[TITLE]"
+                      dataType="wstr"
+                      length="20"
+                      name="TITLE" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[ZIP]"
+                      dataType="wstr"
+                      length="10"
+                      name="ZIP" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output]"
+                  isErrorOut="true"
+                  name="Oracle Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[SERNO]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[SERNO]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[SERNO]"
+                      name="SERNO"
+                      precision="10" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[ADDRESS1]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[ADDRESS1]"
+                      length="100"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[ADDRESS1]"
+                      name="ADDRESS1" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[ADDRESS2]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[ADDRESS2]"
+                      length="100"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[ADDRESS2]"
+                      name="ADDRESS2" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[ADDRESS3]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[ADDRESS3]"
+                      length="100"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[ADDRESS3]"
+                      name="ADDRESS3" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[ADDRESS4]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[ADDRESS4]"
+                      length="100"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[ADDRESS4]"
+                      name="ADDRESS4" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[ADDRESS5]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[ADDRESS5]"
+                      length="100"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[ADDRESS5]"
+                      name="ADDRESS5" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[CITY]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[CITY]"
+                      length="30"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[CITY]"
+                      name="CITY" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[COUNTRY]"
+                      codePage="1252"
+                      dataType="str"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[COUNTRY]"
+                      length="3"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[COUNTRY]"
+                      name="COUNTRY" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[COUNTY]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[COUNTY]"
+                      length="30"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[COUNTY]"
+                      name="COUNTY" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[EMAIL]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[EMAIL]"
+                      length="100"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[EMAIL]"
+                      name="EMAIL" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[FAX]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[FAX]"
+                      length="40"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[FAX]"
+                      name="FAX" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[FIRSTNAME]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[FIRSTNAME]"
+                      length="30"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[FIRSTNAME]"
+                      name="FIRSTNAME" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[INSTITUTION_ID]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[INSTITUTION_ID]"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[INSTITUTION_ID]"
+                      name="INSTITUTION_ID" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[LASTNAME]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[LASTNAME]"
+                      length="30"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[LASTNAME]"
+                      name="LASTNAME" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[LOCATION]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[LOCATION]"
+                      length="50"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[LOCATION]"
+                      name="LOCATION" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[LOGACTION]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[LOGACTION]"
+                      length="11"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[LOGACTION]"
+                      name="LOGACTION" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[MIDNAME]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[MIDNAME]"
+                      length="30"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[MIDNAME]"
+                      name="MIDNAME" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[MOBILE]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[MOBILE]"
+                      length="40"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[MOBILE]"
+                      name="MOBILE" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[POSITION]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[POSITION]"
+                      length="30"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[POSITION]"
+                      name="POSITION" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[STATE]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[STATE]"
+                      length="3"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[STATE]"
+                      name="STATE" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[TEL1]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[TEL1]"
+                      length="40"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[TEL1]"
+                      name="TEL1" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[TEL2]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[TEL2]"
+                      length="40"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[TEL2]"
+                      name="TEL2" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[TEXT]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[TEXT]"
+                      length="255"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[TEXT]"
+                      name="TEXT" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[TITLE]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[TITLE]"
+                      length="20"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[TITLE]"
+                      name="TITLE" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[ZIP]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output].ExternalColumns[ZIP]"
+                      length="10"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[ZIP]"
+                      name="ZIP" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\DFT_MADDRESSES_LOAD.Paths[Balanced Data Distributor Output 1]"
+              endId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES.Inputs[OLE DB Destination Input]"
+              name="Balanced Data Distributor Output 1"
+              startId="Package\DFT_MADDRESSES_LOAD\BDD_MADDRESSES.Outputs[Balanced Data Distributor Output 1]" />
+            <path
+              refId="Package\DFT_MADDRESSES_LOAD.Paths[Balanced Data Distributor Output 2]"
+              endId="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1.Inputs[OLE DB Destination Input]"
+              name="Balanced Data Distributor Output 2"
+              startId="Package\DFT_MADDRESSES_LOAD\BDD_MADDRESSES.Outputs[Balanced Data Distributor Output 2]" />
+            <path
+              refId="Package\DFT_MADDRESSES_LOAD.Paths[Derived Column Output]"
+              endId="Package\DFT_MADDRESSES_LOAD\BDD_MADDRESSES.Inputs[Balanced Data Distributor Input]"
+              name="Derived Column Output"
+              startId="Package\DFT_MADDRESSES_LOAD\DC_BATCH.Outputs[Derived Column Output]" />
+            <path
+              refId="Package\DFT_MADDRESSES_LOAD.Paths[Oracle Source Output]"
+              endId="Package\DFT_MADDRESSES_LOAD\RC_MADDRESSES.Inputs[Row Count Input 1]"
+              name="Oracle Source Output"
+              startId="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES.Outputs[Oracle Source Output]" />
+            <path
+              refId="Package\DFT_MADDRESSES_LOAD.Paths[Row Count Output 1]"
+              endId="Package\DFT_MADDRESSES_LOAD\DC_BATCH.Inputs[Derived Column Input]"
+              name="Row Count Output 1"
+              startId="Package\DFT_MADDRESSES_LOAD\RC_MADDRESSES.Outputs[Row Count Output 1]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_MADDRESSES_GET_DEST_COUNT_LOAD"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{56902FFB-B6CF-498C-BF1B-5AB02C6E7154}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_MADDRESSES_GET_DEST_COUNT_LOAD"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_GET_DEST_COUNT_LOAD"</DTS:PropertyExpression>
+      <DTS:EventHandlers>
+        <DTS:EventHandler
+          DTS:refId="Package\SQL_MADDRESSES_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]"
+          DTS:CreationName="OnPreExecute"
+          DTS:DTSID="{0E083A4A-E30E-48BB-A9E5-397CBC78F9DA}"
+          DTS:EventID="1076330902"
+          DTS:EventName="OnPreExecute"
+          DTS:LocaleID="-1">
+          <DTS:Variables>
+            <DTS:Variable
+              DTS:CreationName=""
+              DTS:Description="The propagate property of the event"
+              DTS:DTSID="{C72DAA0E-2AB6-478E-A07A-15F77962E938}"
+              DTS:IncludeInDebugDump="6789"
+              DTS:Namespace="System"
+              DTS:ObjectName="Propagate">
+              <DTS:VariableValue
+                DTS:DataType="11">-1</DTS:VariableValue>
+            </DTS:Variable>
+          </DTS:Variables>
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\SQL_MADDRESSES_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]\SQL_MADDRESSES_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{4184B2AC-03E2-4234-B07F-E6F74FCD5923}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="SQL_MADDRESSES_UPDATE_DFT_LOAD_COMPLETED"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+              <DTS:Variables />
+              <DTS:PropertyExpression
+                DTS:Name="Name">"SQL_"+ @[User::v_Task_Name]+"_UPDATE_DFT_LOAD_COMPLETED"</DTS:PropertyExpression>
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{021EA68C-8D4A-4381-947C-E2025D63192A}"
+                  SQLTask:SqlStatementSource="UPDATE DBO.BATCH_EXECUTION_STATUS&#xA; SET  &#xA;STATUS_FLAG = 'DFT LOAD COMPLETED'   WHERE&#xA; EXECUTION_ID = (&#xA;       SELECT MAX(EXECUTION_ID) EXECUTION_ID&#xA;       FROM DBO.BATCH_EXECUTION_STATUS&#xA;       WHERE PACKAGE_ID =?&#xA;       AND  BATCH_ID = ?&#xA;    )"
+                  SQLTask:TypeConversionMode="None" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="0"
+                    SQLTask:DtsVariableName="User::v_Package_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="1"
+                    SQLTask:DtsVariableName="User::v_Batch_Id"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                </SQLTask:SqlTaskData>
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+        </DTS:EventHandler>
+      </DTS:EventHandlers>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{512B96AF-B1C4-48FF-AB10-86256A0627BB}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::v_Dest_Count_Query"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="0"
+            SQLTask:DtsVariableName="User::v_Rows_Inserted" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_MADDRESSES_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{D649B47B-6645-47E1-A1EF-89E178B767ED}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_MADDRESSES_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_CHECK_PACKAGE_EXISTENCE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{021EA68C-8D4A-4381-947C-E2025D63192A}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_NAME VARCHAR(500) = ?&#xA;&#xA;EXEC [DBO].[SP_CHECK_PACKAGE_EXISTENCE]  @PACKAGE_NAME" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_MADDRESSES_SP_GET_PACKAGE_BATCH_ID"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{EC67A587-43A7-44AC-B3B5-A397864F80B6}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_MADDRESSES_SP_GET_PACKAGE_BATCH_ID"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+ @[User::v_Task_Name] +"_SP_GET_PACKAGE_BATCH_ID"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{021EA68C-8D4A-4381-947C-E2025D63192A}"
+          SQLTask:SqlStatementSource="&#xA;DECLARE @PACKAGE_NAME VARCHAR(500) = ?&#xA;DECLARE @PACKAGE_ID  INT &#xA;DECLARE @BATCH_ID BIGINT&#xA;&#xA;&#xA; EXEC [DBO].[SP_GET_PACKAGE_BATCH_ID] @PACKAGE_NAME,@PACKAGE_ID OUT,@BATCH_ID OUT&#xA; SELECT ? = @PACKAGE_ID &#xA; SELECT ? = @BATCH_ID" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_MADDRESSES_SP_INSERT_EXECUTION_STATUS"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{590A5C27-25A8-40E9-84DA-234650507B60}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_MADDRESSES_SP_INSERT_EXECUTION_STATUS"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_INSERT_EXECUTION_STATUS"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{021EA68C-8D4A-4381-947C-E2025D63192A}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @PACKAGE_START_TIME DATETIME = ?&#xA;DECLARE @JOB_ID INT  =?&#xA;&#xA;EXEC [DBO].[SP_INSERT_EXECUTION_STATUS]           @PACKAGE_ID&#xA;,@BATCH_ID&#xA;,@PACKAGE_START_TIME&#xA;,@JOB_ID" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="System::StartTime"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="7"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="$Project::p_JOB_ID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_MADDRESSES_SP_UPDATE_EXECUTION_STATUS_LOAD"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{D9878C42-ED65-484D-953D-8AD735C700CA}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_MADDRESSES_SP_UPDATE_EXECUTION_STATUS_LOAD"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_UPDATE_EXECUTION_STATUS_LOAD"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{021EA68C-8D4A-4381-947C-E2025D63192A}"
+          SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @ROWS_READ BIGINT = ?&#xA;DECLARE @ROWS_INSERTED BIGINT = ?&#xA;DECLARE @ROWS_UPDATED BIGINT =0&#xA;DECLARE @ROWS_ERRORED  BIGINT=0&#xA;&#xA;&#xA;EXEC DBO.SP_UPDATE_EXECUTION_STATUS @PACKAGE_ID&#xA; , @BATCH_ID&#xA; , @ROWS_READ&#xA; , @ROWS_INSERTED&#xA; , @ROWS_UPDATED&#xA; , @ROWS_ERRORED" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_Package_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_Batch_Id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::v_Rows_Read"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="User::v_Rows_Inserted"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL_MADDRESSES_TRUNCATE_STG_TABLE"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{F40F9A2A-88A0-4055-B40E-EA85A6D091EE}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL_MADDRESSES_TRUNCATE_STG_TABLE"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_TRUNCATE_STG_TABLE"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{512B96AF-B1C4-48FF-AB10-86256A0627BB}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::v_Trunc_Query" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{AADB7002-D5C6-4DBA-95EA-0CA8A08A993D}"
+      DTS:From="Package\SQL_MADDRESSES_SP_GET_PACKAGE_BATCH_ID"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\SQL_MADDRESSES_SP_INSERT_EXECUTION_STATUS" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{BC1B81C7-D3CC-46AE-99E2-1F71A1D80388}"
+      DTS:From="Package\SQL_MADDRESSES_TRUNCATE_STG_TABLE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\DFT_MADDRESSES_LOAD" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 10]"
+      DTS:CreationName=""
+      DTS:DTSID="{4A28BF10-A2AE-4E5A-9AC2-E7263E559F1A}"
+      DTS:From="Package\SQL_MADDRESSES_SP_CHECK_PACKAGE_EXISTENCE"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 10"
+      DTS:To="Package\SQL_MADDRESSES_SP_GET_PACKAGE_BATCH_ID" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{28ECFBAA-9BAA-4925-8E7E-9638A32FDA1A}"
+      DTS:From="Package\SQL_MADDRESSES_SP_INSERT_EXECUTION_STATUS"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\SQL_MADDRESSES_TRUNCATE_STG_TABLE" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 3]"
+      DTS:CreationName=""
+      DTS:DTSID="{A26A9B67-8DCE-4392-A923-B70B2D4021B9}"
+      DTS:From="Package\DFT_MADDRESSES_LOAD"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 3"
+      DTS:To="Package\SQL_MADDRESSES_GET_DEST_COUNT_LOAD" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 7]"
+      DTS:CreationName=""
+      DTS:DTSID="{FB3E23D9-5207-416F-B041-7F178BD7FA66}"
+      DTS:Expression="@[User::v_Rows_Inserted] ==0"
+      DTS:From="Package\SQL_MADDRESSES_GET_DEST_COUNT_LOAD"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 7"
+      DTS:To="Package\SQL_MADDRESSES_SP_UPDATE_EXECUTION_STATUS_LOAD" />
+  </DTS:PrecedenceConstraints>
+  <DTS:EventHandlers>
+    <DTS:EventHandler
+      DTS:refId="Package.EventHandlers[OnError]"
+      DTS:CreationName="OnError"
+      DTS:DTSID="{57465EE7-3256-444A-A81D-821F1364F62C}"
+      DTS:EventID="2"
+      DTS:EventName="OnError"
+      DTS:LocaleID="-1">
+      <DTS:Variables>
+        <DTS:Variable
+          DTS:CreationName=""
+          DTS:Description="The propagate property of the event"
+          DTS:DTSID="{B8F4F52E-C89D-4728-8A60-19266A87580F}"
+          DTS:IncludeInDebugDump="6789"
+          DTS:Namespace="System"
+          DTS:ObjectName="Propagate">
+          <DTS:VariableValue
+            DTS:DataType="11">-1</DTS:VariableValue>
+        </DTS:Variable>
+      </DTS:Variables>
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package.EventHandlers[OnError]\SQL_MADDRESSES_SP_SSIS_ERRORLOG"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{6A222EF4-7DAE-4A6B-9922-59EDE51B9001}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="SQL_MADDRESSES_SP_SSIS_ERRORLOG"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:PropertyExpression
+            DTS:Name="Name">"SQL_"+@[User::v_Task_Name]+"_SP_SSIS_ERRORLOG"</DTS:PropertyExpression>
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{021EA68C-8D4A-4381-947C-E2025D63192A}"
+              SQLTask:SqlStatementSource="DECLARE @PACKAGE_ID INT = ?&#xA;DECLARE @BATCH_ID BIGINT = ?&#xA;DECLARE @PKG_GUID SYSNAME = ?&#xA;DECLARE @PACKAGE_NAME SYSNAME = ?&#xA;DECLARE @SOURCE_NAME VARCHAR(100) = ?&#xA;DECLARE @TASK_NAME VARCHAR(100) = ?&#xA;DECLARE @MACHINE_NAME VARCHAR(50) = ?&#xA;DECLARE @USER_NAME VARCHAR(50) = ?&#xA;DECLARE @ERROR_NUMBER INT = ?&#xA;DECLARE @ERROR_DESCRIPTION VARCHAR(MAX) = ?&#xA;DECLARE @PACKAGE_START_TIME DATETIME  = NULL&#xA;DECLARE @ROWS_READ BIGINT = ?&#xA;DECLARE @ROWS_INSERTED BIGINT = ?&#xA;DECLARE @ROWS_UPDATED BIGINT = NULL&#xA;DECLARE @ROWS_ERRORED BIGINT = NULL&#xA;&#xA;EXEC DBO.[SP_SSIS_ERRORLOG] @PACKAGE_ID&#xA;&#x9;,@BATCH_ID&#xA;&#x9;,@PKG_GUID&#xA;&#x9;,@PACKAGE_NAME&#xA;&#x9;,@SOURCE_NAME&#xA;&#x9;,@TASK_NAME&#xA;&#x9;,@MACHINE_NAME&#xA;&#x9;,@USER_NAME&#xA;&#x9;,@ERROR_NUMBER&#xA;&#x9;,@ERROR_DESCRIPTION&#xA;&#x9;,@PACKAGE_START_TIME&#xA;&#x9;,@ROWS_READ&#xA;&#x9;,@ROWS_INSERTED&#xA;&#x9;,@ROWS_UPDATED &#xA;&#x9;,@ROWS_ERRORED" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::v_Package_Id"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="1"
+                SQLTask:DtsVariableName="User::v_Batch_Id"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="2"
+                SQLTask:DtsVariableName="System::PackageID"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="3"
+                SQLTask:DtsVariableName="System::PackageName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="4"
+                SQLTask:DtsVariableName="System::SourceName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="5"
+                SQLTask:DtsVariableName="System::TaskName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="6"
+                SQLTask:DtsVariableName="System::MachineName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="7"
+                SQLTask:DtsVariableName="System::UserName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="8"
+                SQLTask:DtsVariableName="System::ErrorCode"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="9"
+                SQLTask:DtsVariableName="System::ErrorDescription"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="10"
+                SQLTask:DtsVariableName="User::v_Rows_Read"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="11"
+                SQLTask:DtsVariableName="User::v_Rows_Inserted"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+    </DTS:EventHandler>
+  </DTS:EventHandlers>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="377.6,43.2"
+          Id="Package\DFT_MADDRESSES_LOAD"
+          TopLeft="600.164116305211,412.182348771409" />
+        <NodeLayout
+          Size="377.6,43.2"
+          Id="Package\SQL_MADDRESSES_GET_DEST_COUNT_LOAD"
+          TopLeft="600.164116305211,513.852935964261" />
+        <NodeLayout
+          Size="377.6,43.2"
+          Id="Package\SQL_MADDRESSES_SP_CHECK_PACKAGE_EXISTENCE"
+          TopLeft="600.164116305211,5.5" />
+        <NodeLayout
+          Size="377.6,43.2"
+          Id="Package\SQL_MADDRESSES_SP_GET_PACKAGE_BATCH_ID"
+          TopLeft="600.164116305211,107.170587192852" />
+        <NodeLayout
+          Size="377.6,43.2"
+          Id="Package\SQL_MADDRESSES_SP_INSERT_EXECUTION_STATUS"
+          TopLeft="600.164116305211,208.841174385704" />
+        <NodeLayout
+          Size="377.6,43.2"
+          Id="Package\SQL_MADDRESSES_SP_UPDATE_EXECUTION_STATUS_LOAD"
+          TopLeft="600.164116305211,615.523523157113" />
+        <NodeLayout
+          Size="377.6,43.2"
+          Id="Package\SQL_MADDRESSES_TRUNCATE_STG_TABLE"
+          TopLeft="600.164116305211,310.511761578557" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="789.164116305211,150.170587192852">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="789.164116305211,353.511761578557">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 10]"
+          TopLeft="789.164116305211,48.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="789.164116305211,251.841174385704">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 3]"
+          TopLeft="789.164116305211,455.182348771409">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 7]"
+          TopLeft="789.164116305211,556.852935964261">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6705871928522"
+              Start="0,0"
+              End="0,51.1705871928522">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1705871928522" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <DtsEventHandler
+    design-time-name="Package.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="273.6,41.6"
+          Id="Package.EventHandlers[OnError]\SQL_MADDRESSES_SP_SSIS_ERRORLOG"
+          TopLeft="292.214287242111,171.817649040751" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <TaskHost
+    design-time-name="Package\DFT_MADDRESSES_LOAD">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="203.2,41.6"
+          Id="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES"
+          TopLeft="56.071428376801,425.213725427278" />
+        <NodeLayout
+          Size="203.2,41.6"
+          Id="Package\DFT_MADDRESSES_LOAD\SRC_MADDRESSES"
+          TopLeft="212.534031257739,54" />
+        <NodeLayout
+          Size="203.2,41.6"
+          Id="Package\DFT_MADDRESSES_LOAD\DC_BATCH"
+          TopLeft="212.534031257739,226.341176476308" />
+        <NodeLayout
+          Size="203.2,41.6"
+          Id="Package\DFT_MADDRESSES_LOAD\RC_MADDRESSES"
+          TopLeft="212.534031257739,140.170588238154" />
+        <NodeLayout
+          Size="203.2,41.6"
+          Id="Package\DFT_MADDRESSES_LOAD\BDD_MADDRESSES"
+          TopLeft="212.534031257739,312.511764714462" />
+        <NodeLayout
+          Size="203.2,41.6"
+          Id="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1"
+          TopLeft="352.071428376801,423.213725427278" />
+        <EdgeLayout
+          Id="Package\DFT_MADDRESSES_LOAD.Paths[Row Count Output 1]"
+          TopLeft="314.034031257739,182.170588238154">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,44.170588238154"
+              Start="0,0"
+              End="0,36.670588238154">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,36.670588238154" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_MADDRESSES_LOAD.Paths[Oracle Source Output]"
+          TopLeft="314.034031257739,96">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,44.170588238154"
+              Start="0,0"
+              End="0,36.670588238154">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,36.670588238154" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_MADDRESSES_LOAD.Paths[Derived Column Output]"
+          TopLeft="314.034031257739,268.341176476308">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,44.170588238154"
+              Start="0,0"
+              End="0,36.670588238154">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,36.670588238154" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_MADDRESSES_LOAD.Paths[Balanced Data Distributor Output 2]"
+          TopLeft="346.534031257739,354.511764714462">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="107.037397119062,68.701960712816"
+              Start="0,0"
+              End="107.037397119062,61.201960712816">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,23.8031395260077" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,23.8031395260077"
+                    Point2="0,27.8031395260077"
+                    Point3="4,27.8031395260077" />
+                  <mssgle:LineSegment
+                    End="103.037397119062,27.8031395260077" />
+                  <mssgle:CubicBezierSegment
+                    Point1="103.037397119062,27.8031395260077"
+                    Point2="107.037397119062,27.8031395260077"
+                    Point3="107.037397119062,31.8031395260077" />
+                  <mssgle:LineSegment
+                    End="107.037397119062,61.201960712816" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-24.367414721719,32.8031395260077,155.7722265625,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DFT_MADDRESSES_LOAD.Paths[Balanced Data Distributor Output 1]"
+          TopLeft="281.534031257739,354.511764714462">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-123.962602880938,70.701960712816"
+              Start="0,0"
+              End="-123.962602880938,63.201960712816">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.6125236902305" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,24.6125236902305"
+                    Point2="0,28.6125236902305"
+                    Point3="-4,28.6125236902305" />
+                  <mssgle:LineSegment
+                    End="-119.962602880938,28.6125236902305" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-119.962602880938,28.6125236902305"
+                    Point2="-123.962602880938,28.6125236902305"
+                    Point3="-123.962602880938,32.6125236902305" />
+                  <mssgle:LineSegment
+                    End="-123.962602880938,63.201960712816" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-139.681867846719,33.6125236902305,155.4011328125,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT_MADDRESSES_LOAD\DST_MADDRESSES 1">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <DtsEventHandler
+    design-time-name="Package\SQL_MADDRESSES_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="313,42"
+          Id="Package\SQL_MADDRESSES_GET_DEST_COUNT_LOAD.EventHandlers[OnPreExecute]\SQL_MADDRESSES_UPDATE_DFT_LOAD_COMPLETED"
+          TopLeft="570.3,184.7" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>
